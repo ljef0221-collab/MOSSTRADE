@@ -273,7 +273,6 @@ TIMEFRAME_CONFIG = {
         "bucket":"month"
     }
 }
-}
 
 
 def aggregate_candles(candles, bucket):
@@ -371,7 +370,7 @@ def analyze_market(symbol: str, interval: str = "1h"):
         tp, sl = price - atr * config["tp_atr"], price + atr * config["sl_atr"]
     else:
         tp = sl = None
-return {
+    return {
     "status": "success",
 
     "strategy_name": config["name"],
