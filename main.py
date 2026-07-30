@@ -119,29 +119,160 @@ def search_symbol(keyword: str):
     return {"status": "success", "source": "Yahoo Finance", "results": results}
 
 
-SCALP = {"fast": 9, "slow": 21, "trend": 50, "lookback": 12, "tp_atr": 1.8, "sl_atr": 1.0, "mode": "cross"}
-INTRADAY = {"fast": 20, "slow": 50, "trend": 200, "lookback": 20, "tp_atr": 3.0, "sl_atr": 1.5, "mode": "breakout"}
-SWING = {"fast": 50, "slow": 200, "trend": 200, "lookback": 55, "tp_atr": 4.5, "sl_atr": 2.0, "mode": "breakout"}
-POSITION = {"fast": 20, "slow": 50, "trend": 50, "lookback": 20, "tp_atr": 4.0, "sl_atr": 2.0, "mode": "breakout"}
-MONTHLY = {"fast": 12, "slow": 24, "trend": 36, "lookback": 12, "tp_atr": 5.0, "sl_atr": 2.5, "mode": "breakout"}
+# =========================
+# SmartNavigator 策略庫
+# =========================
+
+
+SCALP = {
+    "name": "極短線動能策略",
+    "description": "利用短週期 EMA 黃金交叉捕捉快速價格動能，適合1~5分鐘短線交易。",
+    
+    "fast": 9,
+    "slow": 21,
+    "trend": 50,
+    "lookback": 12,
+    
+    "tp_atr": 1.8,
+    "sl_atr": 1.0,
+    
+    "mode": "cross"
+}
+
+
+
+INTRADAY = {
+    "name": "日內趨勢突破策略",
+    "description": "利用EMA20/50/200判斷市場方向，再等待價格突破近期區間，適合15分鐘至4小時。",
+    
+    "fast": 20,
+    "slow": 50,
+    "trend": 200,
+    "lookback": 20,
+    
+    "tp_atr": 3.0,
+    "sl_atr": 1.5,
+    
+    "mode": "breakout"
+}
+
+
+
+SWING = {
+    "name": "波段趨勢追蹤策略",
+    "description": "利用長週期均線確認主要趨勢，尋找中期突破機會，適合持有數天至數週。",
+    
+    "fast": 50,
+    "slow": 200,
+    "trend": 200,
+    "lookback": 55,
+    
+    "tp_atr": 4.5,
+    "sl_atr": 2.0,
+    
+    "mode": "breakout"
+}
+
+
+
+POSITION = {
+    "name": "長線趨勢投資策略",
+    "description": "忽略短期波動，只追蹤主要市場方向，適合長期投資者。",
+    
+    "fast": 20,
+    "slow": 50,
+    "trend": 50,
+    "lookback": 20,
+    
+    "tp_atr": 4.0,
+    "sl_atr": 2.0,
+    
+    "mode": "breakout"
+}
+
+
+
+MONTHLY = {
+    "name": "資產配置趨勢策略",
+    "description": "使用月級別趨勢判斷市場方向，適合長期資金配置。",
+    
+    "fast": 12,
+    "slow": 24,
+    "trend": 36,
+    "lookback": 12,
+    
+    "tp_atr": 5.0,
+    "sl_atr": 2.5,
+    
+    "mode": "breakout"
+}
 
 # TradingView-style intervals. Periods absent from Yahoo are built by aggregating
 # smaller candles on the server, so they still use genuine OHLC data.
 TIMEFRAME_CONFIG = {
-    "1m": {**SCALP, "source": "1m", "range": "7d", "bucket": 60},
-    "3m": {**SCALP, "source": "1m", "range": "7d", "bucket": 180},
-    "5m": {**SCALP, "source": "5m", "range": "60d", "bucket": 300},
-    "10m": {**SCALP, "source": "5m", "range": "60d", "bucket": 600},
-    "15m": {**SCALP, "source": "15m", "range": "60d", "bucket": 900},
-    "30m": {**SCALP, "source": "30m", "range": "60d", "bucket": 1800},
-    "45m": {**SCALP, "source": "15m", "range": "60d", "bucket": 2700},
-    "1h": {**INTRADAY, "source": "1h", "range": "1y", "bucket": 3600},
-    "2h": {**INTRADAY, "source": "1h", "range": "1y", "bucket": 7200},
-    "3h": {**INTRADAY, "source": "1h", "range": "1y", "bucket": 10800},
-    "4h": {**INTRADAY, "source": "1h", "range": "1y", "bucket": 14400},
-    "1d": {**SWING, "source": "1d", "range": "2y", "bucket": 86400},
-    "1w": {**POSITION, "source": "1d", "range": "10y", "bucket": "week"},
-    "1mo": {**MONTHLY, "source": "1d", "range": "10y", "bucket": "month"},
+
+    "1m": {
+        **SCALP,
+        "source":"1m",
+        "range":"7d",
+        "bucket":60
+    },
+
+
+    "5m": {
+        **SCALP,
+        "source":"5m",
+        "range":"60d",
+        "bucket":300
+    },
+
+
+    "15m": {
+        **INTRADAY,
+        "source":"15m",
+        "range":"60d",
+        "bucket":900
+    },
+
+
+   "1h": {
+    **INTRADAY,
+    "source":"1h",
+    "range":"6mo",
+    "bucket":3600
+},
+
+    "4h": {
+        **INTRADAY,
+        "source":"1h",
+        "range":"1y",
+        "bucket":14400
+    },
+
+
+    "1d": {
+        **SWING,
+        "source":"1d",
+        "range":"2y",
+        "bucket":86400
+    },
+
+
+    "1w": {
+        **POSITION,
+        "source":"1d",
+        "range":"10y",
+        "bucket":"week"
+    },
+
+
+    "1mo": {
+        **MONTHLY,
+        "source":"1d",
+        "range":"10y",
+        "bucket":"month"
+    }
+}
 }
 
 
