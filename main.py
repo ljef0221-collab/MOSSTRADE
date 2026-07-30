@@ -318,13 +318,13 @@ def analyze_market(symbol: str, interval: str = "1h"):
         result = response.json()["chart"]["result"][0]
         timestamps = result["timestamp"]
         quote_data = result["indicators"]["quote"][0]
-except (requests.RequestException, ValueError, KeyError, IndexError, TypeError) as error:
-    print("Yahoo K線錯誤:", error)
-    print("Yahoo 回傳:", response.text[:500])
-    raise HTTPException(
+    except (requests.RequestException, ValueError, KeyError, IndexError, TypeError) as error:
+        print("Yahoo K線錯誤:", error)
+        print("Yahoo 回傳:", response.text[:500])
+        raise HTTPException(
         status_code=502,
         detail=f"無法取得 {symbol} 的市場資料。"
-    ) from error
+        ) from error
 
     candles = []
     for timestamp, open_, high, low, close in zip(
@@ -371,9 +371,17 @@ except (requests.RequestException, ValueError, KeyError, IndexError, TypeError) 
         tp, sl = price - atr * config["tp_atr"], price + atr * config["sl_atr"]
     else:
         tp = sl = None
+return {
+    "status": "success",
 
-    return {
-        "status": "success", "direction": direction, "message": message,
+    "strategy_name": config["name"],
+
+    "strategy_description": config["description"],
+
+    "direction": direction,
+
+    "message": message,
+
         "current_price": round(price, 4),
         "tp": round(tp, 4) if tp is not None else "—",
         "sl": round(sl, 4) if sl is not None else "—",
