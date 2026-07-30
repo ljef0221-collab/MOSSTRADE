@@ -187,8 +187,13 @@ def analyze_market(symbol: str, interval: str = "1h"):
         result = response.json()["chart"]["result"][0]
         timestamps = result["timestamp"]
         quote_data = result["indicators"]["quote"][0]
-    except (requests.RequestException, ValueError, KeyError, IndexError, TypeError) as error:
-        raise HTTPException(status_code=502, detail=f"無法取得 {symbol} 的市場資料。") from error
+except (requests.RequestException, ValueError, KeyError, IndexError, TypeError) as error:
+    print("Yahoo K線錯誤:", error)
+    print("Yahoo 回傳:", response.text[:500])
+    raise HTTPException(
+        status_code=502,
+        detail=f"無法取得 {symbol} 的市場資料。"
+    ) from error
 
     candles = []
     for timestamp, open_, high, low, close in zip(
