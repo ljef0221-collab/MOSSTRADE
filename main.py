@@ -22,7 +22,7 @@ with open(
     SYMBOL_DATABASE = json.load(f)
 
 print("Loaded symbols:", len(SYMBOL_DATABASE))
-print(SYMBOL_DATABASE)
+print(SYMBOL_DATABASE[0])
 
 app = FastAPI(title="SmartNavigator")
 BASE_DIR = Path(__file__).resolve().parent
@@ -85,20 +85,19 @@ def site_stats():
 @app.get("/api/search")
 def search_symbol(keyword: str):
 
-    keyword = keyword.strip()
-
-    if keyword.isascii():
-        keyword = keyword.lower()
-
-    keyword = ALIASES.get(keyword, keyword)
+    keyword = keyword.lower().strip()
 
     if not keyword:
         return {
-            "status":"success",
-            "results":[]
+            "status": "success",
+            "results": []
         }
 
-    # 本地智慧搜尋
+
+    results = []
+
+
+    # 本地 symbols.json 搜尋
     for item in SYMBOL_DATABASE:
 
         for key in item["keywords"]:
@@ -115,7 +114,7 @@ def search_symbol(keyword: str):
                 break
 
 
-    # 找不到再丟 TradingView
+    # 如果本地沒有，再查 TradingView
     if not results:
 
         try:
@@ -137,22 +136,26 @@ def search_symbol(keyword: str):
 
             for item in data[:20]:
 
-                results.append({
-                    "symbol": item.get("symbol"),
-                    "name": item.get("description"),
-                    "type": item.get("type"),
-                    "exchange": item.get("exchange")
-                })
+                if item.get("symbol"):
+
+                    results.append({
+                        "symbol": item.get("symbol"),
+                        "name": item.get("description"),
+                        "type": item.get("type"),
+                        "exchange": item.get("exchange")
+                    })
 
 
-        except Exception:
-            pass
+        except Exception as e:
+            print("TradingView search error:", e)
+
 
 
     return {
         "status": "success",
         "results": results
     }
+
 # =========================
 # SmartNavigator 策略庫
 # =========================
