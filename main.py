@@ -1,3 +1,4 @@
+
 from urllib.parse import quote
 from datetime import datetime, timezone
 from pathlib import Path
@@ -8,6 +9,17 @@ import requests
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
+
+import json
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+with open(
+    os.path.join(BASE_DIR,"assets","symbols.json"),
+    encoding="utf-8"
+) as f:
+    SYMBOL_DATABASE=json.load(f)
 
 
 app = FastAPI(title="SmartNavigator")
@@ -69,54 +81,80 @@ def site_stats():
 
 
 @app.get("/api/search")
-def search_symbol(keyword: str):
-    keyword = keyword.strip()
+def search_symbol(keyword:str):
+
+    keyword=keyword.lower().strip()
+
     if not keyword:
-        return {"status": "success", "results": []}
-    # Prefer TradingView-style search when the endpoint is available. It is not
-    # a public guaranteed API, so Yahoo's live catalogue remains the fallback.
-    try:
-        response = requests.get(
-            "https://symbol-search.tradingview.com/symbol_search/",
-            params={"text": keyword, "hl": "1", "lang": "zh_TW"},
-            headers={"User-Agent": "Mozilla/5.0"}, timeout=5,
-        )
-        response.raise_for_status()
-        tv_results = response.json()
-        if tv_results:
-            return {"status": "success", "source": "TradingView", "results": [{
-                "symbol": item.get("symbol", ""),
-                "name": item.get("description") or item.get("symbol", ""),
-                "type": item.get("type", ""),
-                "exchange": item.get("exchange", ""),
-            } for item in tv_results if item.get("symbol")]}
-    except (requests.RequestException, ValueError):
-        pass
+        return {
+            "status":"success",
+            "results":[]
+        }
 
-    try:
-        response = requests.get(
-            "https://query1.finance.yahoo.com/v1/finance/search",
-            params={"q": keyword, "quotesCount": 20, "newsCount": 0},
-            headers={"User-Agent": "SmartNavigator/1.0"},
-            timeout=8,
-        )
-        response.raise_for_status()
-        quotes = response.json().get("quotes", [])
-    except (requests.RequestException, ValueError) as error:
-        raise HTTPException(status_code=502, detail="市場搜尋服務暫時無法使用，請稍後再試。") from error
 
-    results = []
-    for item in quotes:
-        symbol = item.get("symbol")
-        if not symbol:
-            continue
-        results.append({
-            "symbol": symbol,
-            "name": item.get("shortname") or item.get("longname") or symbol,
-            "type": item.get("quoteType") or "",
-            "exchange": item.get("exchDisp") or item.get("exchange") or "",
-        })
-    return {"status": "success", "source": "Yahoo Finance", "results": results}
+    results=[]
+
+
+    # 本地智慧搜尋
+    for item in SYMBOL_DATABASE:
+
+        for key in item["keywords"]:
+
+            if keyword in key.lower():
+
+                results.append({
+                    "symbol":item["symbol"],
+                    "name":item["name"],
+                    "type":item["type"],
+                    "exchange":item["exchange"]
+                })
+
+                break
+
+
+    # 找不到再丟給 TradingView
+    if not results:
+
+        try:
+            response=requests.get(
+                "https://symbol-search.tradingview.com/symbol_search/",
+                params={
+                    "text":keyword,
+                    "hl":"1",
+                    "lang":"zh_TW"
+                },
+                headers={
+                    "User-Agent":"Mozilla/5.0"
+                },
+                timeout=5
+            )
+
+            data=response.json()
+
+
+            for item in data[:20]:
+
+                results.append({
+
+                    "symbol":item.get("symbol"),
+                    "name":item.get("description"),
+                    "type":item.get("type"),
+                    "exchange":item.get("exchange")
+
+                })
+
+
+        except:
+            pass
+
+
+
+    return {
+
+        "status":"success",
+        "results":results
+
+    }
 
 
 # =========================
@@ -205,6 +243,30 @@ MONTHLY = {
     "sl_atr": 2.5,
     
     "mode": "breakout"
+}
+
+# 常用中文名稱 -> 國際代號
+ALIASES = {
+
+    "台積電": "2330.TW",
+    "聯發科": "2454.TW",
+    "鴻海": "2317.TW",
+    "廣達": "2382.TW",
+    "台達電": "2308.TW",
+
+    "蘋果": "AAPL",
+    "微軟": "MSFT",
+    "輝達": "NVDA",
+    "英偉達": "NVDA",
+    "特斯拉": "TSLA",
+    "谷歌": "GOOG",
+    "亞馬遜": "AMZN",
+    "META": "META",
+
+    "比特幣": "BTC-USD",
+    "以太幣": "ETH-USD",
+    "狗狗幣": "DOGE-USD",
+    "索拉納": "SOL-USD",
 }
 
 # TradingView-style intervals. Periods absent from Yahoo are built by aggregating
@@ -370,7 +432,7 @@ def analyze_market(symbol: str, interval: str = "1h"):
         tp, sl = price - atr * config["tp_atr"], price + atr * config["sl_atr"]
     else:
         tp = sl = None
-    return {
+return {
     "status": "success",
 
     "strategy_name": config["name"],

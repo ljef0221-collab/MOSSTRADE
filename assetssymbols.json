@@ -1,0 +1,64 @@
+[
+  {
+    "keywords": [
+      "台積電",
+      "tsmc",
+      "2330",
+      "2330.tw"
+    ],
+    "symbol": "2330.TW",
+    "name": "台積電",
+    "type": "stock",
+    "exchange": "TWSE"
+  },
+
+  {
+    "keywords": [
+      "輝達",
+      "nvidia",
+      "nvda"
+    ],
+    "symbol": "NVDA",
+    "name": "NVIDIA",
+    "type": "stock",
+    "exchange": "NASDAQ"
+  },
+
+  {
+    "keywords": [
+      "蘋果",
+      "apple",
+      "aapl"
+    ],
+    "symbol": "AAPL",
+    "name": "Apple",
+    "type": "stock",
+    "exchange": "NASDAQ"
+  },
+
+  {
+    "keywords": [
+      "比特幣",
+      "bitcoin",
+      "btc",
+      "btc-usd"
+    ],
+    "symbol": "BTC-USD",
+    "name": "Bitcoin",
+    "type": "crypto",
+    "exchange": "Crypto"
+  },
+
+  {
+    "keywords": [
+      "以太坊",
+      "ethereum",
+      "eth",
+      "eth-usd"
+    ],
+    "symbol": "ETH-USD",
+    "name": "Ethereum",
+    "type": "crypto",
+    "exchange": "Crypto"
+  }
+]
