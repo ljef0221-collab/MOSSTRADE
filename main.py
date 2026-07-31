@@ -19,8 +19,10 @@ with open(
     os.path.join(BASE_DIR,"assets","symbols.json"),
     encoding="utf-8"
 ) as f:
-    SYMBOL_DATABASE=json.load(f)
+    SYMBOL_DATABASE = json.load(f)
 
+print("Loaded symbols:", len(SYMBOL_DATABASE))
+print(SYMBOL_DATABASE)
 
 app = FastAPI(title="SmartNavigator")
 BASE_DIR = Path(__file__).resolve().parent
