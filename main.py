@@ -85,17 +85,18 @@ def site_stats():
 @app.get("/api/search")
 def search_symbol(keyword: str):
 
-    keyword = keyword.lower().strip()
+    keyword = keyword.strip()
+
+    if keyword.isascii():
+        keyword = keyword.lower()
+
     keyword = ALIASES.get(keyword, keyword)
 
     if not keyword:
         return {
-            "status": "success",
-            "results": []
+            "status":"success",
+            "results":[]
         }
-
-    results = []
-
 
     # 本地智慧搜尋
     for item in SYMBOL_DATABASE:
