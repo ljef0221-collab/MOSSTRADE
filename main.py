@@ -81,18 +81,18 @@ def site_stats():
 
 
 @app.get("/api/search")
-def search_symbol(keyword:str):
+def search_symbol(keyword: str):
 
-    keyword=keyword.lower().strip()
+    keyword = keyword.lower().strip()
+    keyword = ALIASES.get(keyword, keyword)
 
     if not keyword:
         return {
-            "status":"success",
-            "results":[]
+            "status": "success",
+            "results": []
         }
 
-
-    results=[]
+    results = []
 
 
     # 本地智慧搜尋
@@ -103,60 +103,53 @@ def search_symbol(keyword:str):
             if keyword in key.lower():
 
                 results.append({
-                    "symbol":item["symbol"],
-                    "name":item["name"],
-                    "type":item["type"],
-                    "exchange":item["exchange"]
+                    "symbol": item["symbol"],
+                    "name": item["name"],
+                    "type": item["type"],
+                    "exchange": item["exchange"]
                 })
 
                 break
 
 
-    # 找不到再丟給 TradingView
+    # 找不到再丟 TradingView
     if not results:
 
         try:
-            response=requests.get(
+            response = requests.get(
                 "https://symbol-search.tradingview.com/symbol_search/",
                 params={
-                    "text":keyword,
-                    "hl":"1",
-                    "lang":"zh_TW"
+                    "text": keyword,
+                    "hl": "1",
+                    "lang": "zh_TW"
                 },
                 headers={
-                    "User-Agent":"Mozilla/5.0"
+                    "User-Agent": "Mozilla/5.0"
                 },
                 timeout=5
             )
 
-            data=response.json()
+            data = response.json()
 
 
             for item in data[:20]:
 
                 results.append({
-
-                    "symbol":item.get("symbol"),
-                    "name":item.get("description"),
-                    "type":item.get("type"),
-                    "exchange":item.get("exchange")
-
+                    "symbol": item.get("symbol"),
+                    "name": item.get("description"),
+                    "type": item.get("type"),
+                    "exchange": item.get("exchange")
                 })
 
 
-        except:
+        except Exception:
             pass
 
 
-
     return {
-
-        "status":"success",
-        "results":results
-
+        "status": "success",
+        "results": results
     }
-
-
 # =========================
 # SmartNavigator 策略庫
 # =========================
@@ -432,16 +425,16 @@ def analyze_market(symbol: str, interval: str = "1h"):
         tp, sl = price - atr * config["tp_atr"], price + atr * config["sl_atr"]
     else:
         tp = sl = None
-return {
-    "status": "success",
+    return {
+        "status": "success",
 
-    "strategy_name": config["name"],
+        "strategy_name": config["name"],
 
-    "strategy_description": config["description"],
+        "strategy_description": config["description"],
 
-    "direction": direction,
+        "direction": direction,
 
-    "message": message,
+        "message": message,
 
         "current_price": round(price, 4),
         "tp": round(tp, 4) if tp is not None else "—",
