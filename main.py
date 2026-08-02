@@ -58,6 +58,21 @@ print(
 print("Loaded symbols:", len(SYMBOL_DATABASE))
 print(SYMBOL_DATABASE[0])
 
+# 補上別名對照表
+ALIASES = {
+    "台積電": "2330.TW",
+    "BTC": "BTC-USD",
+    "ETH": "ETH-USD"
+}
+
+# 補上時間週期設定
+TIMEFRAME_CONFIG = {
+    "1m": {"source": "1m", "range": "1d", "bucket": 1, "mode": "cross", "fast": 5, "slow": 20, "trend": 60, "tp_atr": 1.5, "sl_atr": 1.0, "name": "1分極速衝浪", "description": "極短線動能策略"},
+    "1h": {"source": "1m", "range": "5d", "bucket": 60, "mode": "breakout", "fast": 10, "slow": 30, "trend": 100, "lookback": 20, "tp_atr": 2.0, "sl_atr": 1.2, "name": "1小時突破策略", "description": "趨勢區間突破策略"},
+    "1d": {"source": "1d", "range": "1y", "bucket": 1, "mode": "cross", "fast": 10, "slow": 30, "trend": 200, "tp_atr": 3.0, "sl_atr": 1.5, "name": "日線長線策略", "description": "大週期 EMA 交叉策略"}
+}
+
+
 app = FastAPI(title="SmartNavigator")
 BASE_DIR = Path(__file__).resolve().parent
 VISITS_DB = Path(os.getenv("VISITS_DB_PATH", BASE_DIR / "smartnavigator.db"))
@@ -98,6 +113,29 @@ def calculate_atr(candles, period=14):
         atr = (atr * (period - 1) + value) / period
     return atr
 
+# 🔽 新增在 calculate_atr 正下方的函數 🔽
+def aggregate_candles(candles, bucket_minutes):
+    if bucket_minutes <= 1 or not candles:
+        return candles
+    aggregated = []
+    bucket_sec = bucket_minutes * 60
+    current_bucket = None
+    
+    for c in candles:
+        b_time = (c["time"] // bucket_sec) * bucket_sec
+        if current_bucket is None or current_bucket["time"] != b_time:
+            if current_bucket:
+                aggregated.append(current_bucket)
+            current_bucket = {"time": b_time, "open": c["open"], "high": c["high"], "low": c["low"], "close": c["close"]}
+        else:
+            current_bucket["high"] = max(current_bucket["high"], c["high"])
+            current_bucket["low"] = min(current_bucket["low"], c["low"])
+            current_bucket["close"] = c["close"]
+            
+    if current_bucket:
+        aggregated.append(current_bucket)
+    return aggregated
+
 
 @app.get("/", response_class=HTMLResponse)
 def read_index():
@@ -124,6 +162,9 @@ def site_stats():
 # 全球化自動擋搜尋 API：支援任何語言、任何名詞，免手寫 ALIASES 字典
 # =====================================================================
 
+# =====================================================================
+# 全球化極速搜尋 API：毫秒級回傳，絕不卡頓
+# =====================================================================
 @app.get("/api/search")
 def search_symbol(keyword: str):
     keyword = keyword.strip()
@@ -133,15 +174,9 @@ def search_symbol(keyword: str):
     results = []
     lower_keyword = keyword.lower()
 
-    # --- 步驟 1：本地 symbols.json 搜尋 ---
+    # 1. 本地資料庫比對
     for item in SYMBOL_DATABASE:
-        is_match = False
-        for key in item.get("keywords", []):
-            if lower_keyword in key.lower():
-                is_match = True
-                break
-        
-        if is_match:
+        if any(lower_keyword in key.lower() for key in item.get("keywords", [])):
             results.append({
                 "symbol": item["symbol"],
                 "name": item["name"],
@@ -150,12 +185,32 @@ def search_symbol(keyword: str):
                 "source": "Local"
             })
 
-    # --- 步驟 2：如果本地找不到，直接利用 yfinance 進行全球關鍵字（任何語言名詞）搜尋 ---
+    # 2. TradingView 全球大數據極速搜尋 (秒級回傳)
+    if not results:
+        try:
+            response = requests.get(
+                "https://symbol-search.tradingview.com/symbol_search/",
+                params={"text": keyword, "type": ""},
+                headers={"User-Agent": "Mozilla/5.0"},
+                timeout=2
+            )
+            if response.status_code == 200:
+                data = response.json()
+                for item in data[:8]:
+                    results.append({
+                        "symbol": item.get("symbol"),
+                        "name": item.get("description"),
+                        "type": item.get("type"),
+                        "exchange": item.get("exchange"),
+                        "source": "TradingView"
+                    })
+        except Exception as e:
+            print("TradingView 搜尋失敗:", e)
+
+    # 3. 如果前兩者都沒有，備用 Yahoo Search
     if not results:
         try:
             import yfinance as yf
-            # yfinance 的 yf.Search 可以傳入任意名稱（例如: 蘋果, Toyota, 2330）
-            # 它會返回全球各大交易所最貼近的標準商品清單
             yf_search = yf.Search(keyword, max_results=5)
             if yf_search and yf_search.quotes:
                 for q in yf_search.quotes:
@@ -167,61 +222,12 @@ def search_symbol(keyword: str):
                         "source": "Yahoo"
                     })
         except Exception as e:
-            print("Yahoo 全球名詞搜尋失敗，改用 TradingView 備援:", e)
-
-    # --- 步驟 3：如果 Yahoo 搜尋沒結果，轉向 TradingView 進行全球大數據搜尋 ---
-    if not results:
-        try:
-            response = requests.get(
-                "https://tradingview.com",
-                params={"text": keyword, "hl": "1", "lang": "zh_TW"},
-                headers={"User-Agent": "Mozilla/5.0"},
-                timeout=5
-            )
-            if response.status_code == 200:
-                data = response.json()
-                for item in data[:8]:  # 限制前 8 筆
-                    if item.get("symbol"):
-                        results.append({
-                            "symbol": item.get("symbol"),
-                            "name": item.get("description"),
-                            "type": item.get("type"),
-                            "exchange": item.get("exchange"),
-                            "source": "TradingView"
-                        })
-        except Exception as e:
-            print("TradingView 全球搜尋錯誤:", e)
-
-    # --- 步驟 4：關鍵核心！安全的自動策略注入（防禦性保護） ---
-    # 限制只計算前 3 筆，確保打字流暢度與避免後端卡死
-    for res in results[:3]:
-        try:
-            # 這裡直接拿兩大引擎幫我們轉換出來的「標準國際代號」去算 K 線策略
-            analysis = analyze_market(symbol=res["symbol"], interval="1d")
-            res["strategy_signal"] = {
-                "direction": analysis["direction"],      # "BUY", "SELL", or "HOLD"
-                "message": analysis["message"],          # "多頭進場訊號" 等
-                "price": analysis["current_price"],
-                "tp": analysis["tp"],
-                "sl": analysis["sl"],
-                "reason": analysis["reason"]
-            }
-        except Exception as e:
-            # 💡 核心防護機制：如果該代號在 Yahoo 無法取得 K 線（例如特殊的 TradingView 指數、外匯商品）
-            # 後端絕對不會報錯崩潰，而是優雅地回傳基本商品資訊，讓使用者依然能點擊去看圖表
-            print(f"背景策略計算跳過 ({res['symbol']}):", e)
-            res["strategy_signal"] = {
-                "direction": "HOLD",
-                "message": "🔍 點擊查看詳細圖表",
-                "price": "—", "tp": "—", "sl": "—",
-                "reason": "此商品需要載入特定交易所 K 線，請直接點選商品啟動分析。"
-            }
+            print("Yahoo 搜尋失敗:", e)
 
     return {
         "status": "success",
         "results": results
     }
-
 
 # =====================================================================
 # 你原本的核心分析與 K 線聚合邏輯（保留並修正特殊代號問題）

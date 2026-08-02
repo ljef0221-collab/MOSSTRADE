@@ -203,7 +203,7 @@ AI策略
             results.hidden=true;
             return;
         }
-        searchTimer=setTimeout(search,100);      // 微調為 100ms，給予後端足夠的時間抓取數據
+        searchTimer=setTimeout(search,150);      // 微調為 150ms，給予後端足夠的時間抓取數據
     });
     
     input.addEventListener('keydown',event=>{if(event.key==='Enter') search();}); document.getElementById('search-button').onclick=search; document.getElementById('interval').onchange=()=>analyze(); document.getElementById('timezone').onchange=()=>{applyTimezone(); analyze();}; document.addEventListener('click',event=>{if(!event.target.closest('.search')) results.hidden=true;}); populateTimezones(); applyTimezone(); renderWatchlist(); loadVisitCount();
