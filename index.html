@@ -103,7 +103,7 @@ AI策略
       <section class="panel widget"><h2>自選清單</h2><ul id="watchlist" class="watch"></ul></section>
     </aside>
   </main>
-  <script>
+    <script>
     const DEFAULT_WATCHLIST = ['BTC-USD','NVDA','2330.TW','EURUSD=X'];
     let watchlist = JSON.parse(localStorage.getItem('my_watchlist') || 'null') || DEFAULT_WATCHLIST;
     let activeSymbol = '';
@@ -115,33 +115,98 @@ AI策略
     function timeFormatter(timestamp) { return new Intl.DateTimeFormat('zh-TW',{timeZone:document.getElementById('timezone').value,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(timestamp * 1000)); }
     function applyTimezone() { chart.applyOptions({localization:{timeFormatter}}); }
     new ResizeObserver(entries => { chart.applyOptions({width:entries[0].contentRect.width}); }).observe(document.getElementById('chart'));
+    
     function renderWatchlist() { const list=document.getElementById('watchlist'); list.replaceChildren(); watchlist.forEach(symbol => { const li=document.createElement('li'), label=document.createElement('span'), remove=document.createElement('button'); label.textContent=symbol; label.onclick=()=>analyze(symbol); remove.textContent='×'; remove.title='移除'; remove.onclick=e=>{e.stopPropagation(); watchlist=watchlist.filter(item=>item!==symbol); localStorage.setItem('my_watchlist',JSON.stringify(watchlist)); renderWatchlist();}; li.append(label,remove); list.append(li); }); }
-    function showResults(items) { results.replaceChildren(); if (!items.length) { const empty=document.createElement('div'); empty.className='result'; empty.textContent='找不到相符商品'; results.append(empty); } items.forEach(item => { const row=document.createElement('div'), symbol=document.createElement('b'), detail=document.createElement('small'); row.className='result'; symbol.textContent=item.symbol; detail.textContent=`${item.name} · ${item.type}${item.exchange ? ' · '+item.exchange : ''}`; row.append(symbol,document.createElement('br'),detail); row.onclick=()=>{results.hidden=true; input.value=item.symbol; analyze(item.symbol);}; results.append(row); }); results.hidden=false; }
+
+    // ==========================================
+    // 修改焦點：讓搜尋選單一目了然顯示進場狀態
+    // ==========================================
+    function showResults(items) { 
+        results.replaceChildren(); 
+        if (!items.length) { 
+            const empty=document.createElement('div'); 
+            empty.className='result'; 
+            empty.textContent='找不到相符商品'; 
+            results.append(empty); 
+            return;
+        } 
+        
+        items.forEach(item => { 
+            const row=document.createElement('div');
+            row.className='result'; 
+            // 讓每一個選單列有彈性盒模型排版，方便左右對齊
+            row.style.display = 'flex';
+            row.style.justifyContent = 'space-between';
+            row.style.alignItems = 'center';
+            row.style.borderBottom = '1px solid #222';
+            row.style.padding = '12px 14px';
+
+            // 左側：顯示商品名稱與代號
+            const leftContainer = document.createElement('div');
+            const symbol=document.createElement('b'); 
+            symbol.textContent=item.symbol; 
+            symbol.style.color = '#00d4ff';
+            
+            const detail=document.createElement('small'); 
+            detail.style.display = 'block';
+            detail.style.color = '#888';
+            detail.textContent=`${item.name || '未知商品'} · ${item.type}${item.exchange ? ' · '+item.exchange : ''}`; 
+            
+            leftContainer.append(symbol, detail);
+
+            // 右側：直接注入即時訊號標籤 (一目了然！)
+            const rightContainer = document.createElement('div');
+            if (item.strategy_signal) {
+                const sig = item.strategy_signal;
+                const badge = document.createElement('span');
+                badge.style.padding = '4px 8px';
+                badge.style.borderRadius = '5px';
+                badge.style.fontSize = '11px';
+                badge.style.fontWeight = 'bold';
+                badge.style.whiteSpace = 'nowrap';
+                
+                if (sig.direction === 'BUY') {
+                    badge.style.background = '#00ff88';
+                    badge.style.color = '#000';
+                    badge.textContent = '🔥 BUY';
+                } else if (sig.direction === 'SELL') {
+                    badge.style.background = '#ff4560';
+                    badge.style.color = '#fff';
+                    badge.textContent = '🚨 SELL';
+                } else {
+                    badge.style.background = '#333';
+                    badge.style.color = '#888';
+                    badge.textContent = '⏳ HOLD';
+                }
+                rightContainer.append(badge);
+            }
+
+            row.append(leftContainer, rightContainer);
+            row.onclick=()=>{
+                results.hidden=true; 
+                input.value=item.symbol; 
+                analyze(item.symbol);
+            }; 
+            results.append(row); 
+        }); 
+        results.hidden=false; 
+    }
+
     async function search() { const keyword=input.value.trim(); if (!keyword) return; try { const response=await fetch(`/api/search?keyword=${encodeURIComponent(keyword)}`); const data=await response.json(); if (!response.ok) throw new Error(data.detail || '搜尋失敗'); showResults(data.results || []); } catch(error) { showResults([]); } }
-    async function analyze(symbol=activeSymbol) { if (!symbol) return; activeSymbol=symbol.toUpperCase(); results.hidden=true; document.getElementById('chart-title').textContent=`${activeSymbol} · 載入中…`; const signal=document.getElementById('signal'); signal.className='signal HOLD'; signal.textContent='正在計算策略…'; try { const params=new URLSearchParams({symbol:activeSymbol,interval:document.getElementById('interval').value}); const response=await fetch(`/api/analyze?${params}`); const data=await response.json(); if (!response.ok) throw new Error(data.detail || '分析失敗'); series.setData(data.chart_data); chart.timeScale().fitContent(); document.getElementById('chart-title').textContent=`${activeSymbol} · ${document.getElementById('interval').selectedOptions[0].text} · ${document.getElementById('timezone').selectedOptions[0].text}`; signal.className=`signal ${data.direction}`; signal.textContent=data.message; document.getElementById('price').textContent=data.current_price; document.getElementById('tp').textContent=data.tp; document.getElementById('sl').textContent=data.sl;
-document.getElementById('reason').textContent=data.reason;
- 
-document.getElementById('strategy-name').textContent=data.strategy_name;
-
-document.getElementById('strategy-description').textContent=data.strategy_description;
-
-} 
-
-catch(error) { document.getElementById('chart-title').textContent=activeSymbol; signal.className='signal HOLD'; signal.textContent=error.message; } }
+    
+    async function analyze(symbol=activeSymbol) { if (!symbol) return; activeSymbol=symbol.toUpperCase(); results.hidden=true; document.getElementById('chart-title').textContent=`${activeSymbol} · 載入中…`; const signal=document.getElementById('signal'); signal.className='signal HOLD'; signal.textContent='正在計算策略…'; try { const params=new URLSearchParams({symbol:activeSymbol,interval:document.getElementById('interval').value}); const response=await fetch(`/api/analyze?${params}`); const data=await response.json(); if (!response.ok) throw new Error(data.detail || '分析失敗'); series.setData(data.chart_data); chart.timeScale().fitContent(); document.getElementById('chart-title').textContent=`${activeSymbol} · ${document.getElementById('interval').selectedOptions[0].text} · ${document.getElementById('timezone').selectedOptions[0].text}`; signal.className=`signal ${data.direction}`; signal.textContent=data.message; document.getElementById('price').textContent=data.current_price; document.getElementById('tp').textContent=data.tp; document.getElementById('sl').textContent=data.sl; document.getElementById('reason').textContent=data.reason; document.getElementById('strategy-name').textContent=data.strategy_name; document.getElementById('strategy-description').textContent=data.strategy_description; } catch(error) { document.getElementById('chart-title').textContent=activeSymbol; signal.className='signal HOLD'; signal.textContent=error.message; } }
     async function loadVisitCount() { try { const response=await fetch('/api/stats'); const data=await response.json(); document.getElementById('visit-count').textContent=Number(data.visits).toLocaleString('zh-TW'); } catch { document.getElementById('visit-count').textContent='—'; } }
-input.addEventListener('input',()=>{
-
-clearTimeout(searchTimer);
-
-if(input.value.trim().length < 2){
-    results.hidden=true;
-    return;
-}
-
-searchTimer=setTimeout(search,80);
-
-});
-input.addEventListener('keydown',event=>{if(event.key==='Enter') search();}); document.getElementById('search-button').onclick=search; document.getElementById('interval').onchange=()=>analyze(); document.getElementById('timezone').onchange=()=>{applyTimezone(); analyze();}; document.addEventListener('click',event=>{if(!event.target.closest('.search')) results.hidden=true;}); populateTimezones(); applyTimezone(); renderWatchlist(); loadVisitCount();
+    
+    input.addEventListener('input',()=>{
+        clearTimeout(searchTimer);
+        if(input.value.trim().length < 2){
+            results.hidden=true;
+            return;
+        }
+        searchTimer=setTimeout(search,100);      // 微調為 100ms，給予後端足夠的時間抓取數據
+    });
+    
+    input.addEventListener('keydown',event=>{if(event.key==='Enter') search();}); document.getElementById('search-button').onclick=search; document.getElementById('interval').onchange=()=>analyze(); document.getElementById('timezone').onchange=()=>{applyTimezone(); analyze();}; document.addEventListener('click',event=>{if(!event.target.closest('.search')) results.hidden=true;}); populateTimezones(); applyTimezone(); renderWatchlist(); loadVisitCount();
   </script>
 </body>
 </html>

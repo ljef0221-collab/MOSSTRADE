@@ -1,0 +1,5091 @@
+[
+  {
+    "symbol": "BTCUSDT",
+    "name": "BTC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ETHUSDT",
+    "name": "ETH/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BCHUSDT",
+    "name": "BCH/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "XRPUSDT",
+    "name": "XRP/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "LTCUSDT",
+    "name": "LTC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TRXUSDT",
+    "name": "TRX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ETCUSDT",
+    "name": "ETC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "LINKUSDT",
+    "name": "LINK/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "XLMUSDT",
+    "name": "XLM/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ADAUSDT",
+    "name": "ADA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "XMRUSDT",
+    "name": "XMR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "DASHUSDT",
+    "name": "DASH/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ZECUSDT",
+    "name": "ZEC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "XTZUSDT",
+    "name": "XTZ/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BNBUSDT",
+    "name": "BNB/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ATOMUSDT",
+    "name": "ATOM/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ONTUSDT",
+    "name": "ONT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "IOTAUSDT",
+    "name": "IOTA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BATUSDT",
+    "name": "BAT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "VETUSDT",
+    "name": "VET/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "NEOUSDT",
+    "name": "NEO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "QTUMUSDT",
+    "name": "QTUM/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "IOSTUSDT",
+    "name": "IOST/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "THETAUSDT",
+    "name": "THETA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ALGOUSDT",
+    "name": "ALGO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ZILUSDT",
+    "name": "ZIL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "KNCUSDT",
+    "name": "KNC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ZRXUSDT",
+    "name": "ZRX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "COMPUSDT",
+    "name": "COMP/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "DOGEUSDT",
+    "name": "DOGE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "KAVAUSDT",
+    "name": "KAVA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BANDUSDT",
+    "name": "BAND/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "RLCUSDT",
+    "name": "RLC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SNXUSDT",
+    "name": "SNX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "DOTUSDT",
+    "name": "DOT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "YFIUSDT",
+    "name": "YFI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CRVUSDT",
+    "name": "CRV/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TRBUSDT",
+    "name": "TRB/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "RUNEUSDT",
+    "name": "RUNE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SUSHIUSDT",
+    "name": "SUSHI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "EGLDUSDT",
+    "name": "EGLD/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SOLUSDT",
+    "name": "SOL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ICXUSDT",
+    "name": "ICX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "STORJUSDT",
+    "name": "STORJ/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "UNIUSDT",
+    "name": "UNI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AVAXUSDT",
+    "name": "AVAX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ENJUSDT",
+    "name": "ENJ/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "KSMUSDT",
+    "name": "KSM/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "NEARUSDT",
+    "name": "NEAR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AAVEUSDT",
+    "name": "AAVE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "FILUSDT",
+    "name": "FIL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "RSRUSDT",
+    "name": "RSR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BELUSDT",
+    "name": "BEL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AXSUSDT",
+    "name": "AXS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ZENUSDT",
+    "name": "ZEN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SKLUSDT",
+    "name": "SKL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "GRTUSDT",
+    "name": "GRT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "1INCHUSDT",
+    "name": "1INCH/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CHZUSDT",
+    "name": "CHZ/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SANDUSDT",
+    "name": "SAND/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ANKRUSDT",
+    "name": "ANKR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "RVNUSDT",
+    "name": "RVN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SFPUSDT",
+    "name": "SFP/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "COTIUSDT",
+    "name": "COTI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CHRUSDT",
+    "name": "CHR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MANAUSDT",
+    "name": "MANA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ALICEUSDT",
+    "name": "ALICE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "HBARUSDT",
+    "name": "HBAR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ONEUSDT",
+    "name": "ONE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CELRUSDT",
+    "name": "CELR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "HOTUSDT",
+    "name": "HOT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MTLUSDT",
+    "name": "MTL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "OGNUSDT",
+    "name": "OGN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "1000SHIBUSDT",
+    "name": "1000SHIB/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "GTCUSDT",
+    "name": "GTC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BTCDOMUSDT",
+    "name": "BTCDOM/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "IOTXUSDT",
+    "name": "IOTX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "C98USDT",
+    "name": "C98/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MASKUSDT",
+    "name": "MASK/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "DYDXUSDT",
+    "name": "DYDX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "1000XECUSDT",
+    "name": "1000XEC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "GALAUSDT",
+    "name": "GALA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CELOUSDT",
+    "name": "CELO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ARUSDT",
+    "name": "AR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ARPAUSDT",
+    "name": "ARPA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CTSIUSDT",
+    "name": "CTSI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "LPTUSDT",
+    "name": "LPT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ENSUSDT",
+    "name": "ENS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PEOPLEUSDT",
+    "name": "PEOPLE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ROSEUSDT",
+    "name": "ROSE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "DUSKUSDT",
+    "name": "DUSK/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "FLOWUSDT",
+    "name": "FLOW/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "IMXUSDT",
+    "name": "IMX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "API3USDT",
+    "name": "API3/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "GMTUSDT",
+    "name": "GMT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "APEUSDT",
+    "name": "APE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "WOOUSDT",
+    "name": "WOO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "JASMYUSDT",
+    "name": "JASMY/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "OPUSDT",
+    "name": "OP/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "INJUSDT",
+    "name": "INJ/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "STGUSDT",
+    "name": "STG/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SPELLUSDT",
+    "name": "SPELL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "1000LUNCUSDT",
+    "name": "1000LUNC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "LUNA2USDT",
+    "name": "LUNA2/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "LDOUSDT",
+    "name": "LDO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ICPUSDT",
+    "name": "ICP/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "APTUSDT",
+    "name": "APT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "QNTUSDT",
+    "name": "QNT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "FETUSDT",
+    "name": "FET/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MAGICUSDT",
+    "name": "MAGIC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TUSDT",
+    "name": "T/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MINAUSDT",
+    "name": "MINA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ASTRUSDT",
+    "name": "ASTR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "GMXUSDT",
+    "name": "GMX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CFXUSDT",
+    "name": "CFX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "STXUSDT",
+    "name": "STX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ACHUSDT",
+    "name": "ACH/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SSVUSDT",
+    "name": "SSV/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CKBUSDT",
+    "name": "CKB/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "LQTYUSDT",
+    "name": "LQTY/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "USDCUSDT",
+    "name": "USDC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "IDUSDT",
+    "name": "ID/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ARBUSDT",
+    "name": "ARB/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "JOEUSDT",
+    "name": "JOE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TLMUSDT",
+    "name": "TLM/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "HFTUSDT",
+    "name": "HFT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "XVSUSDT",
+    "name": "XVS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ETHBTC",
+    "name": "ETH/BTC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BLURUSDT",
+    "name": "BLUR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "EDUUSDT",
+    "name": "EDU/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SUIUSDT",
+    "name": "SUI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "1000PEPEUSDT",
+    "name": "1000PEPE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "1000FLOKIUSDT",
+    "name": "1000FLOKI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "UMAUSDT",
+    "name": "UMA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "NMRUSDT",
+    "name": "NMR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MAVUSDT",
+    "name": "MAV/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "XVGUSDT",
+    "name": "XVG/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "WLDUSDT",
+    "name": "WLD/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PENDLEUSDT",
+    "name": "PENDLE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ARKMUSDT",
+    "name": "ARKM/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AGLDUSDT",
+    "name": "AGLD/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "YGGUSDT",
+    "name": "YGG/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "DODOXUSDT",
+    "name": "DODOX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BNTUSDT",
+    "name": "BNT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SEIUSDT",
+    "name": "SEI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CYBERUSDT",
+    "name": "CYBER/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ARKUSDT",
+    "name": "ARK/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BICOUSDT",
+    "name": "BICO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BIGTIMEUSDT",
+    "name": "BIGTIME/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "WAXPUSDT",
+    "name": "WAXP/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BSVUSDT",
+    "name": "BSV/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "RIFUSDT",
+    "name": "RIF/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "POLYXUSDT",
+    "name": "POLYX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "GASUSDT",
+    "name": "GAS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "POWRUSDT",
+    "name": "POWR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TIAUSDT",
+    "name": "TIA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CAKEUSDT",
+    "name": "CAKE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MEMEUSDT",
+    "name": "MEME/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TWTUSDT",
+    "name": "TWT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ORDIUSDT",
+    "name": "ORDI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "STEEMUSDT",
+    "name": "STEEM/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ILVUSDT",
+    "name": "ILV/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "KASUSDT",
+    "name": "KAS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BEAMXUSDT",
+    "name": "BEAMX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "1000BONKUSDT",
+    "name": "1000BONK/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PYTHUSDT",
+    "name": "PYTH/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SUPERUSDT",
+    "name": "SUPER/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "USTCUSDT",
+    "name": "USTC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ONGUSDT",
+    "name": "ONG/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ETHWUSDT",
+    "name": "ETHW/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "JTOUSDT",
+    "name": "JTO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "1000SATSUSDT",
+    "name": "1000SATS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AUCTIONUSDT",
+    "name": "AUCTION/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "1000RATSUSDT",
+    "name": "1000RATS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ACEUSDT",
+    "name": "ACE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MOVRUSDT",
+    "name": "MOVR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BTCUSDC",
+    "name": "BTC/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ETHUSDC",
+    "name": "ETH/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BNBUSDC",
+    "name": "BNB/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SOLUSDC",
+    "name": "SOL/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "XRPUSDC",
+    "name": "XRP/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "XAIUSDT",
+    "name": "XAI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "DOGEUSDC",
+    "name": "DOGE/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "WIFUSDT",
+    "name": "WIF/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MANTAUSDT",
+    "name": "MANTA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ONDOUSDT",
+    "name": "ONDO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "LSKUSDT",
+    "name": "LSK/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ALTUSDT",
+    "name": "ALT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "JUPUSDT",
+    "name": "JUP/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ZETAUSDT",
+    "name": "ZETA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "RONINUSDT",
+    "name": "RONIN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "DYMUSDT",
+    "name": "DYM/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SUIUSDC",
+    "name": "SUI/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "LINKUSDC",
+    "name": "LINK/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PIXELUSDT",
+    "name": "PIXEL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "STRKUSDT",
+    "name": "STRK/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ORDIUSDC",
+    "name": "ORDI/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "GLMUSDT",
+    "name": "GLM/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PORTALUSDT",
+    "name": "PORTAL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AXLUSDT",
+    "name": "AXL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "1000PEPEUSDC",
+    "name": "1000PEPE/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "METISUSDT",
+    "name": "METIS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AEVOUSDT",
+    "name": "AEVO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "WLDUSDC",
+    "name": "WLD/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "VANRYUSDT",
+    "name": "VANRY/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BOMEUSDT",
+    "name": "BOME/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ETHFIUSDT",
+    "name": "ETHFI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AVAXUSDC",
+    "name": "AVAX/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "1000SHIBUSDC",
+    "name": "1000SHIB/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ENAUSDT",
+    "name": "ENA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "WUSDT",
+    "name": "W/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "WIFUSDC",
+    "name": "WIF/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BCHUSDC",
+    "name": "BCH/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TNSRUSDT",
+    "name": "TNSR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SAGAUSDT",
+    "name": "SAGA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "LTCUSDC",
+    "name": "LTC/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "NEARUSDC",
+    "name": "NEAR/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TAOUSDT",
+    "name": "TAO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ARBUSDC",
+    "name": "ARB/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "NEOUSDC",
+    "name": "NEO/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "FILUSDC",
+    "name": "FIL/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TIAUSDC",
+    "name": "TIA/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BOMEUSDC",
+    "name": "BOME/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "REZUSDT",
+    "name": "REZ/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ENAUSDC",
+    "name": "ENA/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ETHFIUSDC",
+    "name": "ETHFI/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "1000BONKUSDC",
+    "name": "1000BONK/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BBUSDT",
+    "name": "BB/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "NOTUSDT",
+    "name": "NOT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TURBOUSDT",
+    "name": "TURBO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "IOUSDT",
+    "name": "IO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ZKUSDT",
+    "name": "ZK/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MEWUSDT",
+    "name": "MEW/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "LISTAUSDT",
+    "name": "LISTA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ZROUSDT",
+    "name": "ZRO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CRVUSDC",
+    "name": "CRV/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "RENDERUSDT",
+    "name": "RENDER/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BANANAUSDT",
+    "name": "BANANA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "RAREUSDT",
+    "name": "RARE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "GUSDT",
+    "name": "G/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SYNUSDT",
+    "name": "SYN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BRETTUSDT",
+    "name": "BRETT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "POPCATUSDT",
+    "name": "POPCAT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SUNUSDT",
+    "name": "SUN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "DOGSUSDT",
+    "name": "DOGS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "FLUXUSDT",
+    "name": "FLUX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "RPLUSDT",
+    "name": "RPL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "POLUSDT",
+    "name": "POL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "1MBABYDOGEUSDT",
+    "name": "1MBABYDOGE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "NEIROUSDT",
+    "name": "NEIRO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "FIDAUSDT",
+    "name": "FIDA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CATIUSDT",
+    "name": "CATI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "HMSTRUSDT",
+    "name": "HMSTR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "EIGENUSDT",
+    "name": "EIGEN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "DIAUSDT",
+    "name": "DIA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "1000CATUSDT",
+    "name": "1000CAT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SCRUSDT",
+    "name": "SCR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "GOATUSDT",
+    "name": "GOAT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MOODENGUSDT",
+    "name": "MOODENG/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SAFEUSDT",
+    "name": "SAFE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SANTOSUSDT",
+    "name": "SANTOS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "COWUSDT",
+    "name": "COW/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CETUSUSDT",
+    "name": "CETUS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "1000000MOGUSDT",
+    "name": "1000000MOG/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "GRASSUSDT",
+    "name": "GRASS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "DRIFTUSDT",
+    "name": "DRIFT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ACTUSDT",
+    "name": "ACT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PNUTUSDT",
+    "name": "PNUT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BANUSDT",
+    "name": "BAN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AKTUSDT",
+    "name": "AKT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SCRTUSDT",
+    "name": "SCRT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "1000CHEEMSUSDT",
+    "name": "1000CHEEMS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "THEUSDT",
+    "name": "THE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MORPHOUSDT",
+    "name": "MORPHO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CHILLGUYUSDT",
+    "name": "CHILLGUY/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "KAIAUSDT",
+    "name": "KAIA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AEROUSDT",
+    "name": "AERO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ACXUSDT",
+    "name": "ACX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ORCAUSDT",
+    "name": "ORCA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MOVEUSDT",
+    "name": "MOVE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "RAYSOLUSDT",
+    "name": "RAYSOL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "KOMAUSDT",
+    "name": "KOMA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "VIRTUALUSDT",
+    "name": "VIRTUAL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SPXUSDT",
+    "name": "SPX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MEUSDT",
+    "name": "ME/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AVAUSDT",
+    "name": "AVA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "VELODROMEUSDT",
+    "name": "VELODROME/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MOCAUSDT",
+    "name": "MOCA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "VANAUSDT",
+    "name": "VANA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PENGUUSDT",
+    "name": "PENGU/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "LUMIAUSDT",
+    "name": "LUMIA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "USUALUSDT",
+    "name": "USUAL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AIXBTUSDT",
+    "name": "AIXBT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "FARTCOINUSDT",
+    "name": "FARTCOIN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "KMNOUSDT",
+    "name": "KMNO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CGPTUSDT",
+    "name": "CGPT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "HIVEUSDT",
+    "name": "HIVE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "DEXEUSDT",
+    "name": "DEXE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PHAUSDT",
+    "name": "PHA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "GRIFFAINUSDT",
+    "name": "GRIFFAIN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ZEREBROUSDT",
+    "name": "ZEREBRO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BIOUSDT",
+    "name": "BIO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "COOKIEUSDT",
+    "name": "COOKIE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ALCHUSDT",
+    "name": "ALCH/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SWARMSUSDT",
+    "name": "SWARMS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SONICUSDT",
+    "name": "SONIC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PROMUSDT",
+    "name": "PROM/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SUSDT",
+    "name": "S/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SOLVUSDT",
+    "name": "SOLV/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ARCUSDT",
+    "name": "ARC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AVAAIUSDT",
+    "name": "AVAAI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TRUMPUSDT",
+    "name": "TRUMP/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MELANIAUSDT",
+    "name": "MELANIA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "VTHOUSDT",
+    "name": "VTHO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ANIMEUSDT",
+    "name": "ANIME/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PIPPINUSDT",
+    "name": "PIPPIN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "VVVUSDT",
+    "name": "VVV/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BERAUSDT",
+    "name": "BERA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TSTUSDT",
+    "name": "TST/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "LAYERUSDT",
+    "name": "LAYER/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "HEIUSDT",
+    "name": "HEI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "GPSUSDT",
+    "name": "GPS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SHELLUSDT",
+    "name": "SHELL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "KAITOUSDT",
+    "name": "KAITO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "KAITOUSDC",
+    "name": "KAITO/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TRUMPUSDC",
+    "name": "TRUMP/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ADAUSDC",
+    "name": "ADA/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "REDUSDT",
+    "name": "RED/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PNUTUSDC",
+    "name": "PNUT/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "HBARUSDC",
+    "name": "HBAR/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "VICUSDT",
+    "name": "VIC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "EPICUSDT",
+    "name": "EPIC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BMTUSDT",
+    "name": "BMT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MUBARAKUSDT",
+    "name": "MUBARAK/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "FORMUSDT",
+    "name": "FORM/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TUTUSDT",
+    "name": "TUT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BROCCOLI714USDT",
+    "name": "BROCCOLI714/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BROCCOLIF3BUSDT",
+    "name": "BROCCOLIF3B/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SIRENUSDT",
+    "name": "SIREN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BANANAS31USDT",
+    "name": "BANANAS31/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BRUSDT",
+    "name": "BR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PLUMEUSDT",
+    "name": "PLUME/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "NILUSDT",
+    "name": "NIL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PARTIUSDT",
+    "name": "PARTI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "JELLYJELLYUSDT",
+    "name": "JELLYJELLY/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MAVIAUSDT",
+    "name": "MAVIA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PAXGUSDT",
+    "name": "PAXG/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "WALUSDT",
+    "name": "WAL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "GUNUSDT",
+    "name": "GUN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ATHUSDT",
+    "name": "ATH/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BABYUSDT",
+    "name": "BABY/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PROMPTUSDT",
+    "name": "PROMPT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "STOUSDT",
+    "name": "STO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "FHEUSDT",
+    "name": "FHE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "KERNELUSDT",
+    "name": "KERNEL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "WCTUSDT",
+    "name": "WCT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "INITUSDT",
+    "name": "INIT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BANKUSDT",
+    "name": "BANK/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "DEEPUSDT",
+    "name": "DEEP/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "HYPERUSDT",
+    "name": "HYPER/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "JSTUSDT",
+    "name": "JST/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SIGNUSDT",
+    "name": "SIGN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PUNDIXUSDT",
+    "name": "PUNDIX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CTKUSDT",
+    "name": "CTK/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AIOTUSDT",
+    "name": "AIOT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "DOLOUSDT",
+    "name": "DOLO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "HAEDALUSDT",
+    "name": "HAEDAL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SXTUSDT",
+    "name": "SXT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ASRUSDT",
+    "name": "ASR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ALPINEUSDT",
+    "name": "ALPINE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "B2USDT",
+    "name": "B2/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SYRUPUSDT",
+    "name": "SYRUP/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "DOODUSDT",
+    "name": "DOOD/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "OGUSDT",
+    "name": "OG/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SKYAIUSDT",
+    "name": "SKYAI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "NXPCUSDT",
+    "name": "NXPC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CVCUSDT",
+    "name": "CVC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AGTUSDT",
+    "name": "AGT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AWEUSDT",
+    "name": "AWE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BUSDT",
+    "name": "B/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SOONUSDT",
+    "name": "SOON/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "HUMAUSDT",
+    "name": "HUMA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AUSDT",
+    "name": "A/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SOPHUSDT",
+    "name": "SOPH/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MERLUSDT",
+    "name": "MERL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "HYPEUSDT",
+    "name": "HYPE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "1000000BOBUSDT",
+    "name": "1000000BOB/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "LAUSDT",
+    "name": "LA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "HOMEUSDT",
+    "name": "HOME/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "RESOLVUSDT",
+    "name": "RESOLV/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TAIKOUSDT",
+    "name": "TAIKO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SQDUSDT",
+    "name": "SQD/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PUMPBTCUSDT",
+    "name": "PUMPBTC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AAVEUSDC",
+    "name": "AAVE/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "UNIUSDC",
+    "name": "UNI/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SPKUSDT",
+    "name": "SPK/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MYXUSDT",
+    "name": "MYX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "FUSDT",
+    "name": "F/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "NEWTUSDT",
+    "name": "NEWT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "HUSDT",
+    "name": "H/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SAHARAUSDT",
+    "name": "SAHARA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ICNTUSDT",
+    "name": "ICNT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BULLAUSDT",
+    "name": "BULLA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "IDOLUSDT",
+    "name": "IDOL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MUSDT",
+    "name": "M/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PUMPUSDT",
+    "name": "PUMP/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CROSSUSDT",
+    "name": "CROSS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AINUSDT",
+    "name": "AIN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CUSDT",
+    "name": "C/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "VELVETUSDT",
+    "name": "VELVET/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TACUSDT",
+    "name": "TAC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ERAUSDT",
+    "name": "ERA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TAUSDT",
+    "name": "TA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PENGUUSDC",
+    "name": "PENGU/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CVXUSDT",
+    "name": "CVX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SLPUSDT",
+    "name": "SLP/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ZORAUSDT",
+    "name": "ZORA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TAGUSDT",
+    "name": "TAG/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ESPORTSUSDT",
+    "name": "ESPORTS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TREEUSDT",
+    "name": "TREE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PLAYUSDT",
+    "name": "PLAY/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "NAORISUSDT",
+    "name": "NAORIS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TOWNSUSDT",
+    "name": "TOWNS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PROVEUSDT",
+    "name": "PROVE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ALLUSDT",
+    "name": "ALL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "INUSDT",
+    "name": "IN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CARVUSDT",
+    "name": "CARV/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AIOUSDT",
+    "name": "AIO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "XNYUSDT",
+    "name": "XNY/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "USELESSUSDT",
+    "name": "USELESS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SAPIENUSDT",
+    "name": "SAPIEN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "XPLUSDT",
+    "name": "XPL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "WLFIUSDT",
+    "name": "WLFI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BIOUSDC",
+    "name": "BIO/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SOMIUSDT",
+    "name": "SOMI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BASUSDT",
+    "name": "BAS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BTRUSDT",
+    "name": "BTR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MITOUSDT",
+    "name": "MITO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "HEMIUSDT",
+    "name": "HEMI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "LINEAUSDT",
+    "name": "LINEA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "QUSDT",
+    "name": "Q/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ARIAUSDT",
+    "name": "ARIA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TAKEUSDT",
+    "name": "TAKE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PTBUSDT",
+    "name": "PTB/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "WLFIUSDC",
+    "name": "WLFI/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "OPENUSDT",
+    "name": "OPEN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "FLOCKUSDT",
+    "name": "FLOCK/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SKYUSDT",
+    "name": "SKY/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AVNTUSDT",
+    "name": "AVNT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "HOLOUSDT",
+    "name": "HOLO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "XPINUSDT",
+    "name": "XPIN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "UBUSDT",
+    "name": "UB/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ZKCUSDT",
+    "name": "ZKC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TOSHIUSDT",
+    "name": "TOSHI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "STBLUSDT",
+    "name": "STBL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "0GUSDT",
+    "name": "0G/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BARDUSDT",
+    "name": "BARD/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ASTERUSDT",
+    "name": "ASTER/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TRADOORUSDT",
+    "name": "TRADOOR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BLESSUSDT",
+    "name": "BLESS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "FLUIDUSDT",
+    "name": "FLUID/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "COAIUSDT",
+    "name": "COAI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "HANAUSDT",
+    "name": "HANA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MIRAUSDT",
+    "name": "MIRA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AKEUSDT",
+    "name": "AKE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ORDERUSDT",
+    "name": "ORDER/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "LIGHTUSDT",
+    "name": "LIGHT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "XANUSDT",
+    "name": "XAN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "FFUSDT",
+    "name": "FF/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "EDENUSDT",
+    "name": "EDEN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "NOMUSDT",
+    "name": "NOM/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TRUTHUSDT",
+    "name": "TRUTH/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "2ZUSDT",
+    "name": "2Z/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "EVAAUSDT",
+    "name": "EVAA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "LYNUSDT",
+    "name": "LYN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "KGENUSDT",
+    "name": "KGEN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "4USDT",
+    "name": "4/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "GIGGLEUSDT",
+    "name": "GIGGLE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MONUSDT",
+    "name": "MON/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "YBUSDT",
+    "name": "YB/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "METUSDT",
+    "name": "MET/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "EULUSDT",
+    "name": "EUL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ENSOUSDT",
+    "name": "ENSO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CLOUSDT",
+    "name": "CLO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "RECALLUSDT",
+    "name": "RECALL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ZBTUSDT",
+    "name": "ZBT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "LABUSDT",
+    "name": "LAB/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "RIVERUSDT",
+    "name": "RIVER/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "币安人生USDT",
+    "name": "币安人生/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BLUAIUSDT",
+    "name": "BLUAI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TURTLEUSDT",
+    "name": "TURTLE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "APRUSDT",
+    "name": "APR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ONUSDT",
+    "name": "ON/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "KITEUSDT",
+    "name": "KITE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ATUSDT",
+    "name": "AT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CCUSDT",
+    "name": "CC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MMTUSDT",
+    "name": "MMT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TRUSTUSDT",
+    "name": "TRUST/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "UAIUSDT",
+    "name": "UAI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "FOLKSUSDT",
+    "name": "FOLKS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "STABLEUSDT",
+    "name": "STABLE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "JCTUSDT",
+    "name": "JCT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ALLOUSDT",
+    "name": "ALLO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CLANKERUSDT",
+    "name": "CLANKER/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BEATUSDT",
+    "name": "BEAT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PIEVERSEUSDT",
+    "name": "PIEVERSE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SENTUSDT",
+    "name": "SENT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ZECUSDC",
+    "name": "ZEC/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "IRYSUSDT",
+    "name": "IRYS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "POWERUSDT",
+    "name": "POWER/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "WETUSDT",
+    "name": "WET/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "NIGHTUSDT",
+    "name": "NIGHT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "XAUUSDT",
+    "name": "XAU/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "USUSDT",
+    "name": "US/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CYSUSDT",
+    "name": "CYS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "RAVEUSDT",
+    "name": "RAVE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ZKPUSDT",
+    "name": "ZKP/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "GUAUSDT",
+    "name": "GUA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "LITUSDT",
+    "name": "LIT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BREVUSDT",
+    "name": "BREV/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "COLLECTUSDT",
+    "name": "COLLECT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MAGMAUSDT",
+    "name": "MAGMA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "XAGUSDT",
+    "name": "XAG/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ZAMAUSDT",
+    "name": "ZAMA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "FOGOUSDT",
+    "name": "FOGO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "FRAXUSDT",
+    "name": "FRAX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SPORTFUNUSDT",
+    "name": "SPORTFUN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AIAUSDT",
+    "name": "AIA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ACUUSDT",
+    "name": "ACU/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "我踏马来了USDT",
+    "name": "我踏马来了/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ELSAUSDT",
+    "name": "ELSA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SKRUSDT",
+    "name": "SKR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SPACEUSDT",
+    "name": "SPACE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "FIGHTUSDT",
+    "name": "FIGHT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TSLAUSDT",
+    "name": "TSLA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BIRBUSDT",
+    "name": "BIRB/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "GWEIUSDT",
+    "name": "GWEI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "XPTUSDT",
+    "name": "XPT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "XPDUSDT",
+    "name": "XPD/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MEGAUSDT",
+    "name": "MEGA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "INXUSDT",
+    "name": "INX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "INTCUSDT",
+    "name": "INTC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "HOODUSDT",
+    "name": "HOOD/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TRIAUSDT",
+    "name": "TRIA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MSTRUSDT",
+    "name": "MSTR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AMZNUSDT",
+    "name": "AMZN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CRCLUSDT",
+    "name": "CRCL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "COINUSDT",
+    "name": "COIN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PLTRUSDT",
+    "name": "PLTR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ESPUSDT",
+    "name": "ESP/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AZTECUSDT",
+    "name": "AZTEC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "OPNUSDT",
+    "name": "OPN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ROBOUSDT",
+    "name": "ROBO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "KATUSDT",
+    "name": "KAT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MANTRAUSDT",
+    "name": "MANTRA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "COPPERUSDT",
+    "name": "COPPER/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "龙虾USDT",
+    "name": "龙虾/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "EWYUSDT",
+    "name": "EWY/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CFGUSDT",
+    "name": "CFG/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "EWJUSDT",
+    "name": "EWJ/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "EDGEUSDT",
+    "name": "EDGE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PAYPUSDT",
+    "name": "PAYP/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "METAUSDT",
+    "name": "META/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "NVDAUSDT",
+    "name": "NVDA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "GOOGLUSDT",
+    "name": "GOOGL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BSBUSDT",
+    "name": "BSB/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "XAUTUSDT",
+    "name": "XAUT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BTCUSDT_260925",
+    "name": "BTC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ETHUSDT_260925",
+    "name": "ETH/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BASEDUSDT",
+    "name": "BASED/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CLUSDT",
+    "name": "CL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BZUSDT",
+    "name": "BZ/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "NATGASUSDT",
+    "name": "NATGAS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PRLUSDT",
+    "name": "PRL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "QQQUSDT",
+    "name": "QQQ/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SPYUSDT",
+    "name": "SPY/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AAPLUSDT",
+    "name": "AAPL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TSMUSDT",
+    "name": "TSM/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MUUSDT",
+    "name": "MU/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SNDKUSDT",
+    "name": "SNDK/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "GENIUSUSDT",
+    "name": "GENIUS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CHIPUSDT",
+    "name": "CHIP/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MSFTUSDT",
+    "name": "MSFT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AVGOUSDT",
+    "name": "AVGO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BABAUSDT",
+    "name": "BABA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "OPGUSDT",
+    "name": "OPG/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AIGENSYNUSDT",
+    "name": "AIGENSYN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AMDUSDT",
+    "name": "AMD/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "QCOMUSDT",
+    "name": "QCOM/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "USARUSDT",
+    "name": "USAR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BILLUSDT",
+    "name": "BILL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PHAROSUSDT",
+    "name": "PHAROS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "STARUSDT",
+    "name": "STAR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "LITEUSDT",
+    "name": "LITE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ORCLUSDT",
+    "name": "ORCL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "DISUSDT",
+    "name": "DIS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "UBERUSDT",
+    "name": "UBER/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CSCOUSDT",
+    "name": "CSCO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "HDUSDT",
+    "name": "HD/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SOXLUSDT",
+    "name": "SOXL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MRVLUSDT",
+    "name": "MRVL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BTCUSD1",
+    "name": "BTC/USD1",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CRWVUSDT",
+    "name": "CRWV/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "WMTUSDT",
+    "name": "WMT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "JPMUSDT",
+    "name": "JPM/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "VUSDT",
+    "name": "V/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BRKBUSDT",
+    "name": "BRKB/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "FLNCUSDT",
+    "name": "FLNC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "DRAMUSDT",
+    "name": "DRAM/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "RKLBUSDT",
+    "name": "RKLB/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CBRSUSDT",
+    "name": "CBRS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SPCXUSDT",
+    "name": "SPCX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "OPENAIUSDT",
+    "name": "OPENAI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "NBISUSDT",
+    "name": "NBIS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "WDCUSDT",
+    "name": "WDC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ARMUSDT",
+    "name": "ARM/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BEUSDT",
+    "name": "BE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "COHRUSDT",
+    "name": "COHR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CTRUSDT",
+    "name": "CTR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "QNTXUSDT",
+    "name": "QNTX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SLXUSDT",
+    "name": "SLX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "LLYUSDT",
+    "name": "LLY/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "NVOUSDT",
+    "name": "NVO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BBXUSDT",
+    "name": "BBX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "NOKUSDT",
+    "name": "NOK/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "EWTUSDT",
+    "name": "EWT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ASTSUSDT",
+    "name": "ASTS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SKHYNIXUSDT",
+    "name": "SKHYNIX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SAMSUNGUSDT",
+    "name": "SAMSUNG/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "HYUNDAIUSDT",
+    "name": "HYUNDAI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ANTHROPICUSDT",
+    "name": "ANTHROPIC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "DELLUSDT",
+    "name": "DELL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "IBMUSDT",
+    "name": "IBM/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "NOWUSDT",
+    "name": "NOW/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CRMUSDT",
+    "name": "CRM/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "IRENUSDT",
+    "name": "IREN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ONDSUSDT",
+    "name": "ONDS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ZESTUSDT",
+    "name": "ZEST/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BTWUSDT",
+    "name": "BTW/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BXUSDT",
+    "name": "BX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "HPEUSDT",
+    "name": "HPE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AMATUSDT",
+    "name": "AMAT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CRWDUSDT",
+    "name": "CRWD/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CRDOUSDT",
+    "name": "CRDO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AAOIUSDT",
+    "name": "AAOI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "IWMUSDT",
+    "name": "IWM/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "AXTIUSDT",
+    "name": "AXTI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "NFLXUSDT",
+    "name": "NFLX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "COSTUSDT",
+    "name": "COST/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "URNMUSDT",
+    "name": "URNM/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "HIMSUSDT",
+    "name": "HIMS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "EBAYUSDT",
+    "name": "EBAY/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ZMUSDT",
+    "name": "ZM/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "DKNGUSDT",
+    "name": "DKNG/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "RIVNUSDT",
+    "name": "RIVN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "GMEUSDT",
+    "name": "GME/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "XLEUSDT",
+    "name": "XLE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "EWZUSDT",
+    "name": "EWZ/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BMNRUSDT",
+    "name": "BMNR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "UVXYUSDT",
+    "name": "UVXY/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ADBEUSDT",
+    "name": "ADBE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "GLWUSDT",
+    "name": "GLW/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "STXXUSDT",
+    "name": "STXX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ASMLUSDT",
+    "name": "ASML/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "REUSDT",
+    "name": "RE/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "LRCXUSDT",
+    "name": "LRCX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "KLACUSDT",
+    "name": "KLAC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ALABUSDT",
+    "name": "ALAB/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SMCIUSDT",
+    "name": "SMCI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CIENUSDT",
+    "name": "CIEN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "KORUUSDT",
+    "name": "KORU/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SONYUSDT",
+    "name": "SONY/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ARXUSDT",
+    "name": "ARX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MVLLUSDT",
+    "name": "MVLL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TQQQUSDT",
+    "name": "TQQQ/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SQQQUSDT",
+    "name": "SQQQ/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "OUSDT",
+    "name": "O/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BTCUSDT_261225",
+    "name": "BTC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ETHUSDT_261225",
+    "name": "ETH/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CAPUSDT",
+    "name": "CAP/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BTCU",
+    "name": "BTC/U",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ETHU",
+    "name": "ETH/U",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "GRAMUSDT",
+    "name": "GRAM/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "STRCUSDT",
+    "name": "STRC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "CATUSDT",
+    "name": "CAT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TXNUSDT",
+    "name": "TXN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "FLEXUSDT",
+    "name": "FLEX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TERUSDT",
+    "name": "TER/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TTWOUSDT",
+    "name": "TTWO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "KSTRUSDT",
+    "name": "KSTR/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BSPUSDT",
+    "name": "BSP/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ETHUSD1",
+    "name": "ETH/USD1",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "DATAIPUSDT",
+    "name": "DATAIP/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "DATAIPUSDC",
+    "name": "DATAIP/USDC",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BOTUSDT",
+    "name": "BOT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "WENUSDT",
+    "name": "WEN/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "INTWUSDT",
+    "name": "INTW/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SNXXUSDT",
+    "name": "SNXX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "XBIUSDT",
+    "name": "XBI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BNCUSDT",
+    "name": "BNC/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "FWDIUSDT",
+    "name": "FWDI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "GEVUSDT",
+    "name": "GEV/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "VRTUSDT",
+    "name": "VRT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SNOWUSDT",
+    "name": "SNOW/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "APPUSDT",
+    "name": "APP/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SKHYUSDT",
+    "name": "SKHY/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MUUUSDT",
+    "name": "MUU/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SOXSUSDT",
+    "name": "SOXS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TZAUSDT",
+    "name": "TZA/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "MINIMAXUSDT",
+    "name": "MINIMAX/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "ZHIPUUSDT",
+    "name": "ZHIPU/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "HK0700USDT",
+    "name": "HK0700/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "HK1810USDT",
+    "name": "HK1810/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TENCENTUSDT",
+    "name": "TENCENT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SPCXUSD1",
+    "name": "SPCX/USD1",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SHAZUSDT",
+    "name": "SHAZ/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SOFIUSDT",
+    "name": "SOFI/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PANWUSDT",
+    "name": "PANW/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PENGUSDT",
+    "name": "PENG/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "POPMARTUSDT",
+    "name": "POPMART/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TMFUSDT",
+    "name": "TMF/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "TBTUSDT",
+    "name": "TBT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "BITOUSDT",
+    "name": "BITO/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "PYPLUSDT",
+    "name": "PYPL/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "GSUSDT",
+    "name": "GS/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "SMHUSDT",
+    "name": "SMH/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  },
+  {
+    "symbol": "GRVTUSDT",
+    "name": "GRVT/USDT",
+    "type": "crypto",
+    "exchange": "BINANCE",
+    "market": "FUTURES"
+  }
+]
