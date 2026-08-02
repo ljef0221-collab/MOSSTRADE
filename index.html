@@ -194,8 +194,52 @@ AI策略
 
     async function search() { const keyword=input.value.trim(); if (!keyword) return; try { const response=await fetch(`/api/search?keyword=${encodeURIComponent(keyword)}`); const data=await response.json(); if (!response.ok) throw new Error(data.detail || '搜尋失敗'); showResults(data.results || []); } catch(error) { showResults([]); } }
     
-    async function analyze(symbol=activeSymbol) { if (!symbol) return; activeSymbol=symbol.toUpperCase(); results.hidden=true; document.getElementById('chart-title').textContent=`${activeSymbol} · 載入中…`; const signal=document.getElementById('signal'); signal.className='signal HOLD'; signal.textContent='正在計算策略…'; try { const params=new URLSearchParams({symbol:activeSymbol,interval:document.getElementById('interval').value}); const response=await fetch(`/api/analyze?${params}`); const data=await response.json(); if (!response.ok) throw new Error(data.detail || '分析失敗'); series.setData(data.chart_data); chart.timeScale().fitContent(); document.getElementById('chart-title').textContent=`${activeSymbol} · ${document.getElementById('interval').selectedOptions[0].text} · ${document.getElementById('timezone').selectedOptions[0].text}`; signal.className=`signal ${data.direction}`; signal.textContent=data.message; document.getElementById('price').textContent=data.current_price; document.getElementById('tp').textContent=data.tp; document.getElementById('sl').textContent=data.sl; document.getElementById('reason').textContent=data.reason; document.getElementById('strategy-name').textContent=data.strategy_name; document.getElementById('strategy-description').textContent=data.strategy_description; } catch(error) { document.getElementById('chart-title').textContent=activeSymbol; signal.className='signal HOLD'; signal.textContent=error.message; } }
-    async function loadVisitCount() { try { const response=await fetch('/api/stats'); const data=await response.json(); document.getElementById('visit-count').textContent=Number(data.visits).toLocaleString('zh-TW'); } catch { document.getElementById('visit-count').textContent='—'; } }
+    // ✅ 優化後的 analyze 函式
+async function analyze(symbol = activeSymbol) {
+    if (!symbol) {
+        // 如果目前沒選商品，預設載入 BTC-USD
+        symbol = 'BTC-USD';
+    }
+    activeSymbol = symbol.toUpperCase();
+    results.hidden = true;
+    
+    document.getElementById('chart-title').textContent = `${activeSymbol} · 載入中…`;
+    const signal = document.getElementById('signal');
+    signal.className = 'signal HOLD';
+    signal.textContent = '正在計算策略…';
+    
+    try {
+        const intervalValue = document.getElementById('interval').value;
+        const params = new URLSearchParams({
+            symbol: activeSymbol,
+            interval: intervalValue
+        });
+        
+        const response = await fetch(`/api/analyze?${params}`);
+        const data = await response.json();
+        
+        if (!response.ok) throw new Error(data.detail || '分析失敗');
+        
+        // 瞬間注入數據並自動縮放到合適視域
+        series.setData(data.chart_data);
+        chart.timeScale().fitContent();
+        
+        // 更新標題與策略分析文字
+        document.getElementById('chart-title').textContent = `${activeSymbol} · ${document.getElementById('interval').selectedOptions[0].text} · ${document.getElementById('timezone').selectedOptions[0].text}`;
+        signal.className = `signal ${data.direction}`;
+        signal.textContent = data.message;
+        document.getElementById('price').textContent = data.current_price;
+        document.getElementById('tp').textContent = data.tp;
+        document.getElementById('sl').textContent = data.sl;
+        document.getElementById('reason').textContent = data.reason;
+        document.getElementById('strategy-name').textContent = data.strategy_name;
+        document.getElementById('strategy-description').textContent = data.strategy_description;
+    } catch(error) {
+        document.getElementById('chart-title').textContent = activeSymbol;
+        signal.className = 'signal HOLD';
+        signal.textContent = error.message;
+    }
+}
     
     input.addEventListener('input',()=>{
         clearTimeout(searchTimer);
@@ -206,7 +250,11 @@ AI策略
         searchTimer=setTimeout(search,150);      // 微調為 150ms，給予後端足夠的時間抓取數據
     });
     
-    input.addEventListener('keydown',event=>{if(event.key==='Enter') search();}); document.getElementById('search-button').onclick=search; document.getElementById('interval').onchange=()=>analyze(); document.getElementById('timezone').onchange=()=>{applyTimezone(); analyze();}; document.addEventListener('click',event=>{if(!event.target.closest('.search')) results.hidden=true;}); populateTimezones(); applyTimezone(); renderWatchlist(); loadVisitCount();
+    input.addEventListener('keydown',event=>{if(event.key==='Enter') search();}); document.getElementById('search-button').onclick=search; document.getElementById('interval').onchange=()=>analyze(); // ✅ 修改後：切換時區瞬間直接重新渲染圖表，不重新打 API
+document.getElementById('timezone').onchange=()=>{
+    applyTimezone();
+    document.getElementById('chart-title').textContent = `${activeSymbol} · ${document.getElementById('interval').selectedOptions[0].text} · ${document.getElementById('timezone').selectedOptions[0].text}`;
+}; document.addEventListener('click',event=>{if(!event.target.closest('.search')) results.hidden=true;}); populateTimezones(); applyTimezone(); renderWatchlist(); loadVisitCount();
   </script>
 </body>
 </html>

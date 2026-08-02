@@ -67,12 +67,9 @@ ALIASES = {
 
 # 補上時間週期設定
 TIMEFRAME_CONFIG = {
-    "1m": {"source": "1m", "range": "1d", "bucket": 1, "mode": "cross", "fast": 5, "slow": 20, "trend": 60, "tp_atr": 1.5, "sl_atr": 1.0, "name": "1分極速衝浪", "description": "極短線動能策略"},
-    "5m": {"source": "1m", "range": "1d", "bucket": 5, "mode": "cross", "fast": 5, "slow": 20, "trend": 60, "tp_atr": 1.5, "sl_atr": 1.0, "name": "5分短線策略", "description": "短線動能策略"},
-    "15m": {"source": "5m", "range": "5d", "bucket": 15, "mode": "cross", "fast": 5, "slow": 20, "trend": 60, "tp_atr": 1.8, "sl_atr": 1.1, "name": "15分波段策略", "description": "中短線動能策略"},
+    "1m": {"source": "1m", "range": "1d", "bucket": 1, "mode": "cross", "fast": 5, "slow": 20, "trend": 60, "lookback": 20, "tp_atr": 1.5, "sl_atr": 1.0, "name": "1分極速衝浪", "description": "極短線動能策略"},
     "1h": {"source": "1m", "range": "5d", "bucket": 60, "mode": "breakout", "fast": 10, "slow": 30, "trend": 100, "lookback": 20, "tp_atr": 2.0, "sl_atr": 1.2, "name": "1小時突破策略", "description": "趨勢區間突破策略"},
-    "4h": {"source": "1h", "range": "60d", "bucket": 4, "mode": "breakout", "fast": 10, "slow": 30, "trend": 100, "lookback": 20, "tp_atr": 2.5, "sl_atr": 1.3, "name": "4小時趨勢策略", "description": "中長線區間突破策略"},
-    "1d": {"source": "1d", "range": "1y", "bucket": 1, "mode": "cross", "fast": 10, "slow": 30, "trend": 200, "tp_atr": 3.0, "sl_atr": 1.5, "name": "日線長線策略", "description": "大週期 EMA 交叉策略"}
+    "1d": {"source": "1d", "range": "1y", "bucket": 1, "mode": "cross", "fast": 10, "slow": 30, "trend": 200, "lookback": 20, "tp_atr": 3.0, "sl_atr": 1.5, "name": "日線長線策略", "description": "大週期 EMA 交叉策略"}
 }
 
 app = FastAPI(title="SmartNavigator")
@@ -279,7 +276,8 @@ def analyze_market(symbol: str, interval: str = "1h"):
             candles.append({"time": timestamp, "open": open_, "high": high, "low": low, "close": close})
     
     candles = aggregate_candles(candles, config["bucket"])
-    if len(candles) < max(config["trend"], config["lookback"]) + 2:
+    lookback = config.get("lookback", 0)
+    if len(candles) < max(config["trend"], lookback) + 2:
         raise HTTPException(status_code=422, detail=f"資料不足，無法計算 {interval} 策略。")
 
     closes = [candle["close"] for candle in candles]
