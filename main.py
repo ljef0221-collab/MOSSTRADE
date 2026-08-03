@@ -40,17 +40,17 @@ ALIASES = {
 
 # TIMEFRAME 策略預設配置表
 TIMEFRAME_CONFIG = {
-    "1m":  {"source": "1m",  "range": "1d",  "bucket": 1,  "mode": "cross",    "fast": 5,  "slow": 20, "trend": 60,  "lookback": 20, "tp_atr": 1.5, "sl_atr": 1.0, "name": "1分極速衝浪", "description": "極短線動能策略"},
-    "3m":  {"source": "1m",  "range": "1d",  "bucket": 3,  "mode": "cross",    "fast": 5,  "slow": 20, "trend": 60,  "lookback": 20, "tp_atr": 1.5, "sl_atr": 1.0, "name": "3分極短線策略", "description": "微觀趨勢交叉策略"},
-    "5m":  {"source": "5m",  "range": "1d",  "bucket": 1,  "mode": "cross",    "fast": 5,  "slow": 20, "trend": 60,  "lookback": 20, "tp_atr": 1.5, "sl_atr": 1.0, "name": "5分動能策略",   "description": "5分鐘極速衝浪"},
-    "10m": {"source": "5m",  "range": "1d",  "bucket": 2,  "mode": "cross",    "fast": 5,  "slow": 20, "trend": 60,  "lookback": 20, "tp_atr": 1.8, "sl_atr": 1.0, "name": "10分動能策略",  "description": "10分鐘聚合波段"},
-    "15m": {"source": "15m", "range": "5d",  "bucket": 1,  "mode": "cross",    "fast": 8,  "slow": 21, "trend": 80,  "lookback": 20, "tp_atr": 1.8, "sl_atr": 1.0, "name": "15分日內策略",  "description": "當沖經典短線策略"},
-    "30m": {"source": "15m", "range": "5d",  "bucket": 2,  "mode": "breakout", "fast": 10, "slow": 30, "trend": 100, "lookback": 20, "tp_atr": 2.0, "sl_atr": 1.2, "name": "30分區間突破",  "description": "半小時區間突破策略"},
-    "45m": {"source": "15m", "range": "5d",  "bucket": 3,  "mode": "breakout", "fast": 10, "slow": 30, "trend": 100, "lookback": 20, "tp_atr": 2.0, "sl_atr": 1.2, "name": "45分區間突破",  "description": "波段進場過濾策略"},
-    "1h":  {"source": "1h",  "range": "1mo", "bucket": 1,  "mode": "breakout", "fast": 10, "slow": 30, "trend": 100, "lookback": 20, "tp_atr": 2.0, "sl_atr": 1.2, "name": "1小時突破策略", "description": "趨勢區間突破策略"},
-    "2h":  {"source": "1h",  "range": "1mo", "bucket": 2,  "mode": "breakout", "fast": 10, "slow": 30, "trend": 100, "lookback": 20, "tp_atr": 2.2, "sl_atr": 1.2, "name": "2小時亞盤/歐盤策略", "description": "跨時區區間突破策略"},
-    "3h":  {"source": "1h",  "range": "1mo", "bucket": 3,  "mode": "breakout", "fast": 10, "slow": 30, "trend": 100, "lookback": 20, "tp_atr": 2.5, "sl_atr": 1.5, "name": "3小時趨勢策略", "description": "中長線區間突破"},
-    "4h":  {"source": "1h",  "range": "3mo", "bucket": 4,  "mode": "breakout", "fast": 10, "slow": 30, "trend": 100, "lookback": 20, "tp_atr": 2.5, "sl_atr": 1.5, "name": "4小時四小時線策略", "description": "機構級波段突破策略"},
+    "1m":  {"source": "1m",  "range": "7d",  "bucket": 1,  "mode": "cross",    "fast": 5,  "slow": 20, "trend": 60,  "lookback": 20, "tp_atr": 1.5, "sl_atr": 1.0, "name": "1分極速衝浪", "description": "極短線動能策略"},
+    "3m":  {"source": "1m",  "range": "7d",  "bucket": 3,  "mode": "cross",    "fast": 5,  "slow": 20, "trend": 60,  "lookback": 20, "tp_atr": 1.5, "sl_atr": 1.0, "name": "3分極短線策略", "description": "微觀趨勢交叉策略"},
+    "5m":  {"source": "5m",  "range": "60d", "bucket": 5,   "mode": "cross",    "fast": 5,  "slow": 20, "trend": 60,  "lookback": 20, "tp_atr": 1.5, "sl_atr": 1.0, "name": "5分動能策略",   "description": "5分鐘極速衝浪"},
+    "10m": {"source": "5m",  "range": "60d", "bucket": 10,  "mode": "cross",    "fast": 5,  "slow": 20, "trend": 60,  "lookback": 20, "tp_atr": 1.8, "sl_atr": 1.0, "name": "10分動能策略",  "description": "10分鐘聚合波段"},
+    "15m": {"source": "15m", "range": "60d", "bucket": 15,  "mode": "cross",    "fast": 8,  "slow": 21, "trend": 80,  "lookback": 20, "tp_atr": 1.8, "sl_atr": 1.0, "name": "15分日內策略",  "description": "當沖經典短線策略"},
+    "30m": {"source": "15m", "range": "60d", "bucket": 30,  "mode": "breakout", "fast": 10, "slow": 30, "trend": 100, "lookback": 20, "tp_atr": 2.0, "sl_atr": 1.2, "name": "30分區間突破",  "description": "半小時區間突破策略"},
+    "45m": {"source": "15m", "range": "60d", "bucket": 45,  "mode": "breakout", "fast": 10, "slow": 30, "trend": 100, "lookback": 20, "tp_atr": 2.0, "sl_atr": 1.2, "name": "45分區間突破",  "description": "波段進場過濾策略"},
+    "1h":  {"source": "1h",  "range": "1y",  "bucket": 60,  "mode": "breakout", "fast": 10, "slow": 30, "trend": 100, "lookback": 20, "tp_atr": 2.0, "sl_atr": 1.2, "name": "1小時突破策略", "description": "趨勢區間突破策略"},
+    "2h":  {"source": "1h",  "range": "1y",  "bucket": 120, "mode": "breakout", "fast": 10, "slow": 30, "trend": 100, "lookback": 20, "tp_atr": 2.2, "sl_atr": 1.2, "name": "2小時亞盤/歐盤策略", "description": "跨時區區間突破策略"},
+    "3h":  {"source": "1h",  "range": "1y",  "bucket": 180, "mode": "breakout", "fast": 10, "slow": 30, "trend": 100, "lookback": 20, "tp_atr": 2.5, "sl_atr": 1.5, "name": "3小時趨勢策略", "description": "中長線區間突破"},
+    "4h":  {"source": "1h",  "range": "1y",  "bucket": 240, "mode": "breakout", "fast": 10, "slow": 30, "trend": 100, "lookback": 20, "tp_atr": 2.5, "sl_atr": 1.5, "name": "4小時四小時線策略", "description": "機構級波段突破策略"},
     "1d":  {"source": "1d",  "range": "1y",  "bucket": 1,  "mode": "cross",    "fast": 10, "slow": 30, "trend": 200, "lookback": 20, "tp_atr": 3.0, "sl_atr": 1.5, "name": "日線長線策略",   "description": "大週期 EMA 交叉策略"},
     "1w":  {"source": "1wk", "range": "2y",  "bucket": 1,  "mode": "cross",    "fast": 10, "slow": 30, "trend": 200, "lookback": 20, "tp_atr": 3.5, "sl_atr": 2.0, "name": "週線戰略策略",   "description": "長線戰略佈局策略"},
     "1mo": {"source": "1mo", "range": "5y",  "bucket": 1,  "mode": "cross",    "fast": 5,  "slow": 15, "trend": 50,  "lookback": 12, "tp_atr": 4.0, "sl_atr": 2.0, "name": "月線宏觀策略",   "description": "宏觀週期投資策略"}

@@ -21,11 +21,14 @@
     header { display:flex; justify-content:space-between; gap:16px; align-items:center; border-bottom:1px solid var(--line); padding-bottom:18px; margin-bottom:20px; } 
     h1 { font-size:22px; margin:0; } 
     .sub { color:var(--muted); margin-top:4px; }
-    .search { position:relative; width:min(580px,100%); display:flex; } 
+    .header-actions { display:flex; gap:10px; align-items:center; }
+    .search { position:relative; width:min(580px,100%); }
+    .search-shell { display:flex; align-items:center; gap:8px; background:#101010; border:1px solid #303030; border-radius:10px; padding:4px 6px 4px 12px; }
+    .search-icon { color:var(--muted); font-size:16px; }
     input,select,button { font:inherit; border-radius:8px; border:1px solid #333; color:white; background:#050505; padding:10px 12px; }
-    input { width:100%; } 
-    button { cursor:pointer; background:#001820; color:#00d4ff; border-color:#00d4ff; } 
-    button:hover { filter:brightness(1.1); }
+    .search input { border:0; outline:0; background:transparent; padding:8px 2px; }
+    .search-button, .home-button { cursor:pointer; background:#1b1b1b; color:#e7e7e7; border-color:#3a3a3a; }
+    .search-button:hover, .home-button:hover { background:#282828; border-color:#5a5a5a; }
     #search-results {
       position: absolute;
       top: 100%;
@@ -40,6 +43,7 @@
       overflow-y: auto;
       box-shadow:0 10px 40px #000;
     }
+    .result-heading { padding:9px 12px; color:var(--muted); font-size:12px; border-bottom:1px solid var(--line); }
     .result { padding:10px 12px; cursor:pointer; border-bottom:1px solid var(--line); } 
     .result:hover { background:#111; }
     .result small { color:var(--muted); }
@@ -79,10 +83,16 @@
       <h1>SmartNavigator</h1>
       <div class="sub">市場搜尋、技術策略與時區化圖表 · 瀏覽 <span id="visit-count">—</span> 次</div>
     </div>
-    <div class="search">
-      <input id="asset-input" autocomplete="off" placeholder="搜尋商品，例如：台積電、2330.TW、BTC-USD、EURUSD=X">
-      <button id="search-button">搜尋</button>
-      <div id="search-results" hidden></div>
+    <div class="header-actions">
+      <button id="home-button" class="home-button" type="button">首頁</button>
+      <div class="search">
+        <div class="search-shell">
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <input id="asset-input" autocomplete="off" placeholder="搜尋商品、代號或市場">
+          <button id="search-button" class="search-button" type="button">搜尋</button>
+        </div>
+        <div id="search-results" hidden></div>
+      </div>
     </div>
   </header>
   
@@ -235,6 +245,11 @@
         return;
       }
 
+      const heading = document.createElement('div');
+      heading.className = 'result-heading';
+      heading.textContent = '建議商品';
+      results.append(heading);
+
       items.forEach(item => {
         const row = document.createElement('div');
         row.className = 'result';
@@ -333,6 +348,13 @@
     });
 
     document.getElementById('search-button').onclick = search;
+    document.getElementById('home-button').onclick = () => {
+      input.value = '';
+      results.hidden = true;
+      document.getElementById('interval').value = '1h';
+      analyze('BTC-USD');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
     document.getElementById('interval').onchange = () => analyze();
     
     document.getElementById('timezone').onchange = () => {
