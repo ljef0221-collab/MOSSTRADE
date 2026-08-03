@@ -53,8 +53,8 @@
     .toolbar { display:flex; align-items:center; flex-wrap:wrap; gap:8px; padding:12px; border-bottom:1px solid var(--line); } 
     .toolbar strong { margin-right:auto; } 
     .toolbar select { padding:7px 8px; }
-    .tool-button { cursor:pointer; padding:7px 9px; background:#181818; color:#d7d7d7; border-color:#3a3a3a; }
-    .tool-button.is-active { background:#263a35; border-color:#26a69a; color:#dfffee; }
+    .tool-button, .drawing-select { cursor:pointer; padding:7px 9px; background:#181818; color:#d7d7d7; border-color:#3a3a3a; }
+    #source-status { color:#b8e7ce; font-size:12px; white-space:nowrap; }
     #chart { height:540px; } 
     .side { display:grid; gap:20px; align-content:start; } 
     .widget { padding:16px; } 
@@ -103,6 +103,8 @@
     <section class="panel chart-panel">
       <div class="toolbar">
         <strong id="chart-title">選擇一個商品開始</strong>
+        <select id="exchange-source" aria-label="合約交易所"><option value="OKX">OKX 永續合約</option></select>
+        <span id="source-status">資料來源：OKX 永續合約</span>
         <select id="interval" aria-label="K 線週期">
           <optgroup label="分鐘">
             <option value="1m">1 分鐘</option>
@@ -126,7 +128,12 @@
           </optgroup>
         </select>
         <select id="timezone" aria-label="圖表時區"></select>
-        <button id="line-tool" class="tool-button" type="button">畫水平線</button>
+        <select id="drawing-tool" class="drawing-select" aria-label="繪圖工具">
+          <option value="none">繪圖工具</option>
+          <option value="line">水平線</option>
+          <option value="arrow-up">向上箭頭</option>
+          <option value="arrow-down">向下箭頭</option>
+        </select>
         <button id="clear-lines" class="tool-button" type="button">清除線條</button>
       </div>
       <div id="chart"></div>
@@ -156,9 +163,9 @@
   </main>
 
   <script>
-    const DEFAULT_WATCHLIST = ['BYBIT:BTCUSDT', 'BYBIT:ETHUSDT', 'NVDA', '2330.TW'];
+    const DEFAULT_WATCHLIST = ['OKX:BTC-USDT-SWAP', 'OKX:ETH-USDT-SWAP', 'NVDA', '2330.TW'];
     let watchlist = JSON.parse(localStorage.getItem('my_watchlist') || 'null') || DEFAULT_WATCHLIST;
-    watchlist = watchlist.map(symbol => symbol.startsWith('BINANCE:') ? `BYBIT:${symbol.slice(8)}` : symbol);
+    watchlist = watchlist.map(symbol => symbol.startsWith('BINANCE:') || symbol.startsWith('BYBIT:') ? `OKX:${symbol.split(':')[1].replace('USDT', '-USDT-SWAP')}` : symbol);
     localStorage.setItem('my_watchlist', JSON.stringify(watchlist));
     let activeSymbol = '';
 
@@ -176,7 +183,8 @@
     let markerPlugin = null;
     let fvgLines = [];
     let userLines = [];
-    let drawingMode = false;
+    let structureMarkers = [];
+    let userMarkers = [];
 
     const input = document.getElementById('asset-input');
     const results = document.getElementById('search-results');
@@ -217,15 +225,20 @@
       chart.applyOptions({ localization: { timeFormatter } });
     }
 
-    function renderStructure(structure) {
-      const markers = structure?.markers || [];
-      const zones = structure?.fvg_zones || [];
+    function updateMarkers() {
+      const markers = [...structureMarkers, ...userMarkers].sort((a, b) => a.time - b.time);
       if (typeof LightweightCharts.createSeriesMarkers === 'function') {
         markerPlugin ??= LightweightCharts.createSeriesMarkers(series, []);
         markerPlugin.setMarkers(markers);
       } else if (typeof series.setMarkers === 'function') {
         series.setMarkers(markers);
       }
+    }
+
+    function renderStructure(structure) {
+      structureMarkers = structure?.markers || [];
+      const zones = structure?.fvg_zones || [];
+      updateMarkers();
       fvgLines.forEach(line => series.removePriceLine(line));
       fvgLines = [];
       zones.forEach(zone => {
@@ -233,16 +246,23 @@
         fvgLines.push(series.createPriceLine({ price: zone.low, color, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: `FVG ${zone.side}` }));
         fvgLines.push(series.createPriceLine({ price: zone.high, color, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: `FVG ${zone.side}` }));
       });
-      const choch = markers.length ? markers[0].text : '尚未確認結構轉變';
+      const choch = structureMarkers.length ? structureMarkers[0].text : '尚未確認結構轉變';
       const fvg = zones.length ? `偵測到 ${zones.length} 個 FVG 價格失衡區` : '尚未偵測到 FVG';
       document.getElementById('structure-note').textContent = `CHoCH：結構轉變（${choch}）。FVG：價格失衡區（${fvg}）。`;
     }
 
     chart.subscribeClick(param => {
-      if (!drawingMode || !param.point) return;
-      const price = series.coordinateToPrice(param.point.y);
-      if (price == null) return;
-      userLines.push(series.createPriceLine({ price, color: '#d1d4dc', lineWidth: 1, lineStyle: 0, axisLabelVisible: true, title: '手動畫線' }));
+      const tool = document.getElementById('drawing-tool').value;
+      if (tool === 'none' || !param.point) return;
+      if (tool === 'line') {
+        const price = series.coordinateToPrice(param.point.y);
+        if (price != null) userLines.push(series.createPriceLine({ price, color: '#d1d4dc', lineWidth: 1, lineStyle: 0, axisLabelVisible: true, title: '手動畫線' }));
+        return;
+      }
+      const time = chart.timeScale().coordinateToTime(param.point.x);
+      if (typeof time !== 'number') return;
+      userMarkers.push({ time, position: tool === 'arrow-up' ? 'belowBar' : 'aboveBar', color: tool === 'arrow-up' ? '#26a69a' : '#ef5350', shape: tool === 'arrow-up' ? 'arrowUp' : 'arrowDown', text: tool === 'arrow-up' ? '手動 ↑' : '手動 ↓' });
+      updateMarkers();
     });
 
     new ResizeObserver(entries => {
@@ -333,7 +353,7 @@
     }
 
     async function analyze(symbol = activeSymbol) {
-      if (!symbol) symbol = 'BYBIT:BTCUSDT';
+      if (!symbol) symbol = 'OKX:BTC-USDT-SWAP';
       activeSymbol = symbol.toUpperCase();
       results.hidden = true;
 
@@ -364,6 +384,7 @@
         document.getElementById('reason').textContent = data.reason;
         document.getElementById('strategy-name').textContent = data.strategy_name;
         document.getElementById('strategy-description').textContent = data.strategy_description;
+        document.getElementById('source-status').textContent = `資料來源：${data.market_source}`;
       } catch (error) {
         document.getElementById('chart-title').textContent = activeSymbol;
         signal.className = 'signal HOLD';
@@ -389,20 +410,17 @@
     });
 
     document.getElementById('search-button').onclick = search;
-    document.getElementById('line-tool').onclick = event => {
-      drawingMode = !drawingMode;
-      event.currentTarget.classList.toggle('is-active', drawingMode);
-      event.currentTarget.textContent = drawingMode ? '點圖表畫線' : '畫水平線';
-    };
     document.getElementById('clear-lines').onclick = () => {
       userLines.forEach(line => series.removePriceLine(line));
       userLines = [];
+      userMarkers = [];
+      updateMarkers();
     };
     document.getElementById('home-button').onclick = () => {
       input.value = '';
       results.hidden = true;
       document.getElementById('interval').value = '1h';
-      analyze('BYBIT:BTCUSDT');
+      analyze('OKX:BTC-USDT-SWAP');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
     document.getElementById('interval').onchange = () => analyze();
@@ -423,7 +441,7 @@
     applyTimezone();
     renderWatchlist();
     loadVisitCount();
-    analyze('BYBIT:BTCUSDT'); // 預設載入不受 Yahoo 限流影響的永續合約
+    analyze('OKX:BTC-USDT-SWAP');
   </script>
 </body>
 </html>

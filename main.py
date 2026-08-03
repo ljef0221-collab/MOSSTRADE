@@ -130,6 +130,25 @@ def yahoo_json(path, params, ttl):
             last_error = error
     raise last_error
 
+
+def okx_history_candles(symbol, bar, pages=5):
+    """Page OKX candles backwards so aggregated hourly strategies have history."""
+    rows, after = [], None
+    for _ in range(pages):
+        params = {"instId": symbol, "bar": bar, "limit": 300}
+        if after:
+            params["after"] = after
+        payload = cached_json("https://www.okx.com/api/v5/market/history-candles", params, ttl=60)
+        page = payload.get("data", [])
+        if not page:
+            break
+        rows.extend(page)
+        if len(page) < 300:
+            break
+        after = page[-1][0]
+    unique = {row[0]: row for row in rows}
+    return [unique[key] for key in sorted(unique, key=int)]
+
 def aggregate_candles(candles, bucket_minutes):
     if bucket_minutes <= 1 or not candles:
         return candles
@@ -273,6 +292,7 @@ def analyze_market(symbol: str, interval: str = "1h"):
         
     is_binance = symbol_upper.startswith("BINANCE:")
     is_bybit = symbol_upper.startswith("BYBIT:")
+    is_okx = symbol_upper.startswith("OKX:")
     symbol = symbol_upper.split(":")[-1].replace(".P", "")
     if not symbol:
         raise HTTPException(status_code=400, detail="請輸入商品代號。")
@@ -282,7 +302,13 @@ def analyze_market(symbol: str, interval: str = "1h"):
     config = TIMEFRAME_CONFIG[interval]
 
     try:
-        if is_binance:
+        if is_okx:
+            okx_bar = {"1m": "1m", "3m": "3m", "5m": "5m", "15m": "15m", "30m": "30m", "1h": "1H", "1d": "1Dutc", "1wk": "1Wutc", "1mo": "1Mutc"}.get(config["source"])
+            if not okx_bar:
+                raise ValueError("OKX does not support this interval")
+            rows = okx_history_candles(symbol, okx_bar)
+            candles = [{"time": int(row[0]) // 1000, "open": float(row[1]), "high": float(row[2]), "low": float(row[3]), "close": float(row[4])} for row in rows]
+        elif is_binance:
             binance_interval = {"1wk": "1w", "1mo": "1M"}.get(config["source"], config["source"])
             rows = cached_json(
                 "https://fapi.binance.com/fapi/v1/klines",
@@ -315,7 +341,7 @@ def analyze_market(symbol: str, interval: str = "1h"):
                 if None not in (open_, high, low, close):
                     candles.append({"time": timestamp, "open": open_, "high": high, "low": low, "close": close})
     except Exception as error:
-        source = "Binance Futures" if is_binance else "Bybit Futures" if is_bybit else "Yahoo"
+        source = "OKX Perpetual Futures" if is_okx else "Binance Futures" if is_binance else "Bybit Futures" if is_bybit else "Yahoo"
         raise HTTPException(status_code=502, detail=f"{source} 暫時無法提供 {symbol} 的 K 線資料，請稍後再試。") from error
     
     candles = aggregate_candles(candles, config["bucket"])
@@ -365,6 +391,7 @@ def analyze_market(symbol: str, interval: str = "1h"):
         "status": "success",
         "strategy_name": config["name"],
         "strategy_description": config["description"],
+        "market_source": "OKX Perpetual Futures" if is_okx else "Yahoo Finance",
         "direction": direction,
         "message": message,
         "current_price": round(price, 4),
