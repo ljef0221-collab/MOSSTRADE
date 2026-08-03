@@ -363,21 +363,17 @@ def search_symbol(keyword: str):
 def market_rankings():
     """OKX USDT perpetual 24-hour gain/loss and quote-volume leaders."""
     try:
-        payload = cached_json("https://www.okx.com/api/v5/market/tickers", {"instType": "SWAP"}, ttl=45)
         items = []
-        for item in payload.get("data", []):
-            if not item.get("instId", "").endswith("-USDT-SWAP"):
-                continue
-            last, open_ = float(item.get("last") or 0), float(item.get("open24h") or 0)
-            if last <= 0 or open_ <= 0:
-                continue
-            items.append({
-                "symbol": f"OKX:{item['instId']}",
-                "name": item["instId"],
-                "change": round((last - open_) / open_ * 100, 2),
-                "volume": round(float(item.get("volCcy24h") or 0), 2),
-                "price": last,
-            })
+        try:
+            payload = cached_json("https://www.okx.com/api/v5/market/tickers", {"instType": "SWAP"}, ttl=45)
+            for item in payload.get("data", []):
+                if not item.get("instId", "").endswith("-USDT-SWAP"):
+                    continue
+                last, open_ = float(item.get("last") or 0), float(item.get("open24h") or 0)
+                if last > 0 and open_ > 0:
+                    items.append({"symbol": f"OKX:{item['instId']}", "name": item["instId"], "change": round((last - open_) / open_ * 100, 2), "volume": round(float(item.get("volCcy24h") or 0), 2), "price": last})
+        except Exception as error:
+            print("OKX ranking error:", error)
         futures = {
             "status": "success",
             "gainers": sorted(items, key=lambda row: row["change"], reverse=True)[:10],
