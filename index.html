@@ -54,6 +54,8 @@
     .toolbar strong { margin-right:auto; } 
     .toolbar select { padding:7px 8px; }
     .tool-button, .drawing-select { cursor:pointer; padding:7px 9px; background:#181818; color:#d7d7d7; border-color:#3a3a3a; }
+    .toggle { display:flex; align-items:center; gap:4px; color:#bfc5cf; font-size:12px; white-space:nowrap; }
+    .toggle input { accent-color:#00d4ff; padding:0; }
     #source-status { color:#b8e7ce; font-size:12px; white-space:nowrap; }
     #chart { height:540px; } 
     .side { display:grid; gap:20px; align-content:start; } 
@@ -131,10 +133,12 @@
         <select id="drawing-tool" class="drawing-select" aria-label="繪圖工具">
           <option value="none">繪圖工具</option>
           <option value="line">水平線</option>
-          <option value="arrow-up">向上箭頭</option>
-          <option value="arrow-down">向下箭頭</option>
         </select>
+        <button id="undo-line" class="tool-button" type="button">返回上一步</button>
         <button id="clear-lines" class="tool-button" type="button">清除線條</button>
+        <label class="toggle"><input id="toggle-ema" type="checkbox" checked> EMA</label>
+        <label class="toggle"><input id="toggle-levels" type="checkbox" checked> 撐壓</label>
+        <label class="toggle"><input id="toggle-structure" type="checkbox" checked> CHoCH / FVG</label>
       </div>
       <div id="chart"></div>
     </section>
@@ -180,8 +184,15 @@
     const series = chart.addSeries(LightweightCharts.CandlestickSeries, {
       upColor: '#26a69a', downColor: '#ef5350', borderVisible: false, wickUpColor: '#26a69a', wickDownColor: '#ef5350'
     });
+    const emaFastSeries = chart.addSeries(LightweightCharts.LineSeries, { color:'#f0b90b', lineWidth:1, title:'EMA Fast', lastValueVisible:false, priceLineVisible:false });
+    const emaSlowSeries = chart.addSeries(LightweightCharts.LineSeries, { color:'#00d4ff', lineWidth:1, title:'EMA Slow', lastValueVisible:false, priceLineVisible:false });
+    const emaTrendSeries = chart.addSeries(LightweightCharts.LineSeries, { color:'#a78bfa', lineWidth:1, title:'EMA Trend', lastValueVisible:false, priceLineVisible:false });
     let markerPlugin = null;
     let fvgLines = [];
+    let chochLines = [];
+    let srLines = [];
+    let latestStructure = null;
+    let latestLevels = null;
     let userLines = [];
     let structureMarkers = [];
     let userMarkers = [];
@@ -226,7 +237,7 @@
     }
 
     function updateMarkers() {
-      const markers = [...structureMarkers, ...userMarkers].sort((a, b) => a.time - b.time);
+      const markers = [...(document.getElementById('toggle-structure').checked ? structureMarkers : []), ...userMarkers].sort((a, b) => a.time - b.time);
       if (typeof LightweightCharts.createSeriesMarkers === 'function') {
         markerPlugin ??= LightweightCharts.createSeriesMarkers(series, []);
         markerPlugin.setMarkers(markers);
@@ -236,16 +247,24 @@
     }
 
     function renderStructure(structure) {
+      latestStructure = structure;
       structureMarkers = structure?.markers || [];
       const zones = structure?.fvg_zones || [];
       updateMarkers();
       fvgLines.forEach(line => series.removePriceLine(line));
+      chochLines.forEach(line => series.removePriceLine(line));
       fvgLines = [];
+      chochLines = [];
+      if (!document.getElementById('toggle-structure').checked) return;
       zones.forEach(zone => {
         const color = zone.side === 'bullish' ? '#26a69a' : '#ef5350';
         fvgLines.push(series.createPriceLine({ price: zone.low, color, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: `FVG ${zone.side}` }));
         fvgLines.push(series.createPriceLine({ price: zone.high, color, lineWidth: 1, lineStyle: 2, axisLabelVisible: false, title: `FVG ${zone.side}` }));
       });
+      if (structure?.choch) {
+        const bullish = structure.choch.direction === 'bullish';
+        chochLines.push(series.createPriceLine({ price: structure.choch.level, color: bullish ? '#26a69a' : '#ef5350', lineWidth: 2, lineStyle: 0, axisLabelVisible: true, title: bullish ? 'Bullish CHoCH' : 'Bearish CHoCH' }));
+      }
       const choch = structureMarkers.length ? structureMarkers[0].text : '尚未確認結構轉變';
       const fvg = zones.length ? `偵測到 ${zones.length} 個 FVG 價格失衡區` : '尚未偵測到 FVG';
       document.getElementById('structure-note').textContent = `CHoCH：結構轉變（${choch}）。FVG：價格失衡區（${fvg}）。`;
@@ -268,6 +287,24 @@
     new ResizeObserver(entries => {
       chart.applyOptions({ width: entries[0].contentRect.width });
     }).observe(document.getElementById('chart'));
+
+    function renderLevels(levels) {
+      latestLevels = levels;
+      srLines.forEach(line => series.removePriceLine(line));
+      srLines = [];
+      if (!levels || !document.getElementById('toggle-levels').checked) return;
+      srLines.push(series.createPriceLine({ price: levels.resistance, color:'#f59e0b', lineWidth:1, lineStyle:2, axisLabelVisible:true, title:'Resistance' }));
+      srLines.push(series.createPriceLine({ price: levels.support, color:'#26a69a', lineWidth:1, lineStyle:2, axisLabelVisible:true, title:'Support' }));
+    }
+
+    function applyIndicatorVisibility() {
+      const showEma = document.getElementById('toggle-ema').checked;
+      emaFastSeries.applyOptions({ visible: showEma });
+      emaSlowSeries.applyOptions({ visible: showEma });
+      emaTrendSeries.applyOptions({ visible: showEma });
+      renderLevels(latestLevels);
+      renderStructure(latestStructure);
+    }
 
     function renderWatchlist() {
       const list = document.getElementById('watchlist');
@@ -372,7 +409,11 @@
         if (!response.ok) throw new Error(data.detail || '分析失敗');
 
         series.setData(data.chart_data);
+        emaFastSeries.setData(data.ema_data?.fast || []);
+        emaSlowSeries.setData(data.ema_data?.slow || []);
+        emaTrendSeries.setData(data.ema_data?.trend || []);
         chart.timeScale().fitContent();
+        renderLevels(data.levels);
         renderStructure(data.structure);
 
         document.getElementById('chart-title').textContent = `${activeSymbol} · ${document.getElementById('interval').selectedOptions[0].text} · ${document.getElementById('timezone').selectedOptions[0].text}`;
@@ -416,6 +457,13 @@
       userMarkers = [];
       updateMarkers();
     };
+    document.getElementById('undo-line').onclick = () => {
+      const lastLine = userLines.pop();
+      if (lastLine) series.removePriceLine(lastLine);
+    };
+    ['toggle-ema', 'toggle-levels', 'toggle-structure'].forEach(id => {
+      document.getElementById(id).onchange = applyIndicatorVisibility;
+    });
     document.getElementById('home-button').onclick = () => {
       input.value = '';
       results.hidden = true;

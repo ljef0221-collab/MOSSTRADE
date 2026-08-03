@@ -32,6 +32,16 @@ except Exception as e:
     BINANCE_DATABASE = []
 
 SYMBOL_DATABASE.extend(BINANCE_DATABASE)
+SYMBOL_DATABASE.extend([
+    {"symbol": "AAPL", "name": "Apple Inc.", "type": "US Stock", "exchange": "NASDAQ", "keywords": ["apple", "蘋果"]},
+    {"symbol": "MSFT", "name": "Microsoft", "type": "US Stock", "exchange": "NASDAQ", "keywords": ["microsoft", "微軟"]},
+    {"symbol": "NVDA", "name": "NVIDIA", "type": "US Stock", "exchange": "NASDAQ", "keywords": ["nvidia", "輝達"]},
+    {"symbol": "TSLA", "name": "Tesla", "type": "US Stock", "exchange": "NASDAQ", "keywords": ["tesla", "特斯拉"]},
+    {"symbol": "2330.TW", "name": "台積電", "type": "Taiwan Stock", "exchange": "TWSE", "keywords": ["2330", "tsmc"]},
+    {"symbol": "2317.TW", "name": "鴻海", "type": "Taiwan Stock", "exchange": "TWSE", "keywords": ["2317", "foxconn"]},
+    {"symbol": "2454.TW", "name": "聯發科", "type": "Taiwan Stock", "exchange": "TWSE", "keywords": ["2454", "mediatek"]},
+    {"symbol": "0050.TW", "name": "元大台灣50", "type": "Taiwan ETF", "exchange": "TWSE", "keywords": ["0050", "台灣50"]},
+])
 
 # ALIASES 別名對照表
 ALIASES = {
@@ -182,12 +192,16 @@ def detect_structure(candles, pivot_size=2):
         if candles[index]["low"] == min(item["low"] for item in window):
             swing_lows.append(candles[index])
 
-    markers = []
+    markers, choch = [], None
     current = candles[-1]
     if swing_highs and current["close"] > swing_highs[-1]["high"]:
-        markers.append({"time": current["time"], "position": "belowBar", "color": "#26a69a", "shape": "arrowUp", "text": "CHoCH ↑"})
+        level = swing_highs[-1]["high"]
+        choch = {"direction": "bullish", "level": level, "time": current["time"]}
+        markers.append({"time": current["time"], "position": "belowBar", "color": "#26a69a", "shape": "arrowUp", "text": "Bullish CHoCH"})
     elif swing_lows and current["close"] < swing_lows[-1]["low"]:
-        markers.append({"time": current["time"], "position": "aboveBar", "color": "#ef5350", "shape": "arrowDown", "text": "CHoCH ↓"})
+        level = swing_lows[-1]["low"]
+        choch = {"direction": "bearish", "level": level, "time": current["time"]}
+        markers.append({"time": current["time"], "position": "aboveBar", "color": "#ef5350", "shape": "arrowDown", "text": "Bearish CHoCH"})
 
     zones = []
     for index in range(2, len(candles)):
@@ -196,7 +210,7 @@ def detect_structure(candles, pivot_size=2):
             zones.append({"side": "bullish", "low": first["high"], "high": last["low"], "time": last["time"]})
         elif first["low"] > last["high"]:
             zones.append({"side": "bearish", "low": last["high"], "high": first["low"], "time": last["time"]})
-    return {"markers": markers, "fvg_zones": zones[-3:]}
+    return {"markers": markers, "fvg_zones": zones[-3:], "choch": choch}
 
 @app.get("/", response_class=HTMLResponse)
 def read_index():
@@ -294,6 +308,7 @@ def analyze_market(symbol: str, interval: str = "1h"):
     is_bybit = symbol_upper.startswith("BYBIT:")
     is_okx = symbol_upper.startswith("OKX:")
     symbol = symbol_upper.split(":")[-1].replace(".P", "")
+    is_okx_swap = is_okx and symbol.endswith("-SWAP")
     if not symbol:
         raise HTTPException(status_code=400, detail="請輸入商品代號。")
     if interval not in TIMEFRAME_CONFIG:
@@ -341,7 +356,7 @@ def analyze_market(symbol: str, interval: str = "1h"):
                 if None not in (open_, high, low, close):
                     candles.append({"time": timestamp, "open": open_, "high": high, "low": low, "close": close})
     except Exception as error:
-        source = "OKX Perpetual Futures" if is_okx else "Binance Futures" if is_binance else "Bybit Futures" if is_bybit else "Yahoo"
+        source = ("OKX Perpetual Futures" if is_okx_swap else "OKX Spot") if is_okx else "Binance Futures" if is_binance else "Bybit Futures" if is_bybit else "Yahoo"
         raise HTTPException(status_code=502, detail=f"{source} 暫時無法提供 {symbol} 的 K 線資料，請稍後再試。") from error
     
     candles = aggregate_candles(candles, config["bucket"])
@@ -387,11 +402,14 @@ def analyze_market(symbol: str, interval: str = "1h"):
         tp = sl = None
 
     structure = detect_structure(candles)
+    level_candles = candles[-config["lookback"] - 1:-1]
+    levels = {"resistance": round(max(candle["high"] for candle in level_candles), 4), "support": round(min(candle["low"] for candle in level_candles), 4)}
+    ema_data = {"fast": [{"time": candle["time"], "value": round(fast_ema[index], 4)} for index, candle in enumerate(candles)], "slow": [{"time": candle["time"], "value": round(slow_ema[index], 4)} for index, candle in enumerate(candles)], "trend": [{"time": candle["time"], "value": round(trend_ema[index], 4)} for index, candle in enumerate(candles)]}
     return {
         "status": "success",
         "strategy_name": config["name"],
         "strategy_description": config["description"],
-        "market_source": "OKX Perpetual Futures" if is_okx else "Yahoo Finance",
+        "market_source": "OKX Perpetual Futures" if is_okx_swap else "OKX Spot" if is_okx else "Yahoo Finance",
         "direction": direction,
         "message": message,
         "current_price": round(price, 4),
@@ -399,5 +417,7 @@ def analyze_market(symbol: str, interval: str = "1h"):
         "sl": round(sl, 4) if sl is not None else "—",
         "reason": reason,
         "structure": structure,
+        "levels": levels,
+        "ema_data": ema_data,
         "chart_data": [{key: round(value, 4) if key != "time" else value for key, value in candle.items()} for candle in candles],
     }
