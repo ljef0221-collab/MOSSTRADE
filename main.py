@@ -66,10 +66,27 @@ ALIASES = {
 }
 
 # 補上時間週期設定
+# 補上完整時間週期設定（涵蓋前端所有選單選項，修正短時區無法計算的問題）
 TIMEFRAME_CONFIG = {
-    "1m": {"source": "1m", "range": "1d", "bucket": 1, "mode": "cross", "fast": 5, "slow": 20, "trend": 60, "lookback": 20, "tp_atr": 1.5, "sl_atr": 1.0, "name": "1分極速衝浪", "description": "極短線動能策略"},
-    "1h": {"source": "1m", "range": "5d", "bucket": 60, "mode": "breakout", "fast": 10, "slow": 30, "trend": 100, "lookback": 20, "tp_atr": 2.0, "sl_atr": 1.2, "name": "1小時突破策略", "description": "趨勢區間突破策略"},
-    "1d": {"source": "1d", "range": "1y", "bucket": 1, "mode": "cross", "fast": 10, "slow": 30, "trend": 200, "lookback": 20, "tp_atr": 3.0, "sl_atr": 1.5, "name": "日線長線策略", "description": "大週期 EMA 交叉策略"}
+    # 分鐘級別 (1m - 45m)
+    "1m":  {"source": "1m",  "range": "7d",  "bucket": 1,  "mode": "cross", "fast": 5,  "slow": 20, "trend": 60,  "lookback": 20, "tp_atr": 1.5, "sl_atr": 1.0, "name": "1分極短線", "description": "極短線策略"},
+    "3m":  {"source": "2m",  "range": "7d",  "bucket": 3,  "mode": "cross", "fast": 5,  "slow": 20, "trend": 60,  "lookback": 20, "tp_atr": 1.5, "sl_atr": 1.0, "name": "3分極速策略", "description": "極短線策略"},
+    "5m":  {"source": "5m",  "range": "14d", "bucket": 1,  "mode": "cross", "fast": 5,  "slow": 20, "trend": 60,  "lookback": 20, "tp_atr": 1.5, "sl_atr": 1.0, "name": "5分短線策略", "description": "極短線策略,捕捉主要波段"},
+    "10m": {"source": "5m",  "range": "14d", "bucket": 2,  "mode": "cross", "fast": 8,  "slow": 21, "trend": 80,  "lookback": 20, "tp_atr": 1.8, "sl_atr": 1.0, "name": "10分動能策略", "description": "短線動能追隨策略"},
+    "15m": {"source": "15m", "range": "1mo", "bucket": 1,  "mode": "cross", "fast": 8,  "slow": 21, "trend": 80,  "lookback": 20, "tp_atr": 1.8, "sl_atr": 1.0, "name": "15m當沖主線", "description": "短線交易與趨勢確認"},
+    "30m": {"source": "30m", "range": "1mo", "bucket": 1,  "mode": "breakout", "fast": 10, "slow": 30, "trend": 100, "lookback": 20, "tp_atr": 2.0, "sl_atr": 1.2, "name": "30m波段突破", "description": "日內波段突破策略"},
+    "45m": {"source": "15m", "range": "1mo", "bucket": 3,  "mode": "breakout", "fast": 10, "slow": 30, "trend": 100, "lookback": 20, "tp_atr": 2.0, "sl_atr": 1.2, "name": "45m亞盤/歐盤波段", "description": "中短線區間突破策略"},
+    
+    # 小時級別 (1h - 4h)
+    "1h":  {"source": "60m", "range": "2mo", "bucket": 1,  "mode": "breakout", "fast": 10, "slow": 30, "trend": 100, "lookback": 20, "tp_atr": 2.0, "sl_atr": 1.2, "name": "1小時突破策略", "description": "趨勢區間突破策略"},
+    "2h":  {"source": "60m", "range": "3mo", "bucket": 2,  "mode": "breakout", "fast": 10, "slow": 30, "trend": 100, "lookback": 20, "tp_atr": 2.2, "sl_atr": 1.3, "name": "2小時趨勢策略", "description": "中線波段追蹤策略"},
+    "3h":  {"source": "60m", "range": "3mo", "bucket": 3,  "mode": "breakout", "fast": 10, "slow": 30, "trend": 100, "lookback": 20, "tp_atr": 2.5, "sl_atr": 1.4, "name": "3小時趨勢策略", "description": "跨日波段趨勢策略"},
+    "4h":  {"source": "60m", "range": "6mo", "bucket": 4,  "mode": "breakout", "fast": 10, "slow": 30, "trend": 100, "lookback": 20, "tp_atr": 2.5, "sl_atr": 1.5, "name": "4小時主力波段", "description": "機構主力波段策略"},
+    
+    # 長週期 (1d - 1mo)
+    "1d":  {"source": "1d",  "range": "2y",  "bucket": 1,  "mode": "cross", "fast": 10, "slow": 30, "trend": 200, "lookback": 20, "tp_atr": 3.0, "sl_atr": 1.5, "name": "日線長線策略", "description": "大週期 EMA 交叉策略"},
+    "1w":  {"source": "1wk", "range": "5y",  "bucket": 1,  "mode": "cross", "fast": 10, "slow": 30, "trend": 100, "lookback": 20, "tp_atr": 4.0, "sl_atr": 2.0, "name": "週線戰略策略", "description": "長期投資宏觀策略"},
+    "1mo": {"source": "1mo", "range": "10y", "bucket": 1,  "mode": "cross", "fast": 5,  "slow": 15, "trend": 50,  "lookback": 12, "tp_atr": 5.0, "sl_atr": 2.5, "name": "月線週期策略", "description": "超長線景氣循環策略"}
 }
 
 app = FastAPI(title="SmartNavigator")
@@ -111,6 +128,36 @@ def calculate_atr(candles, period=14):
     for value in true_ranges[period:]:
         atr = (atr * (period - 1) + value) / period
     return atr
+
+# 🔽 新增 SMC / ICT 失衡缺口 (FVG) 計算函數 🔽
+def detect_fvg(candles):
+    """
+    SMC 策略核心：尋找未被填補的失衡缺口 (Fair Value Gap)
+    - 看多 FVG (Bullish FVG): Candle[i-2].high < Candle[i].low (中間第 i-1 根強勢衝高留空)
+    - 看空 FVG (Bearish FVG): Candle[i-2].low > Candle[i].high
+    """
+    if len(candles) < 3:
+        return None, 0, 0
+
+    # 檢測最新 10 根 K 線內最具代表性的 FVG
+    for i in range(len(candles) - 1, len(candles) - 10, -1):
+        if i < 2:
+            break
+        c1, c3 = candles[i - 2], candles[i]
+        
+        # 多頭 FVG 缺口
+        if c3["low"] > c1["high"]:
+            fvg_bottom = c1["high"]
+            fvg_top = c3["low"]
+            return "BULLISH", fvg_top, fvg_bottom
+            
+        # 空頭 FVG 缺口
+        elif c3["high"] < c1["low"]:
+            fvg_top = c1["low"]
+            fvg_bottom = c3["high"]
+            return "BEARISH", fvg_top, fvg_bottom
+
+    return None, 0, 0
 
 # 🔽 新增在 calculate_atr 正下方的函數 🔽
 def aggregate_candles(candles, bucket_minutes):
@@ -160,7 +207,55 @@ def site_stats():
 # =====================================================================
 # 全球化自動擋搜尋 API：支援任何語言、任何名詞，免手寫 ALIASES 字典
 # =====================================================================
+import concurrent.futures
 
+# 🔽 優化版：利用 ThreadPoolExecutor 進行多執行緒平行發包，極速載入首頁榜單 🔽
+@app.get("/api/top_market")
+def get_top_market():
+    dynamic_symbols = ["BTC-USD", "ETH-USD", "SOL-USD", "NVDA", "TSLA", "AAPL", "AMZN", "2330.TW", "2454.TW", "EURUSD=X"]
+    
+    def fetch_single(sym):
+        try:
+            encoded = quote(sym, safe=".-")
+            res = requests.get(
+                f"https://query1.finance.yahoo.com/v8/finance/chart/{encoded}",
+                params={"interval": "1d", "range": "1d"},
+                headers={"User-Agent": "Mozilla/5.0"},
+                timeout=2.5
+            )
+            data = res.json()["chart"]["result"][0]
+            meta = data["meta"]
+            price = meta.get("regularMarketPrice", 0)
+            prev_close = meta.get("chartPreviousClose", price)
+            change_percent = ((price - prev_close) / prev_close * 100) if prev_close else 0
+            volume = meta.get("regularMarketVolume", 0)
+            
+            return {
+                "symbol": sym,
+                "name": meta.get("shortName", sym),
+                "price": round(price, 2),
+                "change_percent": round(change_percent, 2),
+                "volume": volume
+            }
+        except Exception:
+            return None
+
+    # ⚡ 使用 10 個核心執行緒同時抓取數據
+    market_data = []
+    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+        results = executor.map(fetch_single, dynamic_symbols)
+        for r in results:
+            if r is not None:
+                market_data.append(r)
+
+    # 排序並截取前 5 名
+    volume_rank = sorted(market_data, key=lambda x: x["volume"], reverse=True)[:5]
+    gainers_rank = sorted(market_data, key=lambda x: x["change_percent"], reverse=True)[:5]
+
+    return {
+        "volume_rank": volume_rank,
+        "gainers_rank": gainers_rank
+    }
 # =====================================================================
 # 全球化極速搜尋 API：毫秒級回傳，絕不卡頓
 # =====================================================================
@@ -246,20 +341,22 @@ def analyze_market(symbol: str, interval: str = "1h"):
     if not symbol:
         raise HTTPException(status_code=400, detail="請輸入商品代號。")
     if interval not in TIMEFRAME_CONFIG:
-        raise HTTPException(status_code=400, detail=f"不支援的時間週期: {interval}")
-    config = TIMEFRAME_CONFIG[interval]
+        # 如果遇到不認識的週期，預設退回 1h
+        config = TIMEFRAME_CONFIG["1h"]
+    else:
+        config = TIMEFRAME_CONFIG[interval]
 
     try:
         encoded_symbol = quote(symbol, safe=".-")
         response = requests.get(
             f"https://query1.finance.yahoo.com/v8/finance/chart/{encoded_symbol}",
             params={"interval": config["source"], "range": config["range"]},
-            headers={"User-Agent": "SmartNavigator/1.0"},
+            headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"},
             timeout=10,
         )
         response.raise_for_status()
         result = response.json()["chart"]["result"][0]
-        timestamps = result["timestamp"]
+        timestamps = result.get("timestamp", [])
         quote_data = result["indicators"]["quote"][0]
     except (requests.RequestException, ValueError, KeyError, IndexError, TypeError) as error:
         print("Yahoo K線錯誤:", error)
@@ -270,15 +367,21 @@ def analyze_market(symbol: str, interval: str = "1h"):
 
     candles = []
     for timestamp, open_, high, low, close in zip(
-        timestamps, quote_data["open"], quote_data["high"], quote_data["low"], quote_data["close"]
+        timestamps, quote_data.get("open", []), quote_data.get("high", []), quote_data.get("low", []), quote_data.get("close", [])
     ):
         if None not in (open_, high, low, close):
             candles.append({"time": timestamp, "open": open_, "high": high, "low": low, "close": close})
     
     candles = aggregate_candles(candles, config["bucket"])
     lookback = config.get("lookback", 0)
-    if len(candles) < max(config["trend"], lookback) + 2:
-        raise HTTPException(status_code=422, detail=f"資料不足，無法計算 {interval} 策略。")
+    
+    # ⚠️ 防禦優化：若數據稍有不足，自動彈性調降所需的最低 K 線數，防止直接 422 崩潰
+    min_required = max(config["trend"], lookback) + 2
+    if len(candles) < min_required:
+        # 當資料不足時，動態縮小 trend EMA 週期以保證計算成功
+        config["trend"] = max(10, len(candles) // 2)
+        if len(candles) < 15:
+            raise HTTPException(status_code=422, detail=f"【{symbol}】{interval} 歷史 K 線數據不足（僅 {len(candles)} 根），請切換至其他週期。")
 
     closes = [candle["close"] for candle in candles]
     fast_ema = calculate_ema(closes, config["fast"])
@@ -295,7 +398,25 @@ def analyze_market(symbol: str, interval: str = "1h"):
     direction, message = "HOLD", "目前沒有符合條件的訊號"
     reason = "等待下一根 K 線確認"
 
-    if config["mode"] == "cross":
+    # ==========================================
+    # 第二步位置 2：導入 SMC / ICT 策略與原本的 EMA 策略
+    # ==========================================
+    fvg_type, fvg_top, fvg_bottom = detect_fvg(candles)
+    
+    # 1m-15m 短時區自動啟動 SMC FVG 缺口策略
+    if interval in ["1m", "3m", "5m", "10m", "15m"] and fvg_type is not None:
+        if fvg_type == "BULLISH" and price >= fvg_bottom:
+            long_signal, short_signal = True, False
+            reason = f"SMC/ICT 策略：回測 {interval} 多頭失衡缺口 (FVG: {round(fvg_bottom,2)}-{round(fvg_top,2)})，機構買盤確立"
+        elif fvg_type == "BEARISH" and price <= fvg_top:
+            long_signal, short_signal = False, True
+            reason = f"SMC/ICT 策略：觸碰 {interval} 空頭失衡缺口 (FVG: {round(fvg_bottom,2)}-{round(fvg_top,2)})，機構拋售賣壓"
+        else:
+            long_signal = short_signal = False
+            reason = f"{interval} SMC 觀察中：捕捉到 FVG 缺口 ({round(fvg_bottom,2)} - {round(fvg_top,2)})，等待價格回測"
+            
+    # 中長時區維持原有的 EMA 交叉或區間突破邏輯
+    elif config["mode"] == "cross":
         long_signal = trend_up and fast_ema[-2] <= slow_ema[-2] and fast_ema[-1] > slow_ema[-1]
         short_signal = trend_down and fast_ema[-2] >= slow_ema[-2] and fast_ema[-1] < slow_ema[-1]
         reason = f"{interval} 策略：{config['fast']}／{config['slow']} EMA 交叉，{config['trend']} EMA 趨勢濾網"
@@ -307,6 +428,9 @@ def analyze_market(symbol: str, interval: str = "1h"):
         short_signal = trend_down and price < recent_low - buffer and price < current["open"]
         reason = f"{interval} 策略：{config['fast']}／{config['slow']}／{config['trend']} EMA 趨勢；{config['lookback']} 根區間突破＋ATR 過濾"
 
+    # ==========================================
+    # 進出場訊號與風控 (TP/SL) 計算
+    # ==========================================
     if long_signal:
         direction, message = "BUY", "多頭進場訊號"
         tp, sl = price + atr * config["tp_atr"], price - atr * config["sl_atr"]
