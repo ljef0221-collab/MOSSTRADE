@@ -41,6 +41,10 @@ SYMBOL_DATABASE.extend([
     {"symbol": "2317.TW", "name": "鴻海", "type": "Taiwan Stock", "exchange": "TWSE", "keywords": ["2317", "foxconn"]},
     {"symbol": "2454.TW", "name": "聯發科", "type": "Taiwan Stock", "exchange": "TWSE", "keywords": ["2454", "mediatek"]},
     {"symbol": "0050.TW", "name": "元大台灣50", "type": "Taiwan ETF", "exchange": "TWSE", "keywords": ["0050", "台灣50"]},
+    {"symbol": "GLD", "name": "SPDR Gold Shares", "type": "Precious Metals ETF", "exchange": "NYSEARCA", "keywords": ["gold", "黃金", "xau"]},
+    {"symbol": "SLV", "name": "iShares Silver Trust", "type": "Precious Metals ETF", "exchange": "NYSEARCA", "keywords": ["silver", "白銀", "xag"]},
+    {"symbol": "PPLT", "name": "abrdn Physical Platinum", "type": "Precious Metals ETF", "exchange": "NYSEARCA", "keywords": ["platinum", "鉑金"]},
+    {"symbol": "PALL", "name": "abrdn Physical Palladium", "type": "Precious Metals ETF", "exchange": "NYSEARCA", "keywords": ["palladium", "鈀金"]},
 ])
 
 # ALIASES 別名對照表
@@ -139,6 +143,63 @@ def yahoo_json(path, params, ttl):
         except (requests.RequestException, ValueError) as error:
             last_error = error
     raise last_error
+
+
+def number_value(value):
+    """Parse exchange values such as '$1,234.50' or '--'."""
+    if value in (None, "", "--", "-"):
+        return None
+    try:
+        return float(str(value).replace("$", "").replace(",", "").replace("+", ""))
+    except ValueError:
+        return None
+
+
+def nasdaq_daily_candles(symbol):
+    """Keyless daily US-stock/ETF fallback when Yahoo blocks Render's IP."""
+    end = datetime.now(timezone.utc).date()
+    start = end.replace(year=end.year - 3)
+    params = {"assetclass": "stocks", "fromdate": start.isoformat(), "todate": end.isoformat(), "limit": 5000}
+    url = f"https://api.nasdaq.com/api/quote/{quote(symbol.lower(), safe='')}/historical"
+    payload = cached_json(url, params, 300)
+    if not (payload.get("data") or {}).get("tradesTable", {}).get("rows"):
+        params["assetclass"] = "etf"
+        payload = cached_json(url, params, 300)
+    rows = (payload.get("data") or {}).get("tradesTable", {}).get("rows", [])
+    candles = []
+    for row in reversed(rows):
+        try:
+            stamp = int(datetime.strptime(row["date"], "%m/%d/%Y").replace(tzinfo=timezone.utc).timestamp())
+            open_, high, low, close = (number_value(row.get(key)) for key in ("open", "high", "low", "close"))
+            if None not in (open_, high, low, close):
+                candles.append({"time": stamp, "open": open_, "high": high, "low": low, "close": close, "volume": number_value(row.get("volume")) or 0})
+        except (KeyError, ValueError):
+            continue
+    return candles
+
+
+def twse_daily_candles(symbol):
+    """Official TWSE daily fallback; 24 months is enough for EMA strategies."""
+    stock_no = symbol.split(".")[0]
+    now = datetime.now(timezone.utc)
+    candles = []
+    for offset in range(24):
+        month = now.month - offset
+        year = now.year
+        if month <= 0:
+            month += 12
+            year -= 1
+        payload = cached_json("https://www.twse.com.tw/exchangeReport/STOCK_DAY", {"response": "json", "date": f"{year}{month:02d}01", "stockNo": stock_no}, 86400)
+        for row in payload.get("data", []):
+            try:
+                y, m, d = (int(part) for part in row[0].split("/") )
+                stamp = int(datetime(y + 1911, m, d, tzinfo=timezone.utc).timestamp())
+                open_, high, low, close = (number_value(row[index]) for index in (3, 4, 5, 6))
+                if None not in (open_, high, low, close):
+                    candles.append({"time": stamp, "open": open_, "high": high, "low": low, "close": close, "volume": number_value(row[1]) or 0})
+            except (IndexError, ValueError):
+                continue
+    return sorted({candle["time"]: candle for candle in candles}.values(), key=lambda candle: candle["time"])
 
 
 def okx_history_candles(symbol, bar, pages=5):
@@ -317,12 +378,27 @@ def market_rankings():
                 "volume": round(float(item.get("volCcy24h") or 0), 2),
                 "price": last,
             })
-        return {
+        futures = {
             "status": "success",
             "gainers": sorted(items, key=lambda row: row["change"], reverse=True)[:10],
             "losers": sorted(items, key=lambda row: row["change"])[:10],
             "volume": sorted(items, key=lambda row: row["volume"], reverse=True)[:10],
         }
+        def ranked_symbols(symbols, label):
+            rows = []
+            for ticker in symbols:
+                try:
+                    candles = nasdaq_daily_candles(ticker)
+                    if len(candles) < 2:
+                        continue
+                    latest, previous = candles[-1], candles[-2]
+                    rows.append({"symbol": ticker, "name": f"{ticker} · {label}", "change": round((latest["close"] - previous["close"]) / previous["close"] * 100, 2), "volume": latest.get("volume", 0), "price": latest["close"]})
+                except Exception:
+                    continue
+            return {"gainers": sorted(rows, key=lambda row: row["change"], reverse=True)[:10], "losers": sorted(rows, key=lambda row: row["change"])[:10], "volume": sorted(rows, key=lambda row: row["volume"], reverse=True)[:10]}
+        stocks = ranked_symbols(["AAPL", "MSFT", "NVDA", "TSLA", "AMZN", "META", "GOOGL", "AMD", "NFLX", "INTC"], "US Stock")
+        metals = ranked_symbols(["GLD", "IAU", "SLV", "SIVR", "PPLT", "PALL", "GDX", "GDXJ", "SIL", "COPX"], "Metals")
+        return {"status": "success", "markets": {"futures": futures, "stocks": stocks, "metals": metals}}
     except Exception as error:
         raise HTTPException(status_code=502, detail="排行榜資料暫時無法載入，請稍後再試。") from error
 
@@ -345,6 +421,7 @@ def analyze_market(symbol: str, interval: str = "1h"):
         raise HTTPException(status_code=400, detail=f"不支援的時間週期: {interval}")
     
     config = TIMEFRAME_CONFIG[interval]
+    market_source = "OKX Perpetual Futures" if is_okx_swap else "OKX Spot" if is_okx else "Yahoo Finance"
 
     try:
         if is_okx:
@@ -386,8 +463,21 @@ def analyze_market(symbol: str, interval: str = "1h"):
                 if None not in (open_, high, low, close):
                     candles.append({"time": timestamp, "open": open_, "high": high, "low": low, "close": close, "volume": volume or 0})
     except Exception as error:
-        source = ("OKX Perpetual Futures" if is_okx_swap else "OKX Spot") if is_okx else "Binance Futures" if is_binance else "Bybit Futures" if is_bybit else "Yahoo"
-        raise HTTPException(status_code=502, detail=f"{source} 暫時無法提供 {symbol} 的 K 線資料，請稍後再試。") from error
+        if not (is_okx or is_binance or is_bybit):
+            try:
+                if symbol.endswith(".TW"):
+                    candles = twse_daily_candles(symbol)
+                    market_source = "TWSE official daily data"
+                else:
+                    candles = nasdaq_daily_candles(symbol)
+                    market_source = "Nasdaq daily data"
+                if not candles:
+                    raise ValueError("No fallback candles")
+            except Exception:
+                raise HTTPException(status_code=502, detail=f"Yahoo 與備援資料來源暫時無法提供 {symbol} 的 K 線資料，請稍後再試。") from error
+        else:
+            source = "OKX Perpetual Futures" if is_okx_swap else "OKX Spot" if is_okx else "Binance Futures" if is_binance else "Bybit Futures"
+            raise HTTPException(status_code=502, detail=f"{source} 暫時無法提供 {symbol} 的 K 線資料，請稍後再試。") from error
     
     candles = aggregate_candles(candles, config["bucket"])
     lookback = config.get("lookback", 0)
@@ -439,7 +529,7 @@ def analyze_market(symbol: str, interval: str = "1h"):
         "status": "success",
         "strategy_name": config["name"],
         "strategy_description": config["description"],
-        "market_source": "OKX Perpetual Futures" if is_okx_swap else "OKX Spot" if is_okx else "Yahoo Finance",
+        "market_source": market_source,
         "direction": direction,
         "message": message,
         "current_price": round(price, 4),
