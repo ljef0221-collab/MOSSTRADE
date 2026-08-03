@@ -398,7 +398,17 @@ def market_rankings():
             return {"gainers": sorted(rows, key=lambda row: row["change"], reverse=True)[:10], "losers": sorted(rows, key=lambda row: row["change"])[:10], "volume": sorted(rows, key=lambda row: row["volume"], reverse=True)[:10]}
         stocks = ranked_symbols(["AAPL", "MSFT", "NVDA", "TSLA", "AMZN", "META", "GOOGL", "AMD", "NFLX", "INTC"], "US Stock")
         metals = ranked_symbols(["GLD", "IAU", "SLV", "SIVR", "PPLT", "PALL", "GDX", "GDXJ", "SIL", "COPX"], "Metals")
-        return {"status": "success", "markets": {"futures": futures, "stocks": stocks, "metals": metals}}
+        taiwan_rows = []
+        for ticker in ["2330.TW", "2317.TW", "2454.TW", "2303.TW", "2881.TW", "2882.TW", "2308.TW", "3711.TW", "2382.TW", "0050.TW"]:
+            try:
+                candles = twse_daily_candles(ticker)
+                if len(candles) >= 2:
+                    latest, previous = candles[-1], candles[-2]
+                    taiwan_rows.append({"symbol": ticker, "name": ticker, "change": round((latest["close"] - previous["close"]) / previous["close"] * 100, 2), "volume": latest.get("volume", 0), "price": latest["close"]})
+            except Exception:
+                continue
+        taiwan = {"gainers": sorted(taiwan_rows, key=lambda row: row["change"], reverse=True)[:10], "losers": sorted(taiwan_rows, key=lambda row: row["change"])[:10], "volume": sorted(taiwan_rows, key=lambda row: row["volume"], reverse=True)[:10]}
+        return {"status": "success", "markets": {"futures": futures, "taiwan": taiwan, "us": stocks, "metals": metals}}
     except Exception as error:
         raise HTTPException(status_code=502, detail="排行榜資料暫時無法載入，請稍後再試。") from error
 
