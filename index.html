@@ -1,370 +1,233 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SmartNavigator 市場導航</title>
-  <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
-  <style>
-   :root { 
-    color-scheme: dark;
-
-    --bg:#000000;
-    --panel:#101010;
-    --line:#222222;
-
-    --muted:#888888;
-
-    --blue:#00d4ff;
-    --green:#00ff88;
-    --red:#ff4560;
-
-}
-    * { box-sizing:border-box; } body { margin:0; padding:24px; background:var(--bg); color:#f3f5fa; font:14px system-ui,sans-serif; }
-    header { display:flex; justify-content:space-between; gap:16px; align-items:center; border-bottom:1px solid var(--line); padding-bottom:18px; margin-bottom:20px; } h1 { font-size:22px; margin:0; } .sub { color:var(--muted); margin-top:4px; }
-/* ✅ 修正後的 CSS：強設定位在輸入框正下方 */
-.search { position:relative; width:min(580px,100%); display:flex; } 
-#search-results {
-    position: absolute;
-    top: 100%;                  /* 貼緊搜尋區塊正下方 */
-    left: 0;
-    width: calc(100% - 70px);   /* 自動扣除右側搜尋按鈕寬度，精準對齊輸入框 */
-    max-height: 300px;
-    overflow-y: auto;
-    background: #0a0a0a;
-    border: 1px solid #333;
-    border-radius: 0 0 8px 8px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-    z-index: 9999;              /* 確保疊在圖表最上層 */
-    margin-top: 4px;
-}
-
- .result { padding:10px 12px; cursor:pointer; border-bottom:1px solid var(--line); } 
-.result:hover {
-    background:#111;
-}
- .result small { color:var(--muted); }
-    .layout { display:grid; grid-template-columns:minmax(0,1fr) 310px; gap:20px; } .panel { background:var(--panel); border:1px solid var(--line); border-radius:10px; }
-    .chart-panel { overflow:hidden; } .toolbar { display:flex; align-items:center; flex-wrap:wrap; gap:8px; padding:12px; border-bottom:1px solid var(--line); } .toolbar strong { margin-right:auto; } .toolbar select { padding:7px 8px; }
-    #chart { height:540px; } .side { display:grid; gap:20px; align-content:start; } .widget { padding:16px; } h2 { font-size:15px; margin:0 0 12px; } .signal { text-align:center; font-weight:700; border-radius:7px; padding:12px; margin:12px 0; } .BUY { background:var(--green); } .SELL { background:var(--red); } .HOLD { background:#596071; }
-    .metrics { display:grid; gap:8px; color:var(--muted); } .metrics div { display:flex; justify-content:space-between; } .metrics b { color:#fff; } .reason { color:var(--muted); line-height:1.55; font-size:12px; } .watch { list-style:none; padding:0; margin:0; } .watch li { display:flex; justify-content:space-between; padding:9px 0; border-bottom:1px solid var(--line); cursor:pointer; } .watch button { padding:2px 7px; background:transparent; border-color:transparent; color:var(--muted); } .hint { color:var(--muted); font-size:12px; line-height:1.5; }
-    @media (max-width:800px) { body { padding:14px; } header { align-items:flex-start; flex-direction:column; } .layout { grid-template-columns:1fr; } #chart { height:420px; } }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartNavigator - 市場監測與交易輔助平台</title>
+    <!-- 引入 Lightweight Charts CDN -->
+    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #121420; color: #d1d4dc; }
+        
+        /* 導覽列 */
+        header { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; background: #1e222d; border-bottom: 1px solid #2a2e39; }
+        .logo { font-size: 20px; font-weight: bold; color: #2962ff; cursor: pointer; }
+        .nav-tools { display: flex; gap: 12px; }
+        .btn { background: #2962ff; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+        .btn:hover { background: #1e4bd8; }
+        
+        /* 搜尋區塊 */
+        .search-container { max-width: 800px; margin: 30px auto; padding: 0 20px; text-align: center; }
+        .search-box { width: 100%; padding: 16px 20px; font-size: 18px; border-radius: 30px; border: 2px solid #2a2e39; background: #1e222d; color: #fff; outline: none; transition: border-color 0.2s; }
+        .search-box:focus { border-color: #2962ff; }
+        
+        /* 首頁 DashBoard (榜單視圖) */
+        #dashboard-section { max-width: 1200px; margin: 0 auto; padding: 0 20px 40px; }
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 20px; }
+        @media (max-width: 768px) { .grid-container { grid-template-columns: 1fr; } }
+        
+        .card { background: #1e222d; border-radius: 8px; padding: 20px; border: 1px solid #2a2e39; }
+        .card-title { font-size: 18px; font-weight: bold; margin-bottom: 16px; color: #fff; display: flex; justify-content: space-between; align-items: center; }
+        
+        .rank-table { width: 100%; border-collapse: collapse; }
+        .rank-table th, .rank-table td { padding: 12px; text-align: left; border-bottom: 1px solid #2a2e39; }
+        .rank-table th { color: #787b86; font-size: 13px; }
+        .rank-table tr { cursor: pointer; transition: background 0.15s; }
+        .rank-table tbody tr:hover { background: #2a2e39; }
+        
+        .up { color: #089981; font-weight: bold; }
+        .down { color: #f23645; font-weight: bold; }
+        
+        /* 分析頁面 (K線圖視圖) - 預設 display: none */
+        #chart-section { display: none; padding: 20px; max-width: 1400px; margin: 0 auto; }
+        .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        #chart-title { font-size: 24px; font-weight: bold; color: #fff; }
+        #tv-chart { width: 100%; height: 650px; background: #1e222d; border-radius: 8px; border: 1px solid #2a2e39; }
+    </style>
 </head>
 <body>
-  <header>
-    <div style="display: flex; align-items: center; gap: 16px;">
-      <h1>SmartNavigator</h1>
-      <button id="home-btn" style="background:#2962ff; color:#fff; border:none; padding:8px 16px; border-radius:6px; font-weight:bold; cursor:pointer;">首頁</button>
-      <div class="sub">瀏覽 <span id="visit-count">—</span> 次</div>
+
+    <!-- 頂部導覽列 -->
+    <header>
+        <div class="logo" onclick="showDashboard()">SmartNavigator</div>
+        <div class="nav-tools">
+            <button id="home-btn" class="btn" onclick="showDashboard()">🏠 首頁</button>
+        </div>
+    </header>
+
+    <!-- 1. 首頁 (Dashboard) 區塊 -->
+    <div id="dashboard-section">
+        <!-- 放大版搜尋框 -->
+        <div class="search-container">
+            <input type="text" id="symbol-search" class="search-box" placeholder="輸入美股/加密貨幣代號 (例如: NVDA, TSLA, BTC-USD) 按 Enter 分析..." onkeydown="handleSearch(event)">
+        </div>
+
+        <!-- 雙榜單 -->
+        <div class="grid-container">
+            <!-- 成交量榜單 -->
+            <div class="card">
+                <div class="card-title">🔥 成交量前 5 名</div>
+                <table class="rank-table">
+                    <thead>
+                        <tr><th>代碼</th><th>最新價</th><th>成交量</th></tr>
+                    </thead>
+                    <tbody id="volume-list">
+                        <tr><td colspan="3" style="text-align:center; color:#787b86;">資料載入中...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 漲跌幅榜單 -->
+            <div class="card">
+                <div class="card-title">⚡ 漲跌幅前 5 名</div>
+                <table class="rank-table">
+                    <thead>
+                        <tr><th>代碼</th><th>最新價</th><th>漲跌幅</th></tr>
+                    </thead>
+                    <tbody id="gainer-list">
+                        <tr><td colspan="3" style="text-align:center; color:#787b86;">資料載入中...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-    
-    <!-- 🔍 加大且填滿寬度的搜尋框區塊 -->
-    <div class="search" style="position:relative; width:100%; max-width:800px; display:flex;">
-      <input id="asset-input" autocomplete="off" placeholder="搜尋全市場商品，例如：股票代號、加密貨幣、外匯" style="width:100%; padding:12px 16px; font-size:16px;">
-      <button id="search-button" style="padding:12px 24px; font-size:16px; white-space:nowrap;">搜尋</button>
-      <div id="search-results" hidden></div>
+
+    <!-- 2. K線分析區塊 (預設完全不佔用空間) -->
+    <div id="chart-section">
+        <div class="chart-header">
+            <h2 id="chart-title">NVDA - K線圖分析</h2>
+            <button class="btn" onclick="showDashboard()">返回榜單</button>
+        </div>
+        <div id="tv-chart"></div>
     </div>
-  </header>
-<!--  首頁專屬區塊：交易量榜 & 漲跌幅榜 -->
-  <div id="home-dashboard" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
-    <div class="panel widget">
-      <h2>🔥 動態交易量排行榜</h2>
-      <div id="volume-list" class="metrics" style="gap:12px;">讀取全市場資料中…</div>
-    </div>
-    <div class="panel widget">
-      <h2>🚀 動態漲跌幅排行榜</h2>
-      <div id="gainers-list" class="metrics" style="gap:12px;">讀取全市場資料中…</div>
-    </div>
-  </div>
 
-  <main class="layout">
-    <section class="panel chart-panel">
-      <div class="toolbar"><strong id="chart-title">選擇一個商品開始</strong><select id="interval" aria-label="K 線週期"><optgroup label="分鐘"><option value="1m">1 分鐘</option><option value="3m">3 分鐘</option><option value="5m">5 分鐘</option><option value="10m">10 分鐘</option><option value="15m">15 分鐘</option><option value="30m">30 分鐘</option><option value="45m">45 分鐘</option></optgroup><optgroup label="小時"><option value="1h" selected>1 小時</option><option value="2h">2 小時</option><option value="3h">3 小時</option><option value="4h">4 小時</option></optgroup><optgroup label="長週期"><option value="1d">日線</option><option value="1w">週線</option><option value="1mo">月線</option></optgroup></select><select id="timezone" aria-label="圖表時區"></select></div>
-      <div id="chart"></div>
-    </section>
-    <aside class="side">
-<section class="panel widget">
-
-<h2>策略分析</h2>
-
-<h3 id="strategy-name">
-等待分析
-</h3>
-
-<div class="strategy-tag">
-AI策略
-</div>
-
-<p id="strategy-description" class="reason">
-選擇商品後顯示策略說明
-</p>
-
-<div id="signal" class="signal HOLD">
-尚未分析
-</div>
-
-<div class="metrics"><div>目前價格 <b id="price">—</b></div><div>目標價格 <b id="tp">—</b></div><div>停損價格 <b id="sl">—</b></div></div><p id="reason" class="reason">選擇商品後會依目前的時間週期與策略計算。</p><p class="hint">僅供研究，不構成投資建議。</p></section>
-      <section class="panel widget"><h2>自選清單</h2><ul id="watchlist" class="watch"></ul></section>
-    </aside>
-  </main>
     <script>
-    const DEFAULT_WATCHLIST = ['BTC-USD','NVDA','2330.TW','EURUSD=X'];
-    let watchlist = JSON.parse(localStorage.getItem('my_watchlist') || 'null') || DEFAULT_WATCHLIST;
-    let activeSymbol = '';
-    const chart = LightweightCharts.createChart(document.getElementById('chart'), { layout:{background:{color:'#000000'},textColor:'#c9ceda'}, grid:{vertLines:{color:'#202534'},horzLines:{color:'#202534'}}, rightPriceScale:{borderColor:'#303747'}, timeScale:{borderColor:'#303747',timeVisible:true,secondsVisible:false} });
-    const series = chart.addSeries(LightweightCharts.CandlestickSeries, {upColor:'#26a69a',downColor:'#ef5350',borderVisible:false,wickUpColor:'#26a69a',wickDownColor:'#ef5350'});
-let tpLine = null;
-let slLine = null;
-    const input = document.getElementById('asset-input'), results = document.getElementById('search-results');
-    let searchTimer;
-    function populateTimezones() { const select=document.getElementById('timezone'); const zones=typeof Intl.supportedValuesOf==='function' ? Intl.supportedValuesOf('timeZone') : ['UTC','Asia/Taipei','Asia/Tokyo','America/New_York','Europe/London']; ['UTC',...zones.filter(zone=>zone!=='UTC')].forEach(zone=>{const option=document.createElement('option'); option.value=zone; option.textContent=zone; if(zone==='Asia/Taipei') option.selected=true; select.append(option);}); }
-    function timeFormatter(timestamp) { return new Intl.DateTimeFormat('zh-TW',{timeZone:document.getElementById('timezone').value,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(timestamp * 1000)); }
-    function applyTimezone() { chart.applyOptions({localization:{timeFormatter}}); }
-    new ResizeObserver(entries => { chart.applyOptions({width:entries[0].contentRect.width}); }).observe(document.getElementById('chart'));
-    
-    function renderWatchlist() { const list=document.getElementById('watchlist'); list.replaceChildren(); watchlist.forEach(symbol => { const li=document.createElement('li'), label=document.createElement('span'), remove=document.createElement('button'); label.textContent=symbol; label.onclick=()=>analyze(symbol); remove.textContent='×'; remove.title='移除'; remove.onclick=e=>{e.stopPropagation(); watchlist=watchlist.filter(item=>item!==symbol); localStorage.setItem('my_watchlist',JSON.stringify(watchlist)); renderWatchlist();}; li.append(label,remove); list.append(li); }); }
+        let chart = null;
+        let candlestickSeries = null;
 
-    // ==========================================
-    // 修改焦點：讓搜尋選單一目了然顯示進場狀態
-    // ==========================================
-    function showResults(items) { 
-        results.replaceChildren(); 
-        if (!items.length) { 
-            const empty=document.createElement('div'); 
-            empty.className='result'; 
-            empty.textContent='找不到相符商品'; 
-            results.append(empty); 
-            return;
-        } 
-        
-        items.forEach(item => { 
-            const row=document.createElement('div');
-            row.className='result'; 
-            // 讓每一個選單列有彈性盒模型排版，方便左右對齊
-            row.style.display = 'flex';
-            row.style.justifyContent = 'space-between';
-            row.style.alignItems = 'center';
-            row.style.borderBottom = '1px solid #222';
-            row.style.padding = '12px 14px';
-
-            // 左側：顯示商品名稱與代號
-            const leftContainer = document.createElement('div');
-            const symbol=document.createElement('b'); 
-            symbol.textContent=item.symbol; 
-            symbol.style.color = '#00d4ff';
-            
-            const detail=document.createElement('small'); 
-            detail.style.display = 'block';
-            detail.style.color = '#888';
-            detail.textContent=`${item.name || '未知商品'} · ${item.type}${item.exchange ? ' · '+item.exchange : ''}`; 
-            
-            leftContainer.append(symbol, detail);
-
-            // 右側：直接注入即時訊號標籤 (一目了然！)
-            const rightContainer = document.createElement('div');
-            if (item.strategy_signal) {
-                const sig = item.strategy_signal;
-                const badge = document.createElement('span');
-                badge.style.padding = '4px 8px';
-                badge.style.borderRadius = '5px';
-                badge.style.fontSize = '11px';
-                badge.style.fontWeight = 'bold';
-                badge.style.whiteSpace = 'nowrap';
-                
-                if (sig.direction === 'BUY') {
-                    badge.style.background = '#00ff88';
-                    badge.style.color = '#000';
-                    badge.textContent = '🔥 BUY';
-                } else if (sig.direction === 'SELL') {
-                    badge.style.background = '#ff4560';
-                    badge.style.color = '#fff';
-                    badge.textContent = '🚨 SELL';
-                } else {
-                    badge.style.background = '#333';
-                    badge.style.color = '#888';
-                    badge.textContent = '⏳ HOLD';
-                }
-                rightContainer.append(badge);
-            }
-
-            row.append(leftContainer, rightContainer);
-            row.onclick=()=>{
-                results.hidden=true; 
-                input.value=item.symbol; 
-                analyze(item.symbol);
-            }; 
-            results.append(row); 
-        }); 
-        results.hidden=false; 
-    }
-
-    async function search() { const keyword=input.value.trim(); if (!keyword) return; try { const response=await fetch(`/api/search?keyword=${encodeURIComponent(keyword)}`); const data=await response.json(); if (!response.ok) throw new Error(data.detail || '搜尋失敗'); showResults(data.results || []); } catch(error) { showResults([]); } }
-    
-    // ✅ 優化後的 analyze 函式
-async function analyze(symbol = activeSymbol) {
-    if (!symbol) {
-        // 如果目前沒選商品，預設載入 BTC-USD
-        symbol = 'BTC-USD';
-    }
-    activeSymbol = symbol.toUpperCase();
-    results.hidden = true;
-    
-    document.getElementById('chart-title').textContent = `${activeSymbol} · 載入中…`;
-    const signal = document.getElementById('signal');
-    signal.className = 'signal HOLD';
-    signal.textContent = '正在計算策略…';
-    
-    try {
-        const intervalValue = document.getElementById('interval').value;
-        const params = new URLSearchParams({
-            symbol: activeSymbol,
-            interval: intervalValue
+        // 初始化載入
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchRankings();
         });
-        
-        const response = await fetch(`/api/analyze?${params}`);
-        const data = await response.json();
-        
-        if (!response.ok) throw new Error(data.detail || '分析失敗');
-        
-        // 瞬間注入數據並自動縮放到合適視域
-        series.setData(data.chart_data);
-        chart.timeScale().fitContent();
-        
-// ==========================================
-        // 🚀 路線 A：K 線圖實時繪製 SMC / ICT 買賣訊號與 FVG 缺口
-        // ==========================================
-        if (data.chart_data && data.chart_data.length > 0) {
-            const markers = [];
-            const lastCandle = data.chart_data[data.chart_data.length - 1];
 
-            // 1. 若當前產生進場訊號，在最後一根 K 線打上訊號標籤
-            if (data.direction === 'BUY') {
-                markers.push({
-                    time: lastCandle.time,
-                    position: 'belowBar',
-                    color: '#00ff88',
-                    shape: 'arrowUp',
-                    text: '🔥 SMC BUY',
-                });
-            } else if (data.direction === 'SELL') {
-                markers.push({
-                    time: lastCandle.time,
-                    position: 'aboveBar',
-                    color: '#ff4560',
-                    shape: 'arrowDown',
-                    text: '🚨 SMC SELL',
-                });
-            }
-
-            // 將標籤渲染至 TradingView 圖表
-            series.setMarkers(markers);
+        // 頁面切換：顯示首頁榜單
+        function showDashboard() {
+            document.getElementById('dashboard-section').style.display = 'block';
+            document.getElementById('chart-section').style.display = 'none';
         }
 
-        // 更新標題與策略分析文字
-        document.getElementById('chart-title').textContent = `${activeSymbol} · ${document.getElementById('interval').selectedOptions[0].text} · ${document.getElementById('timezone').selectedOptions[0].text}`;
-        signal.className = `signal ${data.direction}`;
-        signal.textContent = data.message;
-        document.getElementById('price').textContent = data.current_price;
-        document.getElementById('tp').textContent = data.tp;
-        document.getElementById('sl').textContent = data.sl;
-// 🧹 清除舊線段
-        if (tpLine) { series.removePriceLine(tpLine); tpLine = null; }
-        if (slLine) { series.removePriceLine(slLine); slLine = null; }
-
-        // 📈 繪製新的 TP/SL 虛線
-        if (data.tp && data.tp !== "—") {
-            tpLine = series.createPriceLine({
-                price: parseFloat(data.tp),
-                color: '#00ff88',
-                lineWidth: 2,
-                lineStyle: LightweightCharts.LineStyle.Dashed,
-                axisLabelVisible: true,
-                title: '🎯 TP',
-            });
-        }
-        if (data.sl && data.sl !== "—") {
-            slLine = series.createPriceLine({
-                price: parseFloat(data.sl),
-                color: '#ff4560',
-                lineWidth: 2,
-                lineStyle: LightweightCharts.LineStyle.Dashed,
-                axisLabelVisible: true,
-                title: '🛑 SL',
-            });
-        }
-        document.getElementById('reason').textContent = data.reason;
-        document.getElementById('strategy-name').textContent = data.strategy_name;
-        document.getElementById('strategy-description').textContent = data.strategy_description;
-    } catch(error) {
-        document.getElementById('chart-title').textContent = activeSymbol;
-        signal.className = 'signal HOLD';
-        signal.textContent = error.message;
-    }
-}
-    
-    input.addEventListener('input',()=>{
-        clearTimeout(searchTimer);
-        if(input.value.trim().length < 2){
-            results.hidden=true;
-            return;
-        }
-        searchTimer=setTimeout(search,150);      // 微調為 150ms，給予後端足夠的時間抓取數據
-    });
-    
-    input.addEventListener('keydown',event=>{if(event.key==='Enter') search();}); document.getElementById('search-button').onclick=search; document.getElementById('interval').onchange=()=>analyze(); // ✅ 修改後：切換時區瞬間直接重新渲染圖表，不重新打 API
-document.getElementById('timezone').onchange=()=>{
-    applyTimezone();
-    document.getElementById('chart-title').textContent = `${activeSymbol} · ${document.getElementById('interval').selectedOptions[0].text} · ${document.getElementById('timezone').selectedOptions[0].text}`;
-}; document.addEventListener('click',event=>{if(!event.target.closest('.search')) results.hidden=true;}); // ✅ 新增抓取瀏覽次數的函式並呼叫
-async function loadVisitCount() {
-    try {
-        const res = await fetch('/api/stats');
-        const data = await res.json();
-        document.getElementById('visit-count').textContent = data.visits || 1;
-    } catch(e) {
-        document.getElementById('visit-count').textContent = '1';
-    }
-}
-
-populateTimezones(); applyTimezone(); renderWatchlist(); loadVisitCount();
-// 首頁切換 logic
-    async function showHomePage() {
-        document.getElementById('home-dashboard').style.display = 'grid';
-        document.querySelector('.layout').style.display = 'none'; // 隱藏圖表
-        
-        try {
-            const res = await fetch('/api/top_market');
-            const data = await res.json();
+        // 頁面切換：顯示圖表頁面
+        function showChartSection(symbol) {
+            document.getElementById('dashboard-section').style.display = 'none';
+            document.getElementById('chart-section').style.display = 'block';
+            document.getElementById('chart-title').innerText = `${symbol} - K線圖分析`;
             
-            document.getElementById('volume-list').innerHTML = data.volume_rank.map(item => `
-                <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #222; cursor:pointer;" onclick="selectSymbol('${item.symbol}')">
-                    <span><b>${item.symbol}</b> <small style="color:#888;">${item.name}</small></span>
-                    <span>$${item.price}</span>
-                </div>
-            `).join('');
-
-            document.getElementById('gainers-list').innerHTML = data.gainers_rank.map(item => {
-                const color = item.change_percent >= 0 ? '#00ff88' : '#ff4560';
-                return `
-                <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #222; cursor:pointer;" onclick="selectSymbol('${item.symbol}')">
-                    <span><b>${item.symbol}</b> <small style="color:#888;">${item.name}</small></span>
-                    <span style="color:${color}; font-weight:bold;">${item.change_percent > 0 ? '+' : ''}${item.change_percent}%</span>
-                </div>`;
-            }).join('');
-        } catch(e) {
-            console.error('榜單抓取失敗', e);
+            // 延遲繪製圖表以確保 DOM 已獲得正確寬高
+            setTimeout(() => {
+                initChart();
+                loadSymbolData(symbol);
+            }, 50);
         }
-    }
 
-    function selectSymbol(sym) {
-        document.getElementById('home-dashboard').style.display = 'none';
-        document.querySelector('.layout').style.display = 'grid';
-        analyze(sym);
-    }
+        // 搜尋事件
+        function handleSearch(event) {
+            if (event.key === 'Enter') {
+                const symbol = event.target.value.trim().toUpperCase();
+                if (symbol) {
+                    showChartSection(symbol);
+                }
+            }
+        }
 
-    document.getElementById('home-btn').onclick = showHomePage;
+        // 抓取全市場動態榜單
+        async function fetchRankings() {
+            try {
+                const res = await fetch('/api/rankings');
+                const data = await res.json();
+                
+                renderTable('volume-list', data.top_volume, item => `
+                    <tr onclick="showChartSection('${item.symbol}')">
+                        <td><strong>${item.symbol}</strong></td>
+                        <td>$${item.price}</td>
+                        <td>${(item.volume / 1e6).toFixed(2)}M</td>
+                    </tr>
+                `);
 
-  </script>
+                renderTable('gainer-list', data.top_gainers, item => {
+                    const changeClass = item.change >= 0 ? 'up' : 'down';
+                    const changeSign = item.change >= 0 ? '+' : '';
+                    return `
+                        <tr onclick="showChartSection('${item.symbol}')">
+                            <td><strong>${item.symbol}</strong></td>
+                            <td>$${item.price}</td>
+                            <td class="${changeClass}">${changeSign}${item.change}%</td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.error("無法載入榜單資料:", err);
+            }
+        }
+
+        function renderTable(elementId, items, rowTemplate) {
+            const container = document.getElementById(elementId);
+            if (!items || items.length === 0) {
+                container.innerHTML = '<tr><td colspan="3" style="text-align:center;">無資料</td></tr>';
+                return;
+            }
+            container.innerHTML = items.map(rowTemplate).join('');
+        }
+
+        // 初始化 TradingView 圖表
+        function initChart() {
+            const container = document.getElementById('tv-chart');
+            container.innerHTML = ''; // 清空既有圖表
+
+            chart = LightweightCharts.createChart(container, {
+                layout: { backgroundColor: '#1e222d', textColor: '#d1d4dc' },
+                grid: { vertLines: { color: '#2a2e39' }, horzLines: { color: '#2a2e39' } },
+                timeScale: { borderColor: '#2a2e39', timeVisible: true },
+            });
+
+            candlestickSeries = chart.addCandlestickSeries({
+                upColor: '#089981', downColor: '#f23645',
+                borderUpColor: '#089981', borderDownColor: '#f23645',
+                wickUpColor: '#089981', wickDownColor: '#f23645',
+            });
+        }
+
+        // 相容性設定 Markers（解決 series.setMarkers is not a function 報錯）
+        function setSeriesMarkers(series, markers) {
+            if (typeof series.setMarkers === 'function') {
+                // 舊版 lightweight-charts 語法
+                series.setMarkers(markers);
+            } else if (typeof LightweightCharts.createSeriesMarker === 'function') {
+                // 新版 lightweight-charts 語法
+                LightweightCharts.createSeriesMarker(series, markers);
+            } else {
+                console.warn("目前版本的 LightweightCharts 找不到相容的 setMarkers API");
+            }
+        }
+
+        // 載入標的 K 線與 SMC 訊號數據
+        async function loadSymbolData(symbol) {
+            try {
+                const res = await fetch(`/api/klines?symbol=${symbol}`);
+                const data = await res.json();
+                
+                if (data && data.ohlc) {
+                    candlestickSeries.setData(data.ohlc);
+                    
+                    // 繪製 SMC/ICT 買賣與 FVG 標記點 (如果有 signals)
+                    if (data.signals) {
+                        setSeriesMarkers(candlestickSeries, data.signals);
+                    }
+                }
+            } catch (err) {
+                console.error("載入 K 線數據失敗:", err);
+            }
+        }
+    </script>
 </body>
 </html>
