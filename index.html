@@ -3,226 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartNavigator - 市場監測與交易輔助平台</title>
-    <script src="https://unpkg.com/lightweight-charts@4.1.1/dist/lightweight-charts.standalone.production.js"></script>
+    <title>金融交易導航系統</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #121420; color: #d1d4dc; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #131722; color: #d1d4dc; display: flex; flex-direction: column; height: 100vh; }
         
-        header { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; background: #1e222d; border-bottom: 1px solid #2a2e39; }
-        .logo { font-size: 20px; font-weight: bold; color: #2962ff; cursor: pointer; }
-        .btn { background: #2962ff; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; }
-        
-        .hidden { display: none !important; }
+        header { background-color: #1e222d; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #2a2e39; }
+        .logo { font-size: 1.2rem; font-weight: bold; color: #2962ff; }
+        .search-box { display: flex; gap: 8px; }
+        input { background: #2a2e39; border: 1px solid #363a45; color: #fff; padding: 8px 12px; border-radius: 4px; outline: none; }
+        button { background: #2962ff; border: none; color: white; padding: 8px 16px; border-radius: 4px; cursor: pointer; transition: 0.2s; }
+        button:hover { background: #1e53e5; }
 
-        #dashboard-section { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .search-container { max-width: 800px; margin: 20px auto 30px; text-align: center; }
-        .search-box { width: 100%; padding: 16px 24px; font-size: 18px; border-radius: 30px; border: 2px solid #2a2e39; background: #1e222d; color: #fff; outline: none; }
-        .search-box:focus { border-color: #2962ff; }
-        
-        /* 切換頁籤按鈕 */
-        .market-toggle { display: flex; justify-content: center; gap: 12px; margin-bottom: 24px; }
-        .toggle-btn { background: #1e222d; border: 1px solid #2a2e39; color: #787b86; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
-        .toggle-btn.active { background: #2962ff; color: #fff; border-color: #2962ff; }
+        main { display: flex; flex: 1; overflow: hidden; }
+        #chart-container { flex: 3; height: 100%; border-right: 1px solid #2a2e39; }
+        #sidebar { flex: 1; min-width: 300px; padding: 20px; background: #1e222d; display: flex; flex-direction: column; gap: 16px; }
 
-        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-        @media (max-width: 768px) { .grid-container { grid-template-columns: 1fr; } }
-        
-        .card { background: #1e222d; border-radius: 12px; padding: 20px; border: 1px solid #2a2e39; }
-        .card-title { font-size: 18px; font-weight: bold; margin-bottom: 16px; color: #fff; }
-        
-        .rank-table { width: 100%; border-collapse: collapse; }
-        .rank-table th, .rank-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #2a2e39; font-size: 14px; }
-        .rank-table th { color: #787b86; font-size: 12px; }
-        .rank-table tr { cursor: pointer; transition: background 0.15s; }
-        .rank-table tbody tr:hover { background: #2a2e39; }
-        
-        .up { color: #089981; font-weight: bold; }
-        .down { color: #f23645; font-weight: bold; }
-        
-        #chart-section { max-width: 1400px; margin: 0 auto; padding: 20px; }
-        .chart-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-        .back-btn { background: #2a2e39; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
-        #chart-title { font-size: 24px; font-weight: bold; color: #fff; }
-        #tv-chart { width: 100%; height: 700px; background: #1e222d; border-radius: 12px; border: 1px solid #2a2e39; }
+        .card { background: #2a2e39; padding: 16px; border-radius: 8px; }
+        .card h3 { font-size: 0.9rem; color: #787b86; margin-bottom: 8px; }
+        .signal-tag { font-size: 1.5rem; font-weight: bold; padding: 4px 8px; border-radius: 4px; display: inline-block; }
+        .BUY { background: rgba(8, 153, 129, 0.2); color: #089981; }
+        .SELL { background: rgba(242, 54, 69, 0.2); color: #f23645; }
+        .HOLD { background: rgba(120, 123, 134, 0.2); color: #787b86; }
+
+        .data-row { display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.95rem; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo" onclick="showDashboard()">SmartNavigator</div>
-        <div style="flex: 1; max-width: 400px; margin: 0 20px;">
-        <input type="text" class="search-box" style="padding: 8px 16px; font-size: 14px;" placeholder="搜尋幣種 (如 ETHUSDT) 按 Enter..." onkeydown="handleSearch(event)">
+        <div class="logo">🧭 金融交易導航系統</div>
+        <div class="search-box">
+            <input type="text" id="symbolInput" placeholder="例如: BINANCE:BTCUSDT 或 AAPL" value="BINANCE:BTCUSDT">
+            <button onclick="updateDashboard()">載入數據與策略</button>
         </div>
-        <button class="btn" onclick="showDashboard()"> 首頁榜單</button>
     </header>
 
-    <!-- 首頁榜單區塊 -->
-    <div id="dashboard-section">
-        <div class="search-container">
-            <input type="text" id="symbol-search" class="search-box" placeholder="搜尋加密貨幣 (如 BTCUSDT, ETHUSDT) 按 Enter 分析..." onkeydown="handleSearch(event)">
+    <main>
+        <!-- TradingView 官方 Widget -->
+        <div id="chart-container">
+            <div id="tradingview_widget" style="height: 100%; width: 100%;"></div>
         </div>
 
-        <!-- 市場切換 -->
-        <div class="market-toggle">
-            <button id="btn-futures" class="toggle-btn active" onclick="switchMarket('futures')">⚡ USDT-M 合約</button>
-            <button id="btn-spot" class="toggle-btn" onclick="switchMarket('spot')">🛒 現貨市場</button>
-        </div>
-
-        <div class="grid-container">
+        <!-- 右側策略訊號面板 -->
+        <div id="sidebar">
             <div class="card">
-                <div class="card-title">🔥 成交量前 10 名</div>
-                <table class="rank-table">
-                    <thead>
-                        <tr><th>#</th><th>標的</th><th>最新價</th><th>成交額</th></tr>
-                    </thead>
-                    <tbody id="volume-list">
-                        <tr><td colspan="4" style="text-align:center;">資料載入中...</td></tr>
-                    </tbody>
-                </table>
+                <h3>即時策略分析 (50/200 EMA + ATR)</h3>
+                <div id="signalTag" class="signal-tag HOLD">載入中...</div>
+                <p id="reasonText" style="margin-top: 8px; font-size: 0.85rem; color: #b2b5be;">正在讀取後端資料...</p>
             </div>
 
             <div class="card">
-                <div class="card-title">🚀 漲跌幅前 10 名</div>
-                <table class="rank-table">
-                    <thead>
-                        <tr><th>#</th><th>標的</th><th>最新價</th><th>24h 漲跌</th></tr>
-                    </thead>
-                    <tbody id="gainer-list">
-                        <tr><td colspan="4" style="text-align:center;">資料載入中...</td></tr>
-                    </tbody>
-                </table>
+                <h3>動態風控參考</h3>
+                <div class="data-row"><span>最新成交價:</span> <strong id="closePrice">--</strong></div>
+                <div class="data-row"><span>動態停損位 (SL):</span> <strong id="stopLoss" style="color: #f23645;">--</strong></div>
+                <div class="data-row"><span>動態停利位 (TP):</span> <strong id="takeProfit" style="color: #089981;">--</strong></div>
+                <div class="data-row"><span>14 週期 ATR:</span> <strong id="atrVal">--</strong></div>
             </div>
         </div>
-    </div>
+    </main>
 
-    <!-- 獨立 K 線分析頁 -->
-    <div id="chart-section" class="hidden">
-        <div class="chart-nav">
-            <button class="back-btn" onclick="showDashboard()">❮ 返回榜單</button>
-            <h2 id="chart-title">BTCUSDT - K線分析</h2>
-            <div style="width: 80px;"></div>
-        </div>
-        <div id="tv-chart"></div>
-    </div>
-
+    <!-- 載入 TradingView 腳本 -->
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
     <script>
-        let currentMarket = 'futures';
-        let chart = null;
-        let candlestickSeries = null;
+        let tvWidget = null;
 
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchRankings(currentMarket);
-        });
-
-        function switchMarket(type) {
-            currentMarket = type;
-            document.getElementById('btn-futures').classList.toggle('active', type === 'futures');
-            document.getElementById('btn-spot').classList.toggle('active', type === 'spot');
-            fetchRankings(type);
+        function initTradingView(symbol) {
+            tvWidget = new TradingView.widget({
+                "autosize": true,
+                "symbol": symbol,
+                "interval": "60",
+                "timezone": "Asia/Taipei",
+                "theme": "dark",
+                "style": "1",
+                "locale": "zh_TW",
+                "toolbar_bg": "#f1f3f6",
+                "enable_publishing": false,
+                "hide_side_toolbar": false,
+                "container_id": "tradingview_widget"
+            });
         }
 
-        function showDashboard() {
-            document.getElementById('chart-section').classList.add('hidden');
-            document.getElementById('dashboard-section').classList.remove('hidden');
-        }
-
-        function showChartSection(symbol) {
-            document.getElementById('dashboard-section').classList.add('hidden');
-            document.getElementById('chart-section').classList.remove('hidden');
-            document.getElementById('chart-title').innerText = `${symbol} - K線圖分析`;
+        async function fetchStrategySignal(rawSymbol) {
+            // 解析 TradingView 符號格式 (例如 "BINANCE:BTCUSDT" -> "BTCUSDT")
+            const cleanSymbol = rawSymbol.includes(":") ? rawSymbol.split(":")[1] : rawSymbol;
             
-            setTimeout(() => {
-                initChart();
-                loadSymbolData(symbol);
-            }, 50);
-        }
-
-        function handleSearch(event) {
-            if (event.key === 'Enter') {
-                let symbol = event.target.value.trim().toUpperCase();
-                if (symbol) {
-                    if (!symbol.endsWith('USDT')) symbol += 'USDT';
-                    showChartSection(symbol);
-                }
-            }
-        }
-
-        async function fetchRankings(type) {
             try {
-                const res = await fetch(`/api/rankings?type=${type}`);
-                const data = await res.json();
-                
-                renderTable('volume-list', data.top_volume, (item, idx) => `
-                    <tr onclick="showChartSection('${item.symbol}')">
-                        <td style="color:#787b86">${idx + 1}</td>
-                        <td><strong>${item.symbol}</strong></td>
-                        <td>$${item.price}</td>
-                        <td>$${(item.volume / 1e6).toFixed(1)}M</td>
-                    </tr>
-                `);
+                const response = await fetch(`http://127.0.0.1:8000/api/v1/analyze/${cleanSymbol}`);
+                if (!response.ok) throw new Error("API 傳回異常");
+                const data = await response.json();
 
-                renderTable('gainer-list', data.top_gainers, (item, idx) => {
-                    const changeClass = item.change >= 0 ? 'up' : 'down';
-                    const changeSign = item.change >= 0 ? '+' : '';
-                    return `
-                        <tr onclick="showChartSection('${item.symbol}')">
-                            <td style="color:#787b86">${idx + 1}</td>
-                            <td><strong>${item.symbol}</strong></td>
-                            <td>$${item.price}</td>
-                            <td class="${changeClass}">${changeSign}${item.change}%</td>
-                        </tr>
-                    `;
-                });
+                // 更新前端 UI
+                const signalTag = document.getElementById("signalTag");
+                signalTag.innerText = data.signal;
+                signalTag.className = `signal-tag ${data.signal}`;
+
+                document.getElementById("closePrice").innerText = data.close_price;
+                document.getElementById("stopLoss").innerText = data.stop_loss || "--";
+                document.getElementById("takeProfit").innerText = data.take_profit || "--";
+                document.getElementById("atrVal").innerText = data.atr;
+                document.getElementById("reasonText").innerText = data.reason;
+
             } catch (err) {
-                console.error("載入榜單失敗:", err);
+                console.error("無法取得後端訊號:", err);
+                document.getElementById("signalTag").innerText = "ERROR";
+                document.getElementById("reasonText").innerText = "後端 API 連線失敗，請確認 main.py 已啟動。";
             }
         }
 
-        function renderTable(elementId, items, rowTemplate) {
-            const container = document.getElementById(elementId);
-            if (!items || items.length === 0) {
-                container.innerHTML = '<tr><td colspan="4" style="text-align:center;">無資料</td></tr>';
-                return;
-            }
-            container.innerHTML = items.map((item, idx) => rowTemplate(item, idx)).join('');
-        }
-
-        function initChart() {
-            const container = document.getElementById('tv-chart');
-            container.innerHTML = ''; 
-
-            chart = LightweightCharts.createChart(container, {
-                layout: { backgroundColor: '#1e222d', textColor: '#d1d4dc' },
-                grid: { vertLines: { color: '#2a2e39' }, horzLines: { color: '#2a2e39' } },
-                timeScale: { borderColor: '#2a2e39', timeVisible: true },
-            });
-
-            candlestickSeries = chart.addCandlestickSeries({
-                upColor: '#089981', downColor: '#f23645',
-                borderUpColor: '#089981', borderDownColor: '#f23645',
-                wickUpColor: '#089981', wickDownColor: '#f23645',
-            });
-        }
-
-        async function loadSymbolData(symbol) {
-            try {
-                const res = await fetch(`/api/klines?symbol=${symbol}`);
-                const data = await res.json();
-                
-                if (data && data.ohlc && data.ohlc.length > 0) {
-                    candlestickSeries.setData(data.ohlc);
-                    
-                    if (data.signals && data.signals.length > 0) {
-                        candlestickSeries.setMarkers(data.signals);
-                    }
-                } else {
-                    alert("找不到該標的行情數據，請確認代碼（例如: BTCUSDT）");
-                }
-            } catch (err) {
-                console.error("載入 K 線失敗:", err);
+        function updateDashboard() {
+            const symbol = document.getElementById("symbolInput").value.trim();
+            if (symbol) {
+                initTradingView(symbol);
+                fetchStrategySignal(symbol);
             }
         }
+
+        // 頁面初次載入
+        window.onload = () => {
+            updateDashboard();
+        };
     </script>
 </body>
 </html>

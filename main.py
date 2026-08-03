@@ -1,13 +1,12 @@
-import time
-from fastapi import FastAPI, Query
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-import requests
 import yfinance as yf
 import pandas as pd
+import numpy as np
 
-app = FastAPI()
+app = FastAPI(title="Financial Navigation System API", version="1.0.0")
 
+# 設定 CORS 允許前端跨域呼叫
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -16,142 +15,98 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-CACHE = {
-    "spot": None,
-    "futures": None,
-    "spot_last_updated": 0,
-    "futures_last_updated": 0
-}
-CACHE_TTL = 60
+def calculate_strategy(df: pd.DataFrame):
+    """
+    量化策略邏輯：
+    1. 趨勢判定：50 EMA > 200 EMA (多頭) / 50 EMA < 200 EMA (空頭)
+    2. 突破捕捉：突破 50 週期唐奇安通道 ± (0.15 * ATR)
+    3. 盤整過濾：14 ATR > 50 SMA(ATR) * 0.85
+    4. 風控計算：停損 2.0 * ATR, 停利 3.8 * ATR (風報比 1.9)
+    """
+    if len(df) < 200:
+        return {"signal": "HOLD", "reason": "數據長度不足以計算 200 EMA"}
 
-@app.get("/", response_class=HTMLResponse)
-def read_index():
-    with open("index.html", "r", encoding="utf-8") as f:
-        return f.read()
+    # 均線計算
+    df['EMA_50'] = df['Close'].ewm(span=50, adjust=False).mean()
+    df['EMA_200'] = df['Close'].ewm(span=200, adjust=False).mean()
 
-@app.get("/api/rankings")
-def get_rankings(type: str = Query("futures")):
-    current_time = time.time()
-    
-    if type == "futures" and CACHE["futures"] and (current_time - CACHE["futures_last_updated"] < CACHE_TTL):
-        return CACHE["futures"]
-    if type == "spot" and CACHE["spot"] and (current_time - CACHE["spot_last_updated"] < CACHE_TTL):
-        return CACHE["spot"]
+    # ATR 計算
+    df['TR'] = np.maximum(
+        df['High'] - df['Low'],
+        np.maximum(
+            abs(df['High'] - df['Close'].shift(1)),
+            abs(df['Low'] - df['Close'].shift(1))
+        )
+    )
+    df['ATR_14'] = df['TR'].rolling(window=14).mean()
+    df['ATR_SMA_50'] = df['ATR_14'].rolling(window=50).mean()
 
-    try:
-        if type == "futures":
-            url = "https://fapi.binance.com/fapi/v1/ticker/24hr"
-            res = requests.get(url, timeout=5).json()
-            data_list = [x for x in res if x['symbol'].endswith('USDT')]
-        else:
-            url = "https://api.binance.com/api/v3/ticker/24hr"
-            res = requests.get(url, timeout=5).json()
-            data_list = [x for x in res if x['symbol'].endswith('USDT')]
+    # 唐奇安通道
+    df['Donchian_High'] = df['High'].shift(1).rolling(window=50).max()
+    df['Donchian_Low'] = df['Low'].shift(1).rolling(window=50).min()
 
-        top_volume_raw = sorted(data_list, key=lambda x: float(x['quoteVolume']), reverse=True)[:10]
-        top_gainers_raw = sorted(data_list, key=lambda x: float(x['priceChangePercent']), reverse=True)[:10]
+    latest = df.iloc[-1]
+    prev = df.iloc[-2]
 
-        top_volume = [{"symbol": x['symbol'], "price": round(float(x['lastPrice']), 4), "volume": round(float(x['quoteVolume'])), "change": round(float(x['priceChangePercent']), 2)} for x in top_volume_raw]
-        top_gainers = [{"symbol": x['symbol'], "price": round(float(x['lastPrice']), 4), "volume": round(float(x['quoteVolume'])), "change": round(float(x['priceChangePercent']), 2)} for x in top_gainers_raw]
+    # 盤整過濾檢查
+    is_volatile = latest['ATR_14'] > (latest['ATR_SMA_50'] * 0.85)
 
-        result = {"top_volume": top_volume, "top_gainers": top_gainers}
+    signal = "HOLD"
+    stop_loss = 0.0
+    take_profit = 0.0
+    reason = "無明確突破訊號"
 
-        if type == "futures":
-            CACHE["futures"] = result
-            CACHE["futures_last_updated"] = current_time
-        else:
-            CACHE["spot"] = result
-            CACHE["spot_last_updated"] = current_time
+    if is_volatile:
+        # 多頭訊號：大趨勢向上 + 突破唐奇安通道上軌
+        if (latest['EMA_50'] > latest['EMA_200']) and (latest['Close'] > (latest['Donchian_High'] + 0.15 * latest['ATR_14'])):
+            signal = "BUY"
+            stop_loss = round(latest['Close'] - (2.0 * latest['ATR_14']), 2)
+            take_profit = round(latest['Close'] + (3.8 * latest['ATR_14']), 2)
+            reason = "多頭趨勢成立，向上突破唐奇安通道上軌"
 
-        return result
-    except Exception as e:
-        if CACHE[type]:
-            return CACHE[type]
-        return {"top_volume": [], "top_gainers": []}
+        # 空頭訊號：大趨勢向下 + 跌破唐奇安通道下軌
+        elif (latest['EMA_50'] < latest['EMA_200']) and (latest['Close'] < (latest['Donchian_Low'] - 0.15 * latest['ATR_14'])):
+            signal = "SELL"
+            stop_loss = round(latest['Close'] + (2.0 * latest['ATR_14']), 2)
+            take_profit = round(latest['Close'] - (3.8 * latest['ATR_14']), 2)
+            reason = "空頭趨勢成立，向下跌破唐奇安通道下軌"
+    else:
+        reason = "波動度不足（14 ATR 過低），判定為低效盤整"
 
-@app.get("/api/klines")
-def get_klines(symbol: str = "BTCUSDT"):
-    symbol_upper = symbol.upper().strip()
-    ohlc = []
-    signals = []
-
-    # 1. 常見傳統金融商品對照表 (黃金, 原油, 股票, 指數)
-    commodity_map = {
-        "GOLD": "GC=F",     # 黃金期貨
-        "SILVER": "SI=F",   # 白銀期貨
-        "OIL": "CL=F",      # 原油期貨
-        "AAPL": "AAPL",     # 蘋果
-        "TSLA": "TSLA",     # 特斯拉
-        "NVDA": "NVDA",     # 輝達
-        "2330": "2330.TW",  # 台積電
-        "QQQ": "QQQ",       # 納斯達克ETF
-        "SPY": "SPY"        # 標普500ETF
+    return {
+        "symbol": latest.name if hasattr(latest, 'name') else "UNKNOWN",
+        "close_price": round(latest['Close'], 2),
+        "signal": signal,
+        "stop_loss": stop_loss,
+        "take_profit": take_profit,
+        "atr": round(latest['ATR_14'], 2),
+        "reason": reason
     }
 
-    yf_symbol = commodity_map.get(symbol_upper)
-
-    # 2. 如果是傳統金融商品 (黃金、股票等) -> 用 yfinance 抓取
-    if yf_symbol or "." in symbol_upper or symbol_upper.endswith("=F"):
-        target = yf_symbol if yf_symbol else symbol_upper
-        try:
-            ticker = yf.Ticker(target)
-            df = ticker.history(period="1mo", interval="1h")
-            
-            if not df.empty:
-                df = df.reset_index()
-                for i, row in df.iterrows():
-                    open_time = int(row['Datetime'].timestamp())
-                    open_p = float(row['Open'])
-                    high_p = float(row['High'])
-                    low_p = float(row['Low'])
-                    close_p = float(row['Close'])
-
-                    ohlc.append({
-                        "time": open_time,
-                        "open": round(open_p, 2),
-                        "high": round(high_p, 2),
-                        "low": round(low_p, 2),
-                        "close": round(close_p, 2)
-                    })
-
-                    # SMC 買賣訊號邏輯範例
-                    if i > 5 and i % 20 == 0:
-                        signals.append({"time": open_time, "position": "aboveBar", "color": "#f23645", "shape": "arrowDown", "text": "SMC Sell"})
-                    elif i > 5 and i % 15 == 0:
-                        signals.append({"time": open_time, "position": "belowBar", "color": "#089981", "shape": "arrowUp", "text": "SMC Buy"})
-
-                return {"ohlc": ohlc, "signals": signals}
-        except Exception as e:
-            print(f"yfinance 抓取失敗: {e}")
-
-    # 3. 若非傳統商品 -> 預設走幣安加密貨幣 API
-    clean_symbol = symbol_upper.replace("-", "").replace("/", "")
-    if not clean_symbol.endswith("USDT") and not clean_symbol.endswith("BTC"):
-        clean_symbol += "USDT"
-
+@app.get("/api/v1/analyze/{symbol}")
+async def analyze_symbol(symbol: str, interval: str = "1h"):
+    """
+    抓取多品類數據 (股票、加密貨幣、外匯、原油、黃金) 並執行策略分析
+    """
     try:
-        url = f"https://fapi.binance.com/fapi/v1/klines?symbol={clean_symbol}&interval=1h&limit=100"
-        res = requests.get(url, timeout=5)
-        
-        if res.status_code != 200:
-            url = f"https://api.binance.com/api/v3/klines?symbol={clean_symbol}&interval=1h&limit=100"
-            res = requests.get(url, timeout=5)
+        # yfinance 格式處理 (例如 BTCUSD -> BTC-USD)
+        formatted_symbol = symbol.upper()
+        if formatted_symbol in ["BTC", "ETH", "SOL"]:
+            formatted_symbol += "-USD"
 
-        if res.status_code == 200:
-            raw_klines = res.json()
-            for i, k in enumerate(raw_klines):
-                open_time = int(k[0] / 1000)
-                open_p, high_p, low_p, close_p = float(k[1]), float(k[2]), float(k[3]), float(k[4])
-                
-                ohlc.append({"time": open_time, "open": open_p, "high": high_p, "low": low_p, "close": close_p})
+        ticker = yf.Ticker(formatted_symbol)
+        df = ticker.history(period="1mo", interval=interval)
 
-                if i > 5 and i % 25 == 0:
-                    signals.append({"time": open_time, "position": "aboveBar", "color": "#f23645", "shape": "arrowDown", "text": "SMC Sell"})
-                elif i > 5 and i % 18 == 0:
-                    signals.append({"time": open_time, "position": "belowBar", "color": "#089981", "shape": "arrowUp", "text": "SMC Buy"})
+        if df.empty:
+            raise HTTPException(status_code=404, detail=f"找不到商品標的: {symbol}")
 
-            return {"ohlc": ohlc, "signals": signals}
+        result = calculate_strategy(df)
+        result["requested_symbol"] = symbol
+        return result
+
     except Exception as e:
-        print(f"幣安 API 抓取失敗: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
-    return {"error": "找不到數據", "ohlc": [], "signals": []}
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
