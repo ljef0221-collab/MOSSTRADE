@@ -171,11 +171,12 @@ def aggregate_candles(candles, bucket_minutes):
         if current_bucket is None or current_bucket["time"] != b_time:
             if current_bucket:
                 aggregated.append(current_bucket)
-            current_bucket = {"time": b_time, "open": c["open"], "high": c["high"], "low": c["low"], "close": c["close"]}
+            current_bucket = {"time": b_time, "open": c["open"], "high": c["high"], "low": c["low"], "close": c["close"], "volume": c.get("volume", 0)}
         else:
             current_bucket["high"] = max(current_bucket["high"], c["high"])
             current_bucket["low"] = min(current_bucket["low"], c["low"])
             current_bucket["close"] = c["close"]
+            current_bucket["volume"] += c.get("volume", 0)
             
     if current_bucket:
         aggregated.append(current_bucket)
@@ -296,6 +297,35 @@ def search_symbol(keyword: str):
 
     return {"status": "success", "results": results}
 
+
+@app.get("/api/market-rankings")
+def market_rankings():
+    """OKX USDT perpetual 24-hour gain/loss and quote-volume leaders."""
+    try:
+        payload = cached_json("https://www.okx.com/api/v5/market/tickers", {"instType": "SWAP"}, ttl=45)
+        items = []
+        for item in payload.get("data", []):
+            if not item.get("instId", "").endswith("-USDT-SWAP"):
+                continue
+            last, open_ = float(item.get("last") or 0), float(item.get("open24h") or 0)
+            if last <= 0 or open_ <= 0:
+                continue
+            items.append({
+                "symbol": f"OKX:{item['instId']}",
+                "name": item["instId"],
+                "change": round((last - open_) / open_ * 100, 2),
+                "volume": round(float(item.get("volCcy24h") or 0), 2),
+                "price": last,
+            })
+        return {
+            "status": "success",
+            "gainers": sorted(items, key=lambda row: row["change"], reverse=True)[:10],
+            "losers": sorted(items, key=lambda row: row["change"])[:10],
+            "volume": sorted(items, key=lambda row: row["volume"], reverse=True)[:10],
+        }
+    except Exception as error:
+        raise HTTPException(status_code=502, detail="排行榜資料暫時無法載入，請稍後再試。") from error
+
 @app.get("/api/analyze")
 def analyze_market(symbol: str, interval: str = "1h"):
     interval = interval.strip().lower()
@@ -322,7 +352,7 @@ def analyze_market(symbol: str, interval: str = "1h"):
             if not okx_bar:
                 raise ValueError("OKX does not support this interval")
             rows = okx_history_candles(symbol, okx_bar)
-            candles = [{"time": int(row[0]) // 1000, "open": float(row[1]), "high": float(row[2]), "low": float(row[3]), "close": float(row[4])} for row in rows]
+            candles = [{"time": int(row[0]) // 1000, "open": float(row[1]), "high": float(row[2]), "low": float(row[3]), "close": float(row[4]), "volume": float(row[5] or 0)} for row in rows]
         elif is_binance:
             binance_interval = {"1wk": "1w", "1mo": "1M"}.get(config["source"], config["source"])
             rows = cached_json(
@@ -330,7 +360,7 @@ def analyze_market(symbol: str, interval: str = "1h"):
                 {"symbol": symbol, "interval": binance_interval, "limit": 1500},
                 ttl=30,
             )
-            candles = [{"time": row[0] // 1000, "open": float(row[1]), "high": float(row[2]), "low": float(row[3]), "close": float(row[4])} for row in rows]
+            candles = [{"time": row[0] // 1000, "open": float(row[1]), "high": float(row[2]), "low": float(row[3]), "close": float(row[4]), "volume": float(row[5] or 0)} for row in rows]
         elif is_bybit:
             bybit_interval = {"1m": "1", "3m": "3", "5m": "5", "15m": "15", "30m": "30", "1h": "60", "1d": "D", "1wk": "W", "1mo": "M"}.get(config["source"])
             if not bybit_interval:
@@ -341,7 +371,7 @@ def analyze_market(symbol: str, interval: str = "1h"):
                 ttl=30,
             )
             rows = payload.get("result", {}).get("list", [])
-            candles = [{"time": int(row[0]) // 1000, "open": float(row[1]), "high": float(row[2]), "low": float(row[3]), "close": float(row[4])} for row in reversed(rows)]
+            candles = [{"time": int(row[0]) // 1000, "open": float(row[1]), "high": float(row[2]), "low": float(row[3]), "close": float(row[4]), "volume": float(row[5] or 0)} for row in reversed(rows)]
         else:
             encoded_symbol = quote(symbol, safe=".-")
             payload = yahoo_json(
@@ -352,9 +382,9 @@ def analyze_market(symbol: str, interval: str = "1h"):
             result = payload["chart"]["result"][0]
             quote_data = result["indicators"]["quote"][0]
             candles = []
-            for timestamp, open_, high, low, close in zip(result["timestamp"], quote_data["open"], quote_data["high"], quote_data["low"], quote_data["close"]):
+            for timestamp, open_, high, low, close, volume in zip(result["timestamp"], quote_data["open"], quote_data["high"], quote_data["low"], quote_data["close"], quote_data.get("volume", [])):
                 if None not in (open_, high, low, close):
-                    candles.append({"time": timestamp, "open": open_, "high": high, "low": low, "close": close})
+                    candles.append({"time": timestamp, "open": open_, "high": high, "low": low, "close": close, "volume": volume or 0})
     except Exception as error:
         source = ("OKX Perpetual Futures" if is_okx_swap else "OKX Spot") if is_okx else "Binance Futures" if is_binance else "Bybit Futures" if is_bybit else "Yahoo"
         raise HTTPException(status_code=502, detail=f"{source} 暫時無法提供 {symbol} 的 K 線資料，請稍後再試。") from error
