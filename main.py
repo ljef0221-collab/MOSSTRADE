@@ -6,6 +6,15 @@ import numpy as np
 
 app = FastAPI(title="Financial Navigation System API", version="1.0.0")
 
+@app.get("/")
+async def read_root():
+    """
+    根目錄：返回前端的 index.html 畫面，解決 Render Not Found 問題
+    """
+    if os.path.exists("index.html"):
+        return FileResponse("index.html")
+    return {"detail": "index.html not found in server directory"}
+
 # 設定 CORS 允許前端跨域呼叫
 app.add_middleware(
     CORSMiddleware,
