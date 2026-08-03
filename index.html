@@ -51,7 +51,10 @@
 
     <header>
         <div class="logo" onclick="showDashboard()">SmartNavigator</div>
-        <button class="btn" onclick="showDashboard()">🏠 首頁榜單</button>
+        <div style="flex: 1; max-width: 400px; margin: 0 20px;">
+        <input type="text" class="search-box" style="padding: 8px 16px; font-size: 14px;" placeholder="搜尋幣種 (如 ETHUSDT) 按 Enter..." onkeydown="handleSearch(event)">
+        </div>
+        <button class="btn" onclick="showDashboard()"> 首頁榜單</button>
     </header>
 
     <!-- 首頁榜單區塊 -->
