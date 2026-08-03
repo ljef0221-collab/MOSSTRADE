@@ -202,6 +202,29 @@ def twse_daily_candles(symbol):
     return sorted({candle["time"]: candle for candle in candles}.values(), key=lambda candle: candle["time"])
 
 
+def twse_recent_candles(symbol, months=2):
+    """Small TWSE request used by rankings; full history is only loaded for analysis."""
+    stock_no = symbol.split(".")[0]
+    now = datetime.now(timezone.utc)
+    candles = []
+    for offset in range(months):
+        month = now.month - offset
+        year = now.year
+        if month <= 0:
+            month += 12
+            year -= 1
+        payload = cached_json("https://www.twse.com.tw/exchangeReport/STOCK_DAY", {"response": "json", "date": f"{year}{month:02d}01", "stockNo": stock_no}, 1800)
+        for row in payload.get("data", []):
+            try:
+                y, m, d = (int(part) for part in row[0].split("/"))
+                open_, high, low, close = (number_value(row[index]) for index in (3, 4, 5, 6))
+                if None not in (open_, high, low, close):
+                    candles.append({"time": int(datetime(y + 1911, m, d, tzinfo=timezone.utc).timestamp()), "open": open_, "high": high, "low": low, "close": close, "volume": number_value(row[1]) or 0})
+            except (IndexError, ValueError):
+                continue
+    return sorted({row["time"]: row for row in candles}.values(), key=lambda row: row["time"])
+
+
 def okx_history_candles(symbol, bar, pages=5):
     """Page OKX candles backwards so aggregated hourly strategies have history."""
     rows, after = [], None
@@ -407,6 +430,44 @@ def market_rankings():
         return {"status": "success", "markets": {"futures": futures, "taiwan": taiwan, "us": stocks, "metals": metals}}
     except Exception as error:
         raise HTTPException(status_code=502, detail="排行榜資料暫時無法載入，請稍後再試。") from error
+
+
+@app.get("/api/market-ranking")
+def market_ranking(market: str = "futures", ranking: str = "gainers"):
+    """Load only the market and ranking currently selected by the user."""
+    market, ranking = market.lower(), ranking.lower()
+    if market not in {"futures", "taiwan", "us", "metals"} or ranking not in {"gainers", "losers", "volume"}:
+        raise HTTPException(status_code=400, detail="不支援的排行榜類型。")
+    rows = []
+    try:
+        if market == "futures":
+            payload = cached_json("https://www.okx.com/api/v5/market/tickers", {"instType": "SWAP"}, 60)
+            for item in payload.get("data", []):
+                if not item.get("instId", "").endswith("-USDT-SWAP"):
+                    continue
+                last, open_ = number_value(item.get("last")), number_value(item.get("open24h"))
+                if last and open_:
+                    rows.append({"symbol": f"OKX:{item['instId']}", "name": item["instId"], "price": last, "change": round((last-open_)/open_*100, 2), "volume": number_value(item.get("volCcy24h")) or 0})
+        else:
+            symbols = {
+                "taiwan": ["2330.TW", "2317.TW", "2454.TW", "2303.TW", "2881.TW", "2882.TW", "2308.TW", "3711.TW", "2382.TW", "0050.TW"],
+                "us": ["AAPL", "MSFT", "NVDA", "TSLA", "AMZN", "META", "GOOGL", "AMD", "QQQ", "TLT"],
+                "metals": ["GLD", "IAU", "SLV", "SIVR", "PPLT", "PALL", "GDX", "GDXJ", "SIL", "COPX"],
+            }[market]
+            for ticker in symbols:
+                try:
+                    candles = twse_recent_candles(ticker) if market == "taiwan" else nasdaq_daily_candles(ticker)
+                    if len(candles) < 2:
+                        continue
+                    latest, previous = candles[-1], candles[-2]
+                    rows.append({"symbol": ticker, "name": ticker, "price": latest["close"], "change": round((latest["close"]-previous["close"])/previous["close"]*100, 2), "volume": latest.get("volume", 0)})
+                except Exception as error:
+                    print(f"Ranking item error {ticker}:", error)
+        key = "volume" if ranking == "volume" else "change"
+        reverse = ranking != "losers"
+        return {"status": "success", "market": market, "ranking": ranking, "results": sorted(rows, key=lambda item: item[key], reverse=reverse)[:10]}
+    except Exception as error:
+        raise HTTPException(status_code=502, detail="目前選擇的排行榜資料暫時無法取得。") from error
 
 @app.get("/api/analyze")
 def analyze_market(symbol: str, interval: str = "1h"):
