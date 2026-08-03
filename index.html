@@ -4,31 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartNavigator - 市場監測與交易輔助平台</title>
-    <!-- 引入 Lightweight Charts CDN -->
-    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+    <!-- 指定 Lightweight Charts v4.1.1 穩定版，確保 setMarkers 完美運作 -->
+    <script src="https://unpkg.com/lightweight-charts@4.1.1/dist/lightweight-charts.standalone.production.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #121420; color: #d1d4dc; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #121420; color: #d1d4dc; overflow-x: hidden; }
         
-        /* 導覽列 */
+        /* 頂部導覽列 */
         header { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; background: #1e222d; border-bottom: 1px solid #2a2e39; }
         .logo { font-size: 20px; font-weight: bold; color: #2962ff; cursor: pointer; }
-        .nav-tools { display: flex; gap: 12px; }
         .btn { background: #2962ff; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: background 0.2s; }
         .btn:hover { background: #1e4bd8; }
         
-        /* 搜尋區塊 */
-        .search-container { max-width: 800px; margin: 30px auto; padding: 0 20px; text-align: center; }
-        .search-box { width: 100%; padding: 16px 20px; font-size: 18px; border-radius: 30px; border: 2px solid #2a2e39; background: #1e222d; color: #fff; outline: none; transition: border-color 0.2s; }
+        /* 頁面切換容器 (平滑顯示/隱藏) */
+        .page-view { transition: opacity 0.25s ease-in-out; }
+        .hidden { display: none !important; }
+
+        /* 1. 首頁 (Dashboard 榜單頁) */
+        #dashboard-section { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .search-container { max-width: 800px; margin: 20px auto 40px; text-align: center; }
+        .search-box { width: 100%; padding: 16px 24px; font-size: 18px; border-radius: 30px; border: 2px solid #2a2e39; background: #1e222d; color: #fff; outline: none; transition: border-color 0.2s; }
         .search-box:focus { border-color: #2962ff; }
         
-        /* 首頁 DashBoard (榜單視圖) */
-        #dashboard-section { max-width: 1200px; margin: 0 auto; padding: 0 20px 40px; }
-        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 20px; }
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
         @media (max-width: 768px) { .grid-container { grid-template-columns: 1fr; } }
         
-        .card { background: #1e222d; border-radius: 8px; padding: 20px; border: 1px solid #2a2e39; }
-        .card-title { font-size: 18px; font-weight: bold; margin-bottom: 16px; color: #fff; display: flex; justify-content: space-between; align-items: center; }
+        .card { background: #1e222d; border-radius: 12px; padding: 20px; border: 1px solid #2a2e39; }
+        .card-title { font-size: 18px; font-weight: bold; margin-bottom: 16px; color: #fff; }
         
         .rank-table { width: 100%; border-collapse: collapse; }
         .rank-table th, .rank-table td { padding: 12px; text-align: left; border-bottom: 1px solid #2a2e39; }
@@ -39,11 +41,13 @@
         .up { color: #089981; font-weight: bold; }
         .down { color: #f23645; font-weight: bold; }
         
-        /* 分析頁面 (K線圖視圖) - 預設 display: none */
-        #chart-section { display: none; padding: 20px; max-width: 1400px; margin: 0 auto; }
-        .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        /* 2. 圖表分析頁 (獨立全螢幕檢視) */
+        #chart-section { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .chart-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .back-btn { background: #2a2e39; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        .back-btn:hover { background: #363a45; }
         #chart-title { font-size: 24px; font-weight: bold; color: #fff; }
-        #tv-chart { width: 100%; height: 650px; background: #1e222d; border-radius: 8px; border: 1px solid #2a2e39; }
+        #tv-chart { width: 100%; height: 700px; background: #1e222d; border-radius: 12px; border: 1px solid #2a2e39; }
     </style>
 </head>
 <body>
@@ -51,19 +55,15 @@
     <!-- 頂部導覽列 -->
     <header>
         <div class="logo" onclick="showDashboard()">SmartNavigator</div>
-        <div class="nav-tools">
-            <button id="home-btn" class="btn" onclick="showDashboard()">🏠 首頁</button>
-        </div>
+        <button id="home-btn" class="btn" onclick="showDashboard()">🏠 首頁榜單</button>
     </header>
 
-    <!-- 1. 首頁 (Dashboard) 區塊 -->
-    <div id="dashboard-section">
-        <!-- 放大版搜尋框 -->
+    <!-- 頁面 A：首頁 (榜單與搜尋) -->
+    <div id="dashboard-section" class="page-view">
         <div class="search-container">
-            <input type="text" id="symbol-search" class="search-box" placeholder="輸入美股/加密貨幣代號 (例如: NVDA, TSLA, BTC-USD) 按 Enter 分析..." onkeydown="handleSearch(event)">
+            <input type="text" id="symbol-search" class="search-box" placeholder="搜尋美股 / 加密貨幣 (例如: NVDA, TSLA, BTC-USD) 按 Enter 分析..." onkeydown="handleSearch(event)">
         </div>
 
-        <!-- 雙榜單 -->
         <div class="grid-container">
             <!-- 成交量榜單 -->
             <div class="card">
@@ -73,7 +73,7 @@
                         <tr><th>代碼</th><th>最新價</th><th>成交量</th></tr>
                     </thead>
                     <tbody id="volume-list">
-                        <tr><td colspan="3" style="text-align:center; color:#787b86;">資料載入中...</td></tr>
+                        <tr><td colspan="3" style="text-align:center; color:#787b86;">載入市場動態中...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -86,18 +86,19 @@
                         <tr><th>代碼</th><th>最新價</th><th>漲跌幅</th></tr>
                     </thead>
                     <tbody id="gainer-list">
-                        <tr><td colspan="3" style="text-align:center; color:#787b86;">資料載入中...</td></tr>
+                        <tr><td colspan="3" style="text-align:center; color:#787b86;">載入市場動態中...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-    <!-- 2. K線分析區塊 (預設完全不佔用空間) -->
-    <div id="chart-section">
-        <div class="chart-header">
+    <!-- 頁面 B：獨立圖表分析頁 (預設隱藏) -->
+    <div id="chart-section" class="page-view hidden">
+        <div class="chart-nav">
+            <button class="back-btn" onclick="showDashboard()">❮ 返回榜單</button>
             <h2 id="chart-title">NVDA - K線圖分析</h2>
-            <button class="btn" onclick="showDashboard()">返回榜單</button>
+            <div style="width: 80px;"></div> <!-- 保持標題置中對齊 -->
         </div>
         <div id="tv-chart"></div>
     </div>
@@ -106,31 +107,31 @@
         let chart = null;
         let candlestickSeries = null;
 
-        // 初始化載入
+        // 頁面載入自動抓取榜單
         document.addEventListener('DOMContentLoaded', () => {
             fetchRankings();
         });
 
-        // 頁面切換：顯示首頁榜單
+        // 切換至：首頁榜單
         function showDashboard() {
-            document.getElementById('dashboard-section').style.display = 'block';
-            document.getElementById('chart-section').style.display = 'none';
+            document.getElementById('chart-section').classList.add('hidden');
+            document.getElementById('dashboard-section').classList.remove('hidden');
         }
 
-        // 頁面切換：顯示圖表頁面
+        // 切換至：K線分析頁（隱藏榜單）
         function showChartSection(symbol) {
-            document.getElementById('dashboard-section').style.display = 'none';
-            document.getElementById('chart-section').style.display = 'block';
+            document.getElementById('dashboard-section').classList.add('hidden');
+            document.getElementById('chart-section').classList.remove('hidden');
             document.getElementById('chart-title').innerText = `${symbol} - K線圖分析`;
             
-            // 延遲繪製圖表以確保 DOM 已獲得正確寬高
+            // 延遲渲染確保 DOM 尺寸正確
             setTimeout(() => {
                 initChart();
                 loadSymbolData(symbol);
             }, 50);
         }
 
-        // 搜尋事件
+        // 搜尋監聽
         function handleSearch(event) {
             if (event.key === 'Enter') {
                 const symbol = event.target.value.trim().toUpperCase();
@@ -140,7 +141,7 @@
             }
         }
 
-        // 抓取全市場動態榜單
+        // 請求市場榜單數據
         async function fetchRankings() {
             try {
                 const res = await fetch('/api/rankings');
@@ -179,10 +180,10 @@
             container.innerHTML = items.map(rowTemplate).join('');
         }
 
-        // 初始化 TradingView 圖表
+        // 初始化 Lightweight Charts
         function initChart() {
             const container = document.getElementById('tv-chart');
-            container.innerHTML = ''; // 清空既有圖表
+            container.innerHTML = ''; // 重置圖表區域
 
             chart = LightweightCharts.createChart(container, {
                 layout: { backgroundColor: '#1e222d', textColor: '#d1d4dc' },
@@ -197,20 +198,7 @@
             });
         }
 
-        // 相容性設定 Markers（解決 series.setMarkers is not a function 報錯）
-        function setSeriesMarkers(series, markers) {
-            if (typeof series.setMarkers === 'function') {
-                // 舊版 lightweight-charts 語法
-                series.setMarkers(markers);
-            } else if (typeof LightweightCharts.createSeriesMarker === 'function') {
-                // 新版 lightweight-charts 語法
-                LightweightCharts.createSeriesMarker(series, markers);
-            } else {
-                console.warn("目前版本的 LightweightCharts 找不到相容的 setMarkers API");
-            }
-        }
-
-        // 載入標的 K 線與 SMC 訊號數據
+        // 載入 K 線與 SMC 策略訊號標記
         async function loadSymbolData(symbol) {
             try {
                 const res = await fetch(`/api/klines?symbol=${symbol}`);
@@ -219,9 +207,9 @@
                 if (data && data.ohlc) {
                     candlestickSeries.setData(data.ohlc);
                     
-                    // 繪製 SMC/ICT 買賣與 FVG 標記點 (如果有 signals)
-                    if (data.signals) {
-                        setSeriesMarkers(candlestickSeries, data.signals);
+                    // 繪製 SMC/ICT 策略點 (Buy/Sell/FVG)
+                    if (data.signals && data.signals.length > 0) {
+                        candlestickSeries.setMarkers(data.signals);
                     }
                 }
             } catch (err) {
