@@ -119,6 +119,17 @@ def cached_json(url, params, ttl=60):
         API_CACHE[key] = (now, payload)
     return payload
 
+
+def yahoo_json(path, params, ttl):
+    """Retry Yahoo's two public hosts before returning an upstream failure."""
+    last_error = None
+    for host in ("query2.finance.yahoo.com", "query1.finance.yahoo.com"):
+        try:
+            return cached_json(f"https://{host}{path}", params, ttl)
+        except (requests.RequestException, ValueError) as error:
+            last_error = error
+    raise last_error
+
 def aggregate_candles(candles, bucket_minutes):
     if bucket_minutes <= 1 or not candles:
         return candles
@@ -233,10 +244,10 @@ def search_symbol(keyword: str):
     # 3. Yahoo Search 備用；使用快取避免 Render 共用 IP 被限流。
     if not results:
         try:
-            payload = cached_json(
-                "https://query1.finance.yahoo.com/v1/finance/search",
+            payload = yahoo_json(
+                "/v1/finance/search",
                 {"q": keyword, "quotesCount": 8, "newsCount": 0},
-                ttl=300,
+                300,
             )
             for q in payload.get("quotes", []):
                 if q.get("symbol"):
@@ -261,6 +272,7 @@ def analyze_market(symbol: str, interval: str = "1h"):
         symbol = ALIASES[symbol_upper]
         
     is_binance = symbol_upper.startswith("BINANCE:")
+    is_bybit = symbol_upper.startswith("BYBIT:")
     symbol = symbol_upper.split(":")[-1].replace(".P", "")
     if not symbol:
         raise HTTPException(status_code=400, detail="請輸入商品代號。")
@@ -278,12 +290,23 @@ def analyze_market(symbol: str, interval: str = "1h"):
                 ttl=30,
             )
             candles = [{"time": row[0] // 1000, "open": float(row[1]), "high": float(row[2]), "low": float(row[3]), "close": float(row[4])} for row in rows]
+        elif is_bybit:
+            bybit_interval = {"1m": "1", "3m": "3", "5m": "5", "15m": "15", "30m": "30", "1h": "60", "1d": "D", "1wk": "W", "1mo": "M"}.get(config["source"])
+            if not bybit_interval:
+                raise ValueError("Bybit does not support this interval")
+            payload = cached_json(
+                "https://api.bybit.com/v5/market/kline",
+                {"category": "linear", "symbol": symbol, "interval": bybit_interval, "limit": 1000},
+                ttl=30,
+            )
+            rows = payload.get("result", {}).get("list", [])
+            candles = [{"time": int(row[0]) // 1000, "open": float(row[1]), "high": float(row[2]), "low": float(row[3]), "close": float(row[4])} for row in reversed(rows)]
         else:
             encoded_symbol = quote(symbol, safe=".-")
-            payload = cached_json(
-                f"https://query1.finance.yahoo.com/v8/finance/chart/{encoded_symbol}",
+            payload = yahoo_json(
+                f"/v8/finance/chart/{encoded_symbol}",
                 {"interval": config["source"], "range": config["range"]},
-                ttl=60,
+                60,
             )
             result = payload["chart"]["result"][0]
             quote_data = result["indicators"]["quote"][0]
@@ -292,7 +315,7 @@ def analyze_market(symbol: str, interval: str = "1h"):
                 if None not in (open_, high, low, close):
                     candles.append({"time": timestamp, "open": open_, "high": high, "low": low, "close": close})
     except Exception as error:
-        source = "Binance Futures" if is_binance else "Yahoo"
+        source = "Binance Futures" if is_binance else "Bybit Futures" if is_bybit else "Yahoo"
         raise HTTPException(status_code=502, detail=f"{source} 暫時無法提供 {symbol} 的 K 線資料，請稍後再試。") from error
     
     candles = aggregate_candles(candles, config["bucket"])

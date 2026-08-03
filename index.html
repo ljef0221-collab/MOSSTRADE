@@ -156,8 +156,10 @@
   </main>
 
   <script>
-    const DEFAULT_WATCHLIST = ['BINANCE:BTCUSDT', 'BINANCE:ETHUSDT', 'NVDA', '2330.TW'];
+    const DEFAULT_WATCHLIST = ['BYBIT:BTCUSDT', 'BYBIT:ETHUSDT', 'NVDA', '2330.TW'];
     let watchlist = JSON.parse(localStorage.getItem('my_watchlist') || 'null') || DEFAULT_WATCHLIST;
+    watchlist = watchlist.map(symbol => symbol.startsWith('BINANCE:') ? `BYBIT:${symbol.slice(8)}` : symbol);
+    localStorage.setItem('my_watchlist', JSON.stringify(watchlist));
     let activeSymbol = '';
 
     // 初始化 Lightweight Chart
@@ -331,7 +333,7 @@
     }
 
     async function analyze(symbol = activeSymbol) {
-      if (!symbol) symbol = 'BINANCE:BTCUSDT';
+      if (!symbol) symbol = 'BYBIT:BTCUSDT';
       activeSymbol = symbol.toUpperCase();
       results.hidden = true;
 
@@ -400,7 +402,7 @@
       input.value = '';
       results.hidden = true;
       document.getElementById('interval').value = '1h';
-      analyze('BINANCE:BTCUSDT');
+      analyze('BYBIT:BTCUSDT');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     };
     document.getElementById('interval').onchange = () => analyze();
@@ -421,7 +423,7 @@
     applyTimezone();
     renderWatchlist();
     loadVisitCount();
-    analyze('BINANCE:BTCUSDT'); // 預設載入不受 Yahoo 限流影響的永續合約
+    analyze('BYBIT:BTCUSDT'); // 預設載入不受 Yahoo 限流影響的永續合約
   </script>
 </body>
 </html>
