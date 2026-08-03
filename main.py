@@ -4,6 +4,8 @@ from pathlib import Path
 import os
 import sqlite3
 import json
+import time
+import threading
 import requests
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -58,6 +60,10 @@ TIMEFRAME_CONFIG = {
 
 app = FastAPI(title="SmartNavigator")
 VISITS_DB = Path(os.getenv("VISITS_DB_PATH", BASE_DIR / "smartnavigator.db"))
+HTTP = requests.Session()
+HTTP.headers.update({"User-Agent": "SmartNavigator/1.0"})
+API_CACHE = {}
+API_CACHE_LOCK = threading.Lock()
 
 app.add_middleware(
     CORSMiddleware,
@@ -92,6 +98,27 @@ def calculate_atr(candles, period=14):
         atr = (atr * (period - 1) + value) / period
     return atr
 
+
+def cached_json(url, params, ttl=60):
+    """Avoid repeated upstream calls and use stale data during rate limits."""
+    key = (url, tuple(sorted(params.items())))
+    now = time.time()
+    with API_CACHE_LOCK:
+        cached = API_CACHE.get(key)
+        if cached and now - cached[0] < ttl:
+            return cached[1]
+    try:
+        response = HTTP.get(url, params=params, timeout=10)
+        response.raise_for_status()
+        payload = response.json()
+    except (requests.RequestException, ValueError):
+        if cached:
+            return cached[1]
+        raise
+    with API_CACHE_LOCK:
+        API_CACHE[key] = (now, payload)
+    return payload
+
 def aggregate_candles(candles, bucket_minutes):
     if bucket_minutes <= 1 or not candles:
         return candles
@@ -113,6 +140,33 @@ def aggregate_candles(candles, bucket_minutes):
     if current_bucket:
         aggregated.append(current_bucket)
     return aggregated
+
+
+def detect_structure(candles, pivot_size=2):
+    """Return the latest CHoCH marker and recent three-candle FVG zones."""
+    swing_highs, swing_lows = [], []
+    for index in range(pivot_size, len(candles) - pivot_size):
+        window = candles[index - pivot_size:index + pivot_size + 1]
+        if candles[index]["high"] == max(item["high"] for item in window):
+            swing_highs.append(candles[index])
+        if candles[index]["low"] == min(item["low"] for item in window):
+            swing_lows.append(candles[index])
+
+    markers = []
+    current = candles[-1]
+    if swing_highs and current["close"] > swing_highs[-1]["high"]:
+        markers.append({"time": current["time"], "position": "belowBar", "color": "#26a69a", "shape": "arrowUp", "text": "CHoCH ↑"})
+    elif swing_lows and current["close"] < swing_lows[-1]["low"]:
+        markers.append({"time": current["time"], "position": "aboveBar", "color": "#ef5350", "shape": "arrowDown", "text": "CHoCH ↓"})
+
+    zones = []
+    for index in range(2, len(candles)):
+        first, last = candles[index - 2], candles[index]
+        if first["high"] < last["low"]:
+            zones.append({"side": "bullish", "low": first["high"], "high": last["low"], "time": last["time"]})
+        elif first["low"] > last["high"]:
+            zones.append({"side": "bearish", "low": last["high"], "high": first["low"], "time": last["time"]})
+    return {"markers": markers, "fvg_zones": zones[-3:]}
 
 @app.get("/", response_class=HTMLResponse)
 def read_index():
@@ -142,9 +196,10 @@ def search_symbol(keyword: str):
     results = []
     lower_keyword = keyword.lower()
 
-    # 1. 本地資料庫搜尋
+    # 1. 本地資料庫搜尋（包含 Binance 永續合約）
     for item in SYMBOL_DATABASE:
-        if any(lower_keyword in key.lower() for key in item.get("keywords", [])):
+        searchable = [item.get("symbol", ""), item.get("name", ""), *item.get("keywords", [])]
+        if any(lower_keyword in key.lower() for key in searchable):
             results.append({
                 "symbol": item["symbol"],
                 "name": item.get("name", item["symbol"]),
@@ -175,13 +230,16 @@ def search_symbol(keyword: str):
         except Exception as e:
             print("TradingView 搜尋失敗:", e)
 
-    # 3. Yahoo Search 備用
+    # 3. Yahoo Search 備用；使用快取避免 Render 共用 IP 被限流。
     if not results:
         try:
-            import yfinance as yf
-            yf_search = yf.Search(keyword, max_results=5)
-            if yf_search and yf_search.quotes:
-                for q in yf_search.quotes:
+            payload = cached_json(
+                "https://query1.finance.yahoo.com/v1/finance/search",
+                {"q": keyword, "quotesCount": 8, "newsCount": 0},
+                ttl=300,
+            )
+            for q in payload.get("quotes", []):
+                if q.get("symbol"):
                     results.append({
                         "symbol": q.get("symbol"),
                         "name": q.get("longname") or q.get("shortname") or keyword,
@@ -189,8 +247,8 @@ def search_symbol(keyword: str):
                         "exchange": q.get("exchDisp", "YAHOO"),
                         "source": "Yahoo"
                     })
-        except Exception as e:
-            print("Yahoo 搜尋失敗:", e)
+        except Exception:
+            pass
 
     return {"status": "success", "results": results}
 
@@ -202,7 +260,8 @@ def analyze_market(symbol: str, interval: str = "1h"):
     if symbol_upper in ALIASES:
         symbol = ALIASES[symbol_upper]
         
-    symbol = symbol.split(":")[-1]
+    is_binance = symbol_upper.startswith("BINANCE:")
+    symbol = symbol_upper.split(":")[-1].replace(".P", "")
     if not symbol:
         raise HTTPException(status_code=400, detail="請輸入商品代號。")
     if interval not in TIMEFRAME_CONFIG:
@@ -211,27 +270,30 @@ def analyze_market(symbol: str, interval: str = "1h"):
     config = TIMEFRAME_CONFIG[interval]
 
     try:
-        encoded_symbol = quote(symbol, safe=".-")
-        response = requests.get(
-            f"https://query1.finance.yahoo.com/v8/finance/chart/{encoded_symbol}",
-            params={"interval": config["source"], "range": config["range"]},
-            headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"},
-            timeout=10,
-        )
-        response.raise_for_status()
-        result = response.json()["chart"]["result"][0]
-        timestamps = result["timestamp"]
-        quote_data = result["indicators"]["quote"][0]
+        if is_binance:
+            binance_interval = {"1wk": "1w", "1mo": "1M"}.get(config["source"], config["source"])
+            rows = cached_json(
+                "https://fapi.binance.com/fapi/v1/klines",
+                {"symbol": symbol, "interval": binance_interval, "limit": 1500},
+                ttl=30,
+            )
+            candles = [{"time": row[0] // 1000, "open": float(row[1]), "high": float(row[2]), "low": float(row[3]), "close": float(row[4])} for row in rows]
+        else:
+            encoded_symbol = quote(symbol, safe=".-")
+            payload = cached_json(
+                f"https://query1.finance.yahoo.com/v8/finance/chart/{encoded_symbol}",
+                {"interval": config["source"], "range": config["range"]},
+                ttl=60,
+            )
+            result = payload["chart"]["result"][0]
+            quote_data = result["indicators"]["quote"][0]
+            candles = []
+            for timestamp, open_, high, low, close in zip(result["timestamp"], quote_data["open"], quote_data["high"], quote_data["low"], quote_data["close"]):
+                if None not in (open_, high, low, close):
+                    candles.append({"time": timestamp, "open": open_, "high": high, "low": low, "close": close})
     except Exception as error:
-        print("Yahoo K線錯誤:", error)
-        raise HTTPException(status_code=502, detail=f"無法取得 {symbol} 的市場 K 線資料。") from error
-
-    candles = []
-    for timestamp, open_, high, low, close in zip(
-        timestamps, quote_data["open"], quote_data["high"], quote_data["low"], quote_data["close"]
-    ):
-        if None not in (open_, high, low, close):
-            candles.append({"time": timestamp, "open": open_, "high": high, "low": low, "close": close})
+        source = "Binance Futures" if is_binance else "Yahoo"
+        raise HTTPException(status_code=502, detail=f"{source} 暫時無法提供 {symbol} 的 K 線資料，請稍後再試。") from error
     
     candles = aggregate_candles(candles, config["bucket"])
     lookback = config.get("lookback", 0)
@@ -275,6 +337,7 @@ def analyze_market(symbol: str, interval: str = "1h"):
     else:
         tp = sl = None
 
+    structure = detect_structure(candles)
     return {
         "status": "success",
         "strategy_name": config["name"],
@@ -285,5 +348,6 @@ def analyze_market(symbol: str, interval: str = "1h"):
         "tp": round(tp, 4) if tp is not None else "—",
         "sl": round(sl, 4) if sl is not None else "—",
         "reason": reason,
+        "structure": structure,
         "chart_data": [{key: round(value, 4) if key != "time" else value for key, value in candle.items()} for candle in candles],
     }
