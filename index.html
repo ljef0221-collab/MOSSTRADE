@@ -27,7 +27,7 @@
   </section>
   <section id="analysis-page" class="hidden">
     <div class="analysis-head"><button id="back-button">← 返回排行榜</button><span id="source-status"></span></div>
-    <div class="layout"><section class="panel"><div class="toolbar"><strong id="chart-title">分析圖表</strong><select id="interval"><option value="1m">1 分</option><option value="5m">5 分</option><option value="15m">15 分</option><option value="1h" selected>1 小時</option><option value="4h">4 小時</option><option value="1d">日線</option></select><label class="toggle"><input id="toggle-ema" type="checkbox"> EMA</label><label class="toggle"><input id="toggle-levels" type="checkbox"> 撐壓</label><label class="toggle"><input id="toggle-choch" type="checkbox"> CHoCH</label><label class="toggle"><input id="toggle-fvg" type="checkbox"> FVG</label><label class="toggle"><input id="toggle-volume" type="checkbox"> 成交量</label></div><div id="chart"></div><div id="volume-chart" class="hidden"></div></section><aside class="panel"><h3>策略分析</h3><div id="signal" class="signal">等待分析</div><p id="reason"></p><p id="analysis-error" class="error"></p></aside></div>
+    <div class="layout"><section class="panel"><div class="toolbar"><strong id="chart-title">分析圖表</strong><select id="interval"><optgroup label="分鐘"><option value="1m">1 分</option><option value="3m">3 分</option><option value="5m">5 分</option><option value="10m">10 分</option><option value="15m">15 分</option><option value="30m">30 分</option><option value="45m">45 分</option></optgroup><optgroup label="小時"><option value="1h" selected>1 小時</option><option value="2h">2 小時</option><option value="3h">3 小時</option><option value="4h">4 小時</option></optgroup><optgroup label="長週期"><option value="1d">日線</option><option value="1w">週線</option><option value="1mo">月線</option></optgroup></select><label class="toggle"><input id="toggle-ema" type="checkbox"> EMA</label><label class="toggle"><input id="toggle-levels" type="checkbox"> 撐壓</label><label class="toggle"><input id="toggle-choch" type="checkbox"> CHoCH</label><label class="toggle"><input id="toggle-fvg" type="checkbox"> FVG</label><label class="toggle"><input id="toggle-volume" type="checkbox"> 成交量</label></div><div id="chart"></div><div id="volume-chart" class="hidden"></div></section><aside class="panel"><h3>策略分析</h3><div id="signal" class="signal">等待分析</div><p id="reason"></p><p id="analysis-error" class="error"></p></aside></div>
   </section>
 </main>
 <script>
@@ -43,9 +43,10 @@
   const volumeChart = LightweightCharts.createChart(byId('volume-chart'), {layout:{background:{color:'#111722'},textColor:'#8d98aa'},timeScale:{visible:false}});
   const candles = chart.addSeries(LightweightCharts.CandlestickSeries, {upColor:'#26a69a',downColor:'#ef5350',borderVisible:false,wickUpColor:'#26a69a',wickDownColor:'#ef5350'});
   const volumeSeries = volumeChart.addSeries(LightweightCharts.HistogramSeries, {priceFormat:{type:'volume'}});
-  const emaFast = chart.addSeries(LightweightCharts.LineSeries, {color:'#f0b90b',priceLineVisible:false,lastValueVisible:false,visible:false});
-  const emaSlow = chart.addSeries(LightweightCharts.LineSeries, {color:'#00d4ff',priceLineVisible:false,lastValueVisible:false,visible:false});
-  const emaTrend = chart.addSeries(LightweightCharts.LineSeries, {color:'#a78bfa',priceLineVisible:false,lastValueVisible:false,visible:false});
+  const emaFast = chart.addSeries(LightweightCharts.LineSeries, {color:'#f0b90b',lineWidth:1,priceLineVisible:false,lastValueVisible:false,visible:false});
+  const emaSlow = chart.addSeries(LightweightCharts.LineSeries, {color:'#00d4ff',lineWidth:1,priceLineVisible:false,lastValueVisible:false,visible:false});
+  const emaTrend = chart.addSeries(LightweightCharts.LineSeries, {color:'#a78bfa',lineWidth:1,priceLineVisible:false,lastValueVisible:false,visible:false});
+
 
   function removeLines(lines){ lines.forEach(line => candles.removePriceLine(line)); return []; }
   function drawIndicators(){
@@ -55,7 +56,9 @@
     if(byId('toggle-choch').checked && structureData?.choch){ const bull=structureData.choch.direction==='bullish'; chochLines.push(candles.createPriceLine({price:structureData.choch.level,color:bull?'#00d4ff':'#ff4560',lineWidth:2,title:'CHoCH'})); }
     if(byId('toggle-fvg').checked) (structureData?.fvg_zones||[]).forEach(zone=>{const color=zone.side==='bullish'?'#b56cff':'#ff9f43';fvgLines.push(candles.createPriceLine({price:zone.low,color,lineStyle:2,title:'FVG'}),candles.createPriceLine({price:zone.high,color,lineStyle:2,title:'FVG'}));});
     if(byId('toggle-levels').checked && levelsData){levelLines.push(candles.createPriceLine({price:levelsData.resistance,color:'#f59e0b',title:'壓力'}),candles.createPriceLine({price:levelsData.support,color:'#26a69a',title:'支撐'}));}
-    byId('volume-chart').classList.toggle('hidden', !byId('toggle-volume').checked);
+    const showVolume=byId('toggle-volume').checked;
+    byId('volume-chart').classList.toggle('hidden', !showVolume);
+    if(showVolume){requestAnimationFrame(()=>{volumeChart.applyOptions({width:byId('chart').clientWidth});volumeChart.timeScale().fitContent();});}
   }
 
   function rankingRows(rows, volumeMode=false){
