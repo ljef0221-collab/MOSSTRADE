@@ -326,11 +326,11 @@ TIMEFRAME_CONFIG = {
     },
 }
 
-app = FastAPI(title="MOSSTREAD")
+app = FastAPI(title="MOSSTRADE")
 app.mount("/assets", StaticFiles(directory=BASE_DIR / "assets"), name="assets")
 VISITS_DB = Path(os.getenv("VISITS_DB_PATH", BASE_DIR / "smartnavigator.db"))
 HTTP = requests.Session()
-HTTP.headers.update({"User-Agent": "MOSSTREAD/1.0"})
+HTTP.headers.update({"User-Agent": "MOSSTRADE/1.0"})
 API_CACHE = {}
 API_CACHE_LOCK = threading.Lock()
 

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>MOSSTREAD｜循著訊號，讀懂市場</title>
+    <title>MOSSTRADE｜循著訊號，讀懂市場</title>
     <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
     <style>
       @font-face {
@@ -745,7 +745,7 @@
       }
     </style>
     <style>
-      /* MOSSTREAD — quiet pixel lagoon */
+      /* MOSSTRADE — quiet pixel lagoon */
       :root {
         --forest-950: #102d2a;
         --forest-900: #173c35;
@@ -908,6 +908,22 @@
         color: #f3f2d3;
         border-color: #1b4038;
       }
+      #results {
+        max-width: 1040px;
+        margin: -18px auto 26px;
+      }
+      .result {
+        padding: 15px 18px;
+        font-size: 20px;
+        line-height: 1.45;
+        letter-spacing: 0.04em;
+      }
+      .analysis-search {
+        max-width: 520px;
+      }
+      .analysis-search input {
+        min-width: 120px;
+      }
       .panel {
         color: var(--ink);
         background: rgba(237, 240, 207, 0.94);
@@ -956,8 +972,18 @@
       }
       .toolbar strong {
         color: #1c4a40;
-        font-size: 22px;
+        flex: 1 1 auto;
+        min-width: 0;
+        margin-right: 12px;
+        overflow: hidden;
+        font-size: clamp(24px, 2vw, 30px);
         line-height: 1.2;
+        letter-spacing: 0.12em;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .toolbar select {
+        flex: 0 0 auto;
       }
       .toggle {
         color: #29463f;
@@ -1088,7 +1114,7 @@
         z-index: 0;
         overflow: hidden;
         pointer-events: none;
-        background: #3d2d21 url("/assets/mosstread-trader-background.gif")
+        background: #3d2d21 url("/assets/mosstrade-trader-background.gif")
           center center/cover no-repeat;
         image-rendering: pixelated;
       }
@@ -1321,9 +1347,18 @@
       }
       @media (max-width: 760px) {
         .toolbar strong {
-          font-size: 20px;
+          font-size: 22px;
+          letter-spacing: 0.08em;
         }
         .toggle {
+          font-size: 17px;
+        }
+        #results {
+          max-width: 100%;
+          margin: -10px 0 18px;
+        }
+        .result {
+          padding: 12px;
           font-size: 17px;
         }
       }
@@ -1374,24 +1409,253 @@
           margin: 5px 0 0;
         }
       }
+
+      /* Warm wood interface matched to the animated trading-room background. */
+      :root {
+        --forest-950: #2b1812;
+        --forest-900: #44271b;
+        --forest-800: #68402a;
+        --moss-700: #8b5a35;
+        --moss-500: #b77a45;
+        --moss-300: #ddb982;
+        --cream: #f2dfbd;
+        --water: #a86f45;
+        --water-light: #d0a675;
+        --ink: #2b1b14;
+        --outline: #5b3826;
+        --pixel-shadow: #21120d;
+      }
+      body {
+        background-color: #5a3826;
+        background-image: linear-gradient(
+          180deg,
+          #c28a55 0 18%,
+          #d8ad74 18% 28%,
+          #9b633c 28% 31%,
+          #70452e 31% 100%
+        );
+      }
+      header {
+        border-color: #1f120e;
+        background: rgba(43, 24, 18, 0.95);
+        box-shadow: 0 4px 0 rgba(221, 185, 130, 0.35);
+      }
+      header:before,
+      header small {
+        color: #ddb982;
+      }
+      header h1:before {
+        content: "⌂ ";
+        color: #ffe348;
+        font-size: 0.9em;
+        text-shadow:
+          2px 2px 0 #6f5010,
+          0 0 8px rgba(255, 227, 72, 0.45);
+      }
+      .container {
+        background: rgba(58, 34, 23, 0.5);
+        backdrop-filter: blur(1px);
+      }
+      #home-page > h2 {
+        padding: 8px 12px;
+        border: 2px solid #a66c3d;
+        background-color: rgba(55, 31, 21, 0.86);
+        background-image: linear-gradient(
+          90deg,
+          rgba(255, 227, 72, 0.08),
+          transparent 58%
+        );
+        color: #ffe5a0;
+        text-shadow: 2px 2px 0 #2b1812;
+        box-shadow: 3px 3px 0 rgba(33, 18, 13, 0.78);
+      }
+      #home-page > h2:before {
+        color: #ffe348;
+      }
+      button,
+      input,
+      select {
+        border-color: #5b3826;
+        background: #f2dfbd;
+        box-shadow:
+          inset -2px -2px 0 #c79a60,
+          inset 2px 2px 0 #fff3d2,
+          4px 4px 0 #21120d;
+      }
+      button {
+        background: #dfbd86;
+      }
+      button:hover,
+      select:hover,
+      input:focus {
+        color: #281711;
+        border-color: #3d2419;
+        background: #f8e8c7;
+        box-shadow:
+          inset -2px -2px 0 #c79a60,
+          inset 2px 2px 0 #fff7df,
+          4px 4px 0 #3d2419;
+      }
+      .search button {
+        border-color: #3d2419;
+        background: #7a4a2d;
+        color: #fff0ca;
+      }
+      .panel,
+      .analysis-head {
+        border-color: #44271b;
+        background: rgba(242, 223, 189, 0.94);
+        box-shadow:
+          inset 0 0 0 3px #c89b61,
+          5px 5px 0 rgba(43, 24, 18, 0.88);
+      }
+      .rank-row,
+      .result,
+      .toolbar,
+      .indicator-help dl,
+      .disclaimer {
+        border-color: #9d744e;
+      }
+      .rank-row:hover,
+      .result:hover,
+      .history-item:hover,
+      .history-item.active {
+        background: #e0bf89;
+      }
+      .toolbar strong,
+      .toggle,
+      .analysis-head span,
+      .container h2,
+      .container h3 {
+        color: #4a2b1e;
+      }
+      .toggle input {
+        border-color: #6b432e;
+        background: #f7e7c5;
+      }
+      .toggle input:checked {
+        border-color: #4b2e20;
+        background: #b87942;
+        box-shadow: inset 0 0 0 2px #f0d3a2;
+      }
+      .indicator-help {
+        border-color: #6b432e;
+        background: rgba(241, 220, 181, 0.9);
+        box-shadow: 2px 2px 0 rgba(54, 31, 22, 0.75);
+      }
+      .indicator-help summary,
+      .indicator-help dt {
+        color: #4b2c1e;
+      }
+      .rank-price {
+        border-color: #3f251a;
+        background: #65402a;
+      }
+      .chart-auto {
+        border-color: #4d2e20;
+        background: rgba(224, 190, 137, 0.94);
+      }
+      #chart,
+      #volume-chart {
+        border-color: #6a432f;
+        background: #1b1310;
+      }
+
+      .search-area {
+        position: relative;
+        z-index: 30;
+        max-width: 1040px;
+        margin: 24px auto 22px;
+      }
+      .search-area .search {
+        max-width: 820px;
+        margin: 0 auto;
+      }
+      .search-area #results {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        left: 0;
+        z-index: 40;
+        max-width: none;
+        max-height: min(520px, 65vh);
+        margin: 0;
+        overflow-y: auto;
+        box-shadow:
+          inset 0 0 0 3px #c89b61,
+          8px 8px 0 rgba(43, 24, 18, 0.88);
+      }
+      .search-area #results .result {
+        padding: 18px 22px;
+        font-size: 24px;
+        line-height: 1.5;
+        letter-spacing: 0.09em;
+      }
+      .rank-row {
+        grid-template-columns: 46px minmax(0, 1fr) auto;
+        min-height: 68px;
+        padding: 17px 14px;
+        letter-spacing: 0.07em;
+      }
+      .rank-row > small:first-child {
+        font-size: 19px;
+      }
+      .rank-row span {
+        font-size: 25px;
+        line-height: 1.2;
+        letter-spacing: 0.08em;
+      }
+      .rank-row b,
+      .rank-price {
+        font-size: 23px;
+        letter-spacing: 0.06em;
+      }
+      @media (max-width: 760px) {
+        .container {
+          background: rgba(58, 34, 23, 0.62);
+        }
+        .search-area {
+          max-width: 100%;
+          margin: 15px 0;
+        }
+        .rank-row {
+          min-height: 58px;
+          padding: 13px 9px;
+        }
+        .rank-row span {
+          font-size: 20px;
+          letter-spacing: 0.05em;
+        }
+        .rank-row b,
+        .rank-price {
+          font-size: 19px;
+        }
+        .search-area #results .result {
+          padding: 14px;
+          font-size: 19px;
+          letter-spacing: 0.06em;
+        }
+      }
     </style>
   </head>
   <body>
     <div class="pixel-scene" aria-hidden="true"></div>
     <header>
-      <h1>MOSSTREAD</h1>
+      <h1>MOSSTRADE</h1>
       <small>循著訊號，讀懂市場</small>
     </header>
     <main class="container">
       <section id="home-page">
         <h2>選擇市場或搜尋商品</h2>
-        <div class="search">
-          <input
-            id="search-input"
-            placeholder="例如：2330.TW、AAPL、GLD、BTC-USDT"
-          /><button id="search-button">搜尋</button>
+        <div class="search-area">
+          <div class="search">
+            <input
+              id="search-input"
+              placeholder="例如：2330.TW、AAPL、GLD、BTC-USDT"
+            /><button id="search-button">搜尋</button>
+          </div>
+          <div id="results" class="panel hidden"></div>
         </div>
-        <div id="results" class="panel hidden"></div>
         <div class="market-tabs">
           <select id="market-select">
             <option value="futures">合約市場（OKX）</option>
@@ -1624,18 +1888,18 @@
 
         const chart = LightweightCharts.createChart(byId("chart"), {
           layout: {
-            background: { color: "#05080c" },
-            textColor: "#9ec8d3",
+            background: { color: "#1b1310" },
+            textColor: "#d8bd95",
             fontFamily: "JerseyPixel, CubicPixelTW, monospace",
             fontSize: 13,
           },
           grid: {
-            vertLines: { color: "#10202a" },
-            horzLines: { color: "#10202a" },
+            vertLines: { color: "#33231c" },
+            horzLines: { color: "#33231c" },
           },
           crosshair: {
-            vertLine: { color: "#9ec8d3", lineStyle: 2 },
-            horzLine: { color: "#587986", lineStyle: 2 },
+            vertLine: { color: "#d8bd95", lineStyle: 2 },
+            horzLine: { color: "#9c704c", lineStyle: 2 },
           },
           localization: {
             locale: "zh-TW",
@@ -1643,12 +1907,12 @@
               fullTimeFormatter.format(chartTimeToDate(time)),
           },
           rightPriceScale: {
-            borderColor: "#27495a",
+            borderColor: "#6a432f",
             minimumWidth: 96,
             scaleMargins: { top: 0.12, bottom: 0.12 },
           },
           timeScale: {
-            borderColor: "#27495a",
+            borderColor: "#6a432f",
             timeVisible: true,
             secondsVisible: false,
             rightOffset: 8,
@@ -1718,18 +1982,18 @@
           if (!volumeChart) {
             volumeChart = LightweightCharts.createChart(byId("volume-chart"), {
               layout: {
-                background: { color: "#05080c" },
-                textColor: "#78909c",
+                background: { color: "#1b1310" },
+                textColor: "#b99a72",
                 fontFamily: "JerseyPixel, CubicPixelTW, monospace",
               },
               grid: {
-                vertLines: { color: "#10202a" },
-                horzLines: { color: "#10202a" },
+                vertLines: { color: "#33231c" },
+                horzLines: { color: "#33231c" },
               },
               crosshair: {
                 vertLine: {
                   visible: true,
-                  color: "#d8e7ea",
+                  color: "#d8bd95",
                   lineStyle: 2,
                   labelVisible: false,
                 },
