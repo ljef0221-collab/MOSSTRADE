@@ -348,11 +348,43 @@ def search_symbol(keyword: str):
     except Exception:
         pass
     try:
+        for item in cached_json("https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O", {}, 21600):
+            code, name = str(item.get("SecuritiesCompanyCode", "")).strip(), str(item.get("CompanyAbbreviation", "")).strip()
+            if lower_keyword in code.lower() or lower_keyword in name.lower():
+                results.append({"symbol": f"{code}.TWO", "name": name, "type": "Taiwan OTC Stock", "exchange": "TPEx", "source": "TPEx"})
+    except Exception:
+        pass
+    try:
+        for item in cached_json("https://openapi.twse.com.tw/v1/opendata/t187ap47_L", {}, 21600):
+            code, name = str(item.get("基金代號", "")).strip(), str(item.get("基金簡稱", "")).strip()
+            if lower_keyword in code.lower() or lower_keyword in name.lower():
+                results.append({"symbol": f"{code}.TW", "name": name, "type": "Taiwan ETF", "exchange": "TWSE", "source": "TWSE"})
+    except Exception:
+        pass
+    try:
         payload = cached_json("https://api.nasdaq.com/api/screener/stocks", {"tableonly": "true", "limit": 10000, "offset": 0}, 21600)
         for item in (payload.get("data") or {}).get("table", {}).get("rows", []):
             ticker, name = str(item.get("symbol", "")).strip(), str(item.get("name", "")).strip()
             if lower_keyword in ticker.lower() or lower_keyword in name.lower():
                 results.append({"symbol": ticker, "name": name, "type": "US Stock", "exchange": "NASDAQ/NYSE", "source": "Nasdaq"})
+    except Exception:
+        pass
+    try:
+        payload = cached_json("https://api.nasdaq.com/api/screener/etf", {"tableonly": "true", "limit": 10000, "offset": 0}, 21600)
+        rows = (((payload.get("data") or {}).get("records") or {}).get("data") or {}).get("rows", [])
+        for item in rows:
+            ticker, name = str(item.get("symbol", "")).strip(), str(item.get("companyName", "")).strip()
+            if lower_keyword in ticker.lower() or lower_keyword in name.lower():
+                results.append({"symbol": ticker, "name": name, "type": "US ETF", "exchange": "US ETF", "source": "Nasdaq"})
+    except Exception:
+        pass
+    try:
+        payload = cached_json("https://api.nasdaq.com/api/autocomplete/slookup/10", {"search": keyword}, 3600)
+        for item in payload.get("data", []):
+            ticker, name = str(item.get("symbol", "")).strip(), str(item.get("name", "")).strip()
+            if ticker:
+                asset = str(item.get("asset", "US Asset"))
+                results.append({"symbol": ticker, "name": name, "type": asset, "exchange": item.get("exchange") or "US Market", "source": "Nasdaq"})
     except Exception:
         pass
 
