@@ -10,6 +10,7 @@ import requests
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 
 BASE_DIR = Path(__file__).resolve().parent
 
@@ -67,15 +68,16 @@ TIMEFRAME_CONFIG = {
     "2h":  {"source": "1h",  "range": "1y",  "bucket": 120, "mode": "breakout", "fast": 10, "slow": 30, "trend": 100, "lookback": 20, "tp_atr": 2.2, "sl_atr": 1.2, "name": "2小時亞盤/歐盤策略", "description": "跨時區區間突破策略"},
     "3h":  {"source": "1h",  "range": "1y",  "bucket": 180, "mode": "breakout", "fast": 10, "slow": 30, "trend": 100, "lookback": 20, "tp_atr": 2.5, "sl_atr": 1.5, "name": "3小時趨勢策略", "description": "中長線區間突破"},
     "4h":  {"source": "1h",  "range": "1y",  "bucket": 240, "mode": "breakout", "fast": 10, "slow": 30, "trend": 100, "lookback": 20, "tp_atr": 2.5, "sl_atr": 1.5, "name": "4小時四小時線策略", "description": "機構級波段突破策略"},
-    "1d":  {"source": "1d",  "range": "1y",  "bucket": 1,  "mode": "cross",    "fast": 10, "slow": 30, "trend": 200, "lookback": 20, "tp_atr": 3.0, "sl_atr": 1.5, "name": "日線長線策略",   "description": "大週期 EMA 交叉策略"},
-    "1w":  {"source": "1wk", "range": "2y",  "bucket": 1,  "mode": "cross",    "fast": 10, "slow": 30, "trend": 200, "lookback": 20, "tp_atr": 3.5, "sl_atr": 2.0, "name": "週線戰略策略",   "description": "長線戰略佈局策略"},
-    "1mo": {"source": "1mo", "range": "5y",  "bucket": 1,  "mode": "cross",    "fast": 5,  "slow": 15, "trend": 50,  "lookback": 12, "tp_atr": 4.0, "sl_atr": 2.0, "name": "月線宏觀策略",   "description": "宏觀週期投資策略"}
+    "1d":  {"source": "1d",  "range": "5y",  "bucket": 1,  "mode": "macro",    "fast": 20, "slow": 50, "trend": 200, "lookback": 60, "tp_atr": 3.0, "sl_atr": 1.5, "name": "日線趨勢結構策略", "description": "EMA 斜率、布林通道與波段回測綜合判讀"},
+    "1w":  {"source": "1wk", "range": "10y", "bucket": 1,  "mode": "macro",    "fast": 10, "slow": 30, "trend": 52,  "lookback": 52, "tp_atr": 3.5, "sl_atr": 2.0, "name": "週線戰略趨勢策略", "description": "52 週趨勢、布林中軌與長波段結構"},
+    "1mo": {"source": "1mo", "range": "10y", "bucket": 1,  "mode": "macro",    "fast": 6,  "slow": 12, "trend": 24,  "lookback": 24, "tp_atr": 4.0, "sl_atr": 2.0, "name": "月線宏觀週期策略", "description": "兩年趨勢、布林通道與主要回測區判讀"}
 }
 
-app = FastAPI(title="SmartNavigator")
+app = FastAPI(title="MOSSTREAD")
+app.mount("/assets", StaticFiles(directory=BASE_DIR / "assets"), name="assets")
 VISITS_DB = Path(os.getenv("VISITS_DB_PATH", BASE_DIR / "smartnavigator.db"))
 HTTP = requests.Session()
-HTTP.headers.update({"User-Agent": "SmartNavigator/1.0"})
+HTTP.headers.update({"User-Agent": "MOSSTREAD/1.0"})
 API_CACHE = {}
 API_CACHE_LOCK = threading.Lock()
 
@@ -111,6 +113,20 @@ def calculate_atr(candles, period=14):
     for value in true_ranges[period:]:
         atr = (atr * (period - 1) + value) / period
     return atr
+
+def calculate_bollinger(prices, period=20, deviations=2):
+    """Return aligned middle, upper and lower Bollinger-band arrays."""
+    middle, upper, lower = [], [], []
+    for index in range(len(prices)):
+        if index + 1 < period:
+            middle.append(None); upper.append(None); lower.append(None)
+            continue
+        window = prices[index - period + 1:index + 1]
+        mean = sum(window) / period
+        variance = sum((value - mean) ** 2 for value in window) / period
+        deviation = variance ** 0.5 * deviations
+        middle.append(mean); upper.append(mean + deviation); lower.append(mean - deviation)
+    return middle, upper, lower
 
 
 def cached_json(url, params, ttl=60):
@@ -616,6 +632,7 @@ def analyze_market(symbol: str, interval: str = "1h"):
     slow_ema = calculate_ema(closes, config["slow"])
     trend_ema = calculate_ema(closes, config["trend"])
     atr = calculate_atr(candles)
+    bb_middle, bb_upper, bb_lower = calculate_bollinger(closes)
     
     if atr is None or not fast_ema or not slow_ema or not trend_ema:
         raise HTTPException(status_code=422, detail="指標計算數據不足。")
@@ -674,8 +691,46 @@ def analyze_market(symbol: str, interval: str = "1h"):
         long_score += 2; long_factors.append("上漲爆量")
     if volume_spike and price < current["open"]:
         short_score += 2; short_factors.append("下跌爆量")
-    long_signal = long_score >= 3 and long_score > short_score
-    short_signal = short_score >= 3 and short_score > long_score
+
+    # Bollinger regime and swing Fibonacci retracement confirmation.
+    if bb_middle[-1] is not None:
+        middle_rising = bb_middle[-1] > bb_middle[-2]
+        if price > bb_middle[-1] and middle_rising:
+            long_score += 1; long_factors.append("布林中軌向上")
+        if price < bb_middle[-1] and not middle_rising:
+            short_score += 1; short_factors.append("布林中軌向下")
+        if price >= bb_upper[-1] and volume_spike:
+            long_score += 1; long_factors.append("布林上軌爆量突破")
+        if price <= bb_lower[-1] and volume_spike:
+            short_score += 1; short_factors.append("布林下軌爆量跌破")
+
+    swing_window = candles[-min(len(candles) - 1, max(config["lookback"], 20)) - 1:-1]
+    swing_high = max(candle["high"] for candle in swing_window)
+    swing_low = min(candle["low"] for candle in swing_window)
+    swing_range = swing_high - swing_low
+    fibonacci = {}
+    if swing_range > 0:
+        fibonacci = {
+            "high": swing_high, "low": swing_low,
+            "bull_382": swing_high - swing_range * 0.382,
+            "bull_500": swing_high - swing_range * 0.500,
+            "bull_618": swing_high - swing_range * 0.618,
+            "bear_382": swing_low + swing_range * 0.382,
+            "bear_500": swing_low + swing_range * 0.500,
+            "bear_618": swing_low + swing_range * 0.618,
+        }
+        tolerance = max(atr * 0.45, swing_range * 0.012)
+        if trend_up and any(abs(price - fibonacci[key]) <= tolerance for key in ("bull_382", "bull_500", "bull_618")):
+            long_score += 1; long_factors.append("多頭斐波那契回測區")
+        if trend_down and any(abs(price - fibonacci[key]) <= tolerance for key in ("bear_382", "bear_500", "bear_618")):
+            short_score += 1; short_factors.append("空頭斐波那契反彈區")
+
+    macro_mode = config["mode"] == "macro"
+    signal_threshold = 4 if macro_mode else 3
+    macro_long_ok = not macro_mode or (trend_up and bb_middle[-1] is not None and bb_middle[-1] > bb_middle[-2])
+    macro_short_ok = not macro_mode or (trend_down and bb_middle[-1] is not None and bb_middle[-1] < bb_middle[-2])
+    long_signal = long_score >= signal_threshold and long_score > short_score and macro_long_ok
+    short_signal = short_score >= signal_threshold and short_score > long_score and macro_short_ok
     reason = f"{interval} 多因子評分｜多方 {long_score} 分：{', '.join(long_factors) or '無'}｜空方 {short_score} 分：{', '.join(short_factors) or '無'}"
 
     if long_signal:
@@ -693,6 +748,11 @@ def analyze_market(symbol: str, interval: str = "1h"):
     level_candles = candles[-config["lookback"] - 1:-1]
     levels = {"resistance": round(max(candle["high"] for candle in level_candles), 4), "support": round(min(candle["low"] for candle in level_candles), 4)}
     ema_data = {"fast": [{"time": candle["time"], "value": round(fast_ema[index], 4)} for index, candle in enumerate(candles)], "slow": [{"time": candle["time"], "value": round(slow_ema[index], 4)} for index, candle in enumerate(candles)], "trend": [{"time": candle["time"], "value": round(trend_ema[index], 4)} for index, candle in enumerate(candles)]}
+    bollinger_data = {
+        "middle": [{"time": candle["time"], "value": round(bb_middle[index], 4)} for index, candle in enumerate(candles) if bb_middle[index] is not None],
+        "upper": [{"time": candle["time"], "value": round(bb_upper[index], 4)} for index, candle in enumerate(candles) if bb_upper[index] is not None],
+        "lower": [{"time": candle["time"], "value": round(bb_lower[index], 4)} for index, candle in enumerate(candles) if bb_lower[index] is not None],
+    }
     return {
         "status": "success",
         "strategy_name": config["name"],
@@ -708,5 +768,7 @@ def analyze_market(symbol: str, interval: str = "1h"):
         "structure": structure,
         "levels": levels,
         "ema_data": ema_data,
+        "bollinger_data": bollinger_data,
+        "fibonacci": {key: round(value, 4) for key, value in fibonacci.items()},
         "chart_data": [{key: round(value, 4) if key != "time" else value for key, value in candle.items()} for candle in candles],
     }
