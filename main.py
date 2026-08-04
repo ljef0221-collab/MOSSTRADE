@@ -277,16 +277,24 @@ def detect_structure(candles, pivot_size=2):
         if candles[index]["low"] == min(item["low"] for item in window):
             swing_lows.append(candles[index])
 
-    markers, choch = [], None
-    current = candles[-1]
-    if swing_highs and current["close"] > swing_highs[-1]["high"]:
-        level = swing_highs[-1]["high"]
-        choch = {"direction": "bullish", "level": level, "time": current["time"]}
-        markers.append({"time": current["time"], "position": "belowBar", "color": "#26a69a", "shape": "arrowUp", "text": "Bullish CHoCH"})
-    elif swing_lows and current["close"] < swing_lows[-1]["low"]:
-        level = swing_lows[-1]["low"]
-        choch = {"direction": "bearish", "level": level, "time": current["time"]}
-        markers.append({"time": current["time"], "position": "aboveBar", "color": "#ef5350", "shape": "arrowDown", "text": "Bearish CHoCH"})
+    events = []
+    index_by_time = {item["time"]: index for index, item in enumerate(candles)}
+    for swing in swing_highs[-24:]:
+        start = index_by_time[swing["time"]] + 1
+        for index in range(start, len(candles)):
+            if candles[index - 1]["close"] <= swing["high"] < candles[index]["close"]:
+                events.append({"direction": "bullish", "level": swing["high"], "time": candles[index]["time"]})
+                break
+    for swing in swing_lows[-24:]:
+        start = index_by_time[swing["time"]] + 1
+        for index in range(start, len(candles)):
+            if candles[index - 1]["close"] >= swing["low"] > candles[index]["close"]:
+                events.append({"direction": "bearish", "level": swing["low"], "time": candles[index]["time"]})
+                break
+    unique_events = {(event["time"], event["direction"]): event for event in events}
+    recent_events = sorted(unique_events.values(), key=lambda event: event["time"])[-6:]
+    markers = [{"time": event["time"], "position": "belowBar" if event["direction"] == "bullish" else "aboveBar", "color": "#26a69a" if event["direction"] == "bullish" else "#ef5350", "shape": "arrowUp" if event["direction"] == "bullish" else "arrowDown", "text": "Bullish CHoCH" if event["direction"] == "bullish" else "Bearish CHoCH"} for event in recent_events]
+    choch = recent_events[-1] if recent_events else None
 
     zones = []
     recent_ranges = [item["high"] - item["low"] for item in candles[-50:]]
@@ -673,11 +681,13 @@ def analyze_market(symbol: str, interval: str = "1h"):
     if long_signal:
         direction, message = "BUY", "多頭進場訊號"
         tp, sl = price + atr * max(config["tp_atr"], config["sl_atr"] * 1.6), price - atr * config["sl_atr"]
+        tp2 = price + atr * config["sl_atr"] * 2.5
     elif short_signal:
         direction, message = "SELL", "空頭進場訊號"
         tp, sl = price - atr * max(config["tp_atr"], config["sl_atr"] * 1.6), price + atr * config["sl_atr"]
+        tp2 = price - atr * config["sl_atr"] * 2.5
     else:
-        tp = sl = None
+        tp = tp2 = sl = None
 
     structure = detect_structure(candles)
     level_candles = candles[-config["lookback"] - 1:-1]
@@ -692,6 +702,7 @@ def analyze_market(symbol: str, interval: str = "1h"):
         "message": message,
         "current_price": round(price, 4),
         "tp": round(tp, 4) if tp is not None else "—",
+        "tp2": round(tp2, 4) if tp2 is not None else "—",
         "sl": round(sl, 4) if sl is not None else "—",
         "reason": reason,
         "structure": structure,
