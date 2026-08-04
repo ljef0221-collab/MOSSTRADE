@@ -35,6 +35,21 @@
     .analysis-search{display:flex;gap:7px;flex:1;max-width:520px}.analysis-search input{flex:1;min-width:120px}.search-results{margin:0 0 14px;z-index:6}.empty{color:#536879}.up{color:#19734b;text-shadow:none}.down{color:#b42848;text-shadow:none}
     @media(max-width:760px){body:before{border-width:5px}.container{border-width:2px}.analysis-head{flex-wrap:wrap}.analysis-search{order:3;min-width:100%;max-width:none}.analysis-search button{min-width:70px}.panel{border-width:3px;padding:12px}}
   </style>
+  <style>
+    /* Reduced-noise refinement */
+    body{background:#86cfdf;background-image:none}
+    body:after{display:none}body:before{border-width:6px;box-shadow:inset 0 0 0 2px #0e274d}
+    .container{background:rgba(134,207,223,.94)}
+    header,.panel{box-shadow:3px 3px 0 #10243e}
+    .panel{background:#dce9c8;box-shadow:inset 0 0 0 2px #f1f5dc,3px 3px 0 #10243e}
+    .panel:before,.panel:after{display:none}
+    .rank-row small{color:#243b5e;font-weight:700}.rank-row small:first-child{color:#243b5e}.rank-row span small{color:#263c54}.rank-row b{font-weight:900}
+    .signal{font-size:15px;line-height:1.55;border-width:4px;box-shadow:inset 0 0 24px rgba(255,255,255,.68),4px 4px 0 #10243e}
+    .signal.BUY{color:#064d28;background:rgba(42,210,100,.52);border-color:#08733b;box-shadow:inset 0 0 22px rgba(231,255,237,.72),0 0 0 3px rgba(29,137,70,.22),4px 4px 0 #10243e}
+    .signal.SELL{color:#77152b;background:rgba(250,65,95,.46);border-color:#a31232;box-shadow:inset 0 0 22px rgba(255,231,235,.68),0 0 0 3px rgba(174,24,56,.20),4px 4px 0 #10243e}
+    .signal.HOLD{color:#3e4a52;background:rgba(196,204,208,.70);border-color:#66747c}
+    .result{font-weight:700;color:#1b3150}.result:hover{background:#c6dcb6}
+  </style>
 </head>
 <body>
 <header><h1>SmartNavigator</h1><small>市場排行與多週期策略分析</small></header>
@@ -59,9 +74,10 @@
   let rankingData = {};
   let structureData = null;
   let levelsData = null;
-  let chochLines = [], fvgLines = [], levelLines = [];
+  let chochLines = [], fvgLines = [], levelLines = [], syncingRange = false, volumeSyncReady = false;
+  let volumeByTime = new Map();
 
-  const chart = LightweightCharts.createChart(byId('chart'), {layout:{background:{color:'#05080c'},textColor:'#9ec8d3',fontFamily:'Consolas, monospace'},grid:{vertLines:{color:'#10202a'},horzLines:{color:'#10202a'}},rightPriceScale:{borderColor:'#27495a'},timeScale:{borderColor:'#27495a',timeVisible:true}});
+  const chart = LightweightCharts.createChart(byId('chart'), {layout:{background:{color:'#05080c'},textColor:'#9ec8d3',fontFamily:'Consolas, monospace'},grid:{vertLines:{color:'#10202a'},horzLines:{color:'#10202a'}},crosshair:{vertLine:{color:'#9ec8d3',lineStyle:2},horzLine:{color:'#587986',lineStyle:2}},rightPriceScale:{borderColor:'#27495a'},timeScale:{borderColor:'#27495a',timeVisible:true}});
   let volumeChart = null, volumeSeries = null, lastChartData = [];
   const candles = chart.addSeries(LightweightCharts.CandlestickSeries, {upColor:'#26a69a',downColor:'#ef5350',borderVisible:false,wickUpColor:'#26a69a',wickDownColor:'#ef5350'});
   const emaFast = chart.addSeries(LightweightCharts.LineSeries, {color:'#f0b90b',lineWidth:1,priceLineVisible:false,lastValueVisible:false,visible:false});
@@ -70,12 +86,19 @@
 
   function ensureVolumeChart(){
     if(!volumeChart){
-      volumeChart=LightweightCharts.createChart(byId('volume-chart'),{layout:{background:{color:'#05080c'},textColor:'#78909c',fontFamily:'Consolas, monospace'},grid:{vertLines:{color:'#10202a'},horzLines:{color:'#10202a'}},width:byId('chart').clientWidth,height:140,timeScale:{visible:false}});
+      volumeChart=LightweightCharts.createChart(byId('volume-chart'),{layout:{background:{color:'#05080c'},textColor:'#78909c',fontFamily:'Consolas, monospace'},grid:{vertLines:{color:'#10202a'},horzLines:{color:'#10202a'}},crosshair:{vertLine:{visible:true,color:'#d8e7ea',lineStyle:2,labelVisible:false},horzLine:{visible:false}},width:byId('chart').clientWidth,height:140,timeScale:{visible:false}});
       volumeSeries=volumeChart.addSeries(LightweightCharts.HistogramSeries,{priceFormat:{type:'volume'}});
     }
     volumeSeries.setData(lastChartData.map(c=>({time:c.time,value:Number(c.volume)||0,color:c.close>=c.open?'#26a69a99':'#ef535099'})));
     volumeChart.applyOptions({width:byId('chart').clientWidth,height:140});
-    volumeChart.timeScale().fitContent();
+    if(!volumeSyncReady){
+      chart.timeScale().subscribeVisibleLogicalRangeChange(range=>{if(!range||syncingRange)return;syncingRange=true;volumeChart.timeScale().setVisibleLogicalRange(range);syncingRange=false;});
+      volumeChart.timeScale().subscribeVisibleLogicalRangeChange(range=>{if(!range||syncingRange)return;syncingRange=true;chart.timeScale().setVisibleLogicalRange(range);syncingRange=false;});
+      chart.subscribeCrosshairMove(param=>{if(!volumeChart||param.time===undefined){volumeChart?.clearCrosshairPosition?.();return;}const value=volumeByTime.get(String(param.time))||0;if(volumeChart.setCrosshairPosition)volumeChart.setCrosshairPosition(value,param.time,volumeSeries);});
+      volumeSyncReady=true;
+    }
+    const visibleRange=chart.timeScale().getVisibleLogicalRange();
+    if(visibleRange)volumeChart.timeScale().setVisibleLogicalRange(visibleRange);else volumeChart.timeScale().fitContent();
   }
 
 
@@ -99,10 +122,11 @@
   }
   async function loadRankings(){const market=byId('market-select').value;const ranking=byId('ranking-select').value;const labels={gainers:'漲幅',losers:'跌幅',volume:'成交量'};byId('ranking-title').textContent=labels[ranking]+' Top 10';byId('ranking-error').textContent='';byId('ranking-list').innerHTML='<div class="empty">資料比對中…</div>';try{const response=await fetch('/api/market-ranking?market='+encodeURIComponent(market)+'&ranking='+encodeURIComponent(ranking));const data=await response.json();if(!response.ok)throw new Error(data.detail||'排行榜載入失敗');rankingRows(data.results||[],ranking==='volume');}catch(error){byId('ranking-error').textContent=error.message;rankingRows([],ranking==='volume');}}
 
-  async function searchFrom(inputId, resultsId){const keyword=byId(inputId).value.trim();if(!keyword)return;const box=byId(resultsId);box.classList.remove('hidden');box.textContent='搜尋中…';try{const response=await fetch('/api/search?keyword='+encodeURIComponent(keyword));const data=await response.json();box.replaceChildren();(data.results||[]).slice(0,15).forEach(item=>{const row=document.createElement('div');row.className='result';row.textContent=`${item.symbol} · ${item.name||''} · ${item.exchange||''}`;row.onclick=()=>{box.classList.add('hidden');openAnalysis(item.symbol);};box.append(row);});if(!box.children.length)box.textContent='找不到商品';}catch(error){box.textContent='搜尋暫時失敗';}}
+  function compactSymbol(item){const symbol=String(item.symbol||'');if(symbol.startsWith('OKX:')){const raw=symbol.slice(4);const perpetual=raw.endsWith('-SWAP');const clean=raw.replace('-SWAP','').replaceAll('-','');return clean+(perpetual?'.P':'')+':OKX';}if(symbol.endsWith('.TW'))return symbol.slice(0,-3)+':TWSE';if(symbol.endsWith('.TWO'))return symbol.slice(0,-4)+':TPEx';const exchange=String(item.exchange||'US').replace('NASDAQ/NYSE','US');return symbol+':'+exchange;}
+  async function searchFrom(inputId, resultsId){const keyword=byId(inputId).value.trim();if(!keyword)return;const box=byId(resultsId);box.classList.remove('hidden');box.textContent='搜尋中…';try{const response=await fetch('/api/search?keyword='+encodeURIComponent(keyword));const data=await response.json();box.replaceChildren();(data.results||[]).slice(0,15).forEach(item=>{const row=document.createElement('div');row.className='result';row.textContent=`${compactSymbol(item)} · ${item.name||''}`;row.onclick=()=>{box.classList.add('hidden');openAnalysis(item.symbol);};box.append(row);});if(!box.children.length)box.textContent='找不到商品';}catch(error){box.textContent='搜尋暫時失敗';}}
   const search=()=>searchFrom('search-input','results');
   const searchAnalysis=()=>searchFrom('analysis-search-input','analysis-results');
-  async function openAnalysis(symbol){activeSymbol=symbol;byId('home-page').classList.add('hidden');byId('analysis-page').classList.remove('hidden');byId('analysis-results').classList.add('hidden');chart.applyOptions({width:byId('chart').clientWidth});byId('chart-title').textContent=symbol;byId('analysis-error').textContent='';const signal=byId('signal');signal.className='signal HOLD';signal.textContent='資料載入中…';try{const response=await fetch('/api/analyze?symbol='+encodeURIComponent(symbol)+'&interval='+byId('interval').value);const data=await response.json();if(!response.ok)throw new Error(data.detail||'分析失敗');lastChartData=data.chart_data||[];candles.setData(lastChartData);emaFast.setData(data.ema_data?.fast||[]);emaSlow.setData(data.ema_data?.slow||[]);emaTrend.setData(data.ema_data?.trend||[]);structureData=data.structure;levelsData=data.levels;drawIndicators();chart.timeScale().fitContent();byId('source-status').textContent='資料來源：'+data.market_source;signal.className='signal '+data.direction;signal.textContent=(data.direction==='BUY'?'多頭趨勢｜':data.direction==='SELL'?'空頭趨勢｜':'趨勢不明｜')+data.message;byId('reason').textContent=data.reason;}catch(error){signal.className='signal HOLD';signal.textContent='無法生成圖表';byId('analysis-error').textContent=error.message;}}
+  async function openAnalysis(symbol){activeSymbol=symbol;byId('home-page').classList.add('hidden');byId('analysis-page').classList.remove('hidden');byId('analysis-results').classList.add('hidden');chart.applyOptions({width:byId('chart').clientWidth});byId('chart-title').textContent=symbol;byId('analysis-error').textContent='';const signal=byId('signal');signal.className='signal HOLD';signal.textContent='資料載入中…';try{const response=await fetch('/api/analyze?symbol='+encodeURIComponent(symbol)+'&interval='+byId('interval').value);const data=await response.json();if(!response.ok)throw new Error(data.detail||'分析失敗');lastChartData=data.chart_data||[];volumeByTime=new Map(lastChartData.map(c=>[String(c.time),Number(c.volume)||0]));candles.setData(lastChartData);emaFast.setData(data.ema_data?.fast||[]);emaSlow.setData(data.ema_data?.slow||[]);emaTrend.setData(data.ema_data?.trend||[]);structureData=data.structure;levelsData=data.levels;drawIndicators();chart.timeScale().fitContent();byId('source-status').textContent='資料來源：'+data.market_source;signal.className='signal '+data.direction;signal.textContent=(data.direction==='BUY'?'多頭趨勢｜':data.direction==='SELL'?'空頭趨勢｜':'趨勢不明｜')+data.message;byId('reason').textContent=data.reason;}catch(error){signal.className='signal HOLD';signal.textContent='無法生成圖表';byId('analysis-error').textContent=error.message;}}
 
   byId('search-button').onclick=search; byId('search-input').onkeydown=e=>{if(e.key==='Enter')search();};byId('analysis-search-button').onclick=searchAnalysis;byId('analysis-search-input').onkeydown=e=>{if(e.key==='Enter')searchAnalysis();}; byId('market-select').onchange=loadRankings; byId('ranking-select').onchange=loadRankings; byId('back-button').onclick=()=>{byId('analysis-page').classList.add('hidden');byId('home-page').classList.remove('hidden');}; byId('interval').onchange=()=>activeSymbol&&openAnalysis(activeSymbol); ['toggle-ema','toggle-levels','toggle-choch','toggle-fvg','toggle-volume'].forEach(id=>byId(id).onchange=drawIndicators);
   new ResizeObserver(entries=>{chart.applyOptions({width:entries[0].contentRect.width});if(volumeChart)volumeChart.applyOptions({width:entries[0].contentRect.width});}).observe(byId('chart'));
