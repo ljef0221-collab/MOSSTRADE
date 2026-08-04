@@ -289,11 +289,13 @@ def detect_structure(candles, pivot_size=2):
         markers.append({"time": current["time"], "position": "aboveBar", "color": "#ef5350", "shape": "arrowDown", "text": "Bearish CHoCH"})
 
     zones = []
+    recent_ranges = [item["high"] - item["low"] for item in candles[-50:]]
+    minimum_gap = (sum(recent_ranges) / len(recent_ranges)) * 0.20 if recent_ranges else 0
     for index in range(2, len(candles)):
         first, last = candles[index - 2], candles[index]
-        if first["high"] < last["low"]:
+        if last["low"] - first["high"] >= minimum_gap and not any(item["low"] <= first["high"] for item in candles[index + 1:]):
             zones.append({"side": "bullish", "low": first["high"], "high": last["low"], "time": last["time"]})
-        elif first["low"] > last["high"]:
+        elif first["low"] - last["high"] >= minimum_gap and not any(item["high"] >= first["low"] for item in candles[index + 1:]):
             zones.append({"side": "bearish", "low": last["high"], "high": first["low"], "time": last["time"]})
     return {"markers": markers, "fvg_zones": zones[-3:], "choch": choch}
 
@@ -337,6 +339,23 @@ def search_symbol(keyword: str):
                 "source": "Local"
             })
 
+    # Official catalogs expand search beyond the small built-in seed list.
+    try:
+        for item in cached_json("https://openapi.twse.com.tw/v1/opendata/t187ap03_L", {}, 21600):
+            code, name = str(item.get("公司代號", "")).strip(), str(item.get("公司簡稱", "")).strip()
+            if lower_keyword in code.lower() or lower_keyword in name.lower():
+                results.append({"symbol": f"{code}.TW", "name": name, "type": "Taiwan Stock", "exchange": "TWSE", "source": "TWSE"})
+    except Exception:
+        pass
+    try:
+        payload = cached_json("https://api.nasdaq.com/api/screener/stocks", {"tableonly": "true", "limit": 10000, "offset": 0}, 21600)
+        for item in (payload.get("data") or {}).get("table", {}).get("rows", []):
+            ticker, name = str(item.get("symbol", "")).strip(), str(item.get("name", "")).strip()
+            if lower_keyword in ticker.lower() or lower_keyword in name.lower():
+                results.append({"symbol": ticker, "name": name, "type": "US Stock", "exchange": "NASDAQ/NYSE", "source": "Nasdaq"})
+    except Exception:
+        pass
+
     # 2. TradingView 全球大數據搜尋
     if not results:
         try:
@@ -379,7 +398,8 @@ def search_symbol(keyword: str):
         except Exception:
             pass
 
-    return {"status": "success", "results": results}
+    unique_results = {item["symbol"]: item for item in results if item.get("symbol")}
+    return {"status": "success", "results": list(unique_results.values())[:30]}
 
 
 @app.get("/api/market-rankings")
@@ -579,12 +599,51 @@ def analyze_market(symbol: str, interval: str = "1h"):
         short_signal = trend_down and price < recent_low - buffer and price < current["open"]
         reason = f"{interval} 策略：{config['fast']}／{config['slow']}／{config['trend']} EMA 趨勢；{config['lookback']} 根區間突破＋ATR 過濾"
 
+    # Multi-factor score: trend, momentum, structure, FVG retest and volume spike.
+    structure = detect_structure(candles)
+    recent_high = max(candle["high"] for candle in candles[-config["lookback"] - 1:-1])
+    recent_low = min(candle["low"] for candle in candles[-config["lookback"] - 1:-1])
+    volumes = [candle.get("volume", 0) for candle in candles]
+    average_volume = sum(volumes[-21:-1]) / max(len(volumes[-21:-1]), 1)
+    volume_spike = average_volume > 0 and volumes[-1] >= average_volume * 1.5
+    long_score, short_score = 0, 0
+    long_factors, short_factors = [], []
+    if trend_up:
+        long_score += 2; long_factors.append("EMA 多頭趨勢")
+    if trend_down:
+        short_score += 2; short_factors.append("EMA 空頭趨勢")
+    if price > candles[-2]["close"] and fast_ema[-1] > fast_ema[-2]:
+        long_score += 1; long_factors.append("上漲動能")
+    if price < candles[-2]["close"] and fast_ema[-1] < fast_ema[-2]:
+        short_score += 1; short_factors.append("下跌動能")
+    if price >= recent_high - atr * 0.10:
+        long_score += 1; long_factors.append("接近區間突破")
+    if price <= recent_low + atr * 0.10:
+        short_score += 1; short_factors.append("接近區間跌破")
+    choch = structure.get("choch") or {}
+    if choch.get("direction") == "bullish":
+        long_score += 2; long_factors.append("多頭 CHoCH")
+    if choch.get("direction") == "bearish":
+        short_score += 2; short_factors.append("空頭 CHoCH")
+    for zone in structure.get("fvg_zones", []):
+        if zone["side"] == "bullish" and current["low"] <= zone["high"] and price > zone["low"]:
+            long_score += 2; long_factors.append("多頭 FVG 回補")
+        elif zone["side"] == "bearish" and current["high"] >= zone["low"] and price < zone["high"]:
+            short_score += 2; short_factors.append("空頭 FVG 回補")
+    if volume_spike and price > current["open"]:
+        long_score += 2; long_factors.append("上漲爆量")
+    if volume_spike and price < current["open"]:
+        short_score += 2; short_factors.append("下跌爆量")
+    long_signal = long_score >= 3 and long_score > short_score
+    short_signal = short_score >= 3 and short_score > long_score
+    reason = f"{interval} 多因子評分｜多方 {long_score} 分：{', '.join(long_factors) or '無'}｜空方 {short_score} 分：{', '.join(short_factors) or '無'}"
+
     if long_signal:
         direction, message = "BUY", "多頭進場訊號"
-        tp, sl = price + atr * config["tp_atr"], price - atr * config["sl_atr"]
+        tp, sl = price + atr * max(config["tp_atr"], config["sl_atr"] * 1.6), price - atr * config["sl_atr"]
     elif short_signal:
         direction, message = "SELL", "空頭進場訊號"
-        tp, sl = price - atr * config["tp_atr"], price + atr * config["sl_atr"]
+        tp, sl = price - atr * max(config["tp_atr"], config["sl_atr"] * 1.6), price + atr * config["sl_atr"]
     else:
         tp = sl = None
 
