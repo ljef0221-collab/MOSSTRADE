@@ -1578,11 +1578,56 @@
           markerPlugin = null;
         let volumeByTime = new Map();
 
+        const userTimeZone =
+          Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
+        const fullTimeFormatter = new Intl.DateTimeFormat("zh-TW", {
+          timeZone: userTimeZone,
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false,
+          hourCycle: "h23",
+        });
+        const intradayTickFormatter = new Intl.DateTimeFormat("zh-TW", {
+          timeZone: userTimeZone,
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+          hourCycle: "h23",
+        });
+        const dateTickFormatter = new Intl.DateTimeFormat("zh-TW", {
+          timeZone: userTimeZone,
+          month: "2-digit",
+          day: "2-digit",
+          hour12: false,
+        });
+
+        function chartTimeToDate(time) {
+          if (typeof time === "number") return new Date(time * 1000);
+          if (typeof time === "string") return new Date(time);
+          if (time && typeof time === "object") {
+            return new Date(Date.UTC(time.year, time.month - 1, time.day));
+          }
+          return new Date(0);
+        }
+
+        function formatChartTick(time) {
+          const interval = byId("interval")?.value || "1h";
+          const formatter = ["1d", "1w", "1mo"].includes(interval)
+            ? dateTickFormatter
+            : intradayTickFormatter;
+          return formatter.format(chartTimeToDate(time));
+        }
+
         const chart = LightweightCharts.createChart(byId("chart"), {
           layout: {
             background: { color: "#05080c" },
             textColor: "#9ec8d3",
             fontFamily: "JerseyPixel, CubicPixelTW, monospace",
+            fontSize: 13,
           },
           grid: {
             vertLines: { color: "#10202a" },
@@ -1592,8 +1637,23 @@
             vertLine: { color: "#9ec8d3", lineStyle: 2 },
             horzLine: { color: "#587986", lineStyle: 2 },
           },
-          rightPriceScale: { borderColor: "#27495a" },
-          timeScale: { borderColor: "#27495a", timeVisible: true },
+          localization: {
+            locale: "zh-TW",
+            timeFormatter: (time) =>
+              fullTimeFormatter.format(chartTimeToDate(time)),
+          },
+          rightPriceScale: {
+            borderColor: "#27495a",
+            minimumWidth: 96,
+            scaleMargins: { top: 0.12, bottom: 0.12 },
+          },
+          timeScale: {
+            borderColor: "#27495a",
+            timeVisible: true,
+            secondsVisible: false,
+            rightOffset: 8,
+            tickMarkFormatter: formatChartTick,
+          },
         });
         let volumeChart = null,
           volumeSeries = null,
@@ -2190,7 +2250,7 @@
             drawIndicators();
             chart.timeScale().fitContent();
             byId("source-status").textContent =
-              "資料來源：" + data.market_source;
+              `資料來源：${data.market_source}｜時區：${userTimeZone}（24 小時制）`;
             signal.className = "signal " + data.direction;
             signal.textContent =
               (data.direction === "BUY"
