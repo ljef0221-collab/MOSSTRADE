@@ -1535,6 +1535,196 @@
         background: transparent !important;
         color: #3f4335 !important;
       }
+      /* Remove decorative pixel grids from UI surfaces; chart canvases remain intact. */
+      .container *:not(canvas) {
+        background-image: none !important;
+      }
+      .panel::before,
+      .panel::after,
+      .analysis-head::before,
+      .analysis-head::after,
+      .toolbar::before,
+      .toolbar::after,
+      .indicator-help::before,
+      .indicator-help::after,
+      .indicator-help summary::before,
+      .ranking-help summary::before {
+        display: none !important;
+      }
+      .toggle input[type="checkbox"] {
+        width: 13px !important;
+        height: 13px !important;
+        margin: 0 6px 0 0 !important;
+        appearance: none !important;
+        border: 1px solid #9b9588 !important;
+        border-radius: 50% !important;
+        background: #fffdf8 !important;
+        box-shadow: none !important;
+        vertical-align: -1px;
+      }
+      .toggle input[type="checkbox"]:checked {
+        border-color: #607c32 !important;
+        background: #607c32 !important;
+        box-shadow: none !important;
+      }
+      .toggle:has(input[type="checkbox"]:checked) {
+        border-color: rgba(96, 124, 50, 0.28) !important;
+        color: #435c25 !important;
+        background-color: #eef3e8 !important;
+      }
+      .rank-row {
+        min-height: 52px !important;
+        padding: 11px 12px !important;
+        letter-spacing: 0 !important;
+      }
+      .rank-row > small:first-child {
+        font-size: 13px !important;
+      }
+      .rank-row span {
+        font-size: 16px !important;
+        line-height: 1.3 !important;
+        letter-spacing: 0 !important;
+      }
+      .rank-row span small {
+        font-size: 11px !important;
+      }
+      .rank-row b,
+      .rank-price,
+      .rank-change {
+        font-size: 14px !important;
+        letter-spacing: 0 !important;
+      }
+      .quote-chinese {
+        font-size: 12px !important;
+        line-height: 1.85 !important;
+        letter-spacing: 0 !important;
+      }
+      .ranking-help dl {
+        display: block !important;
+        padding: 4px 14px 14px !important;
+        border: 0 !important;
+      }
+      .ranking-help dt,
+      .ranking-help dd,
+      .ranking-help .help-note {
+        margin: 0 !important;
+        padding: 8px 0 0 !important;
+        border: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+      }
+      .ranking-help summary {
+        border: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+      }
+      .ranking-help summary::before {
+        display: none !important;
+        content: none !important;
+      }
+      .sim-wallet-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+      }
+      .wallet-card {
+        display: grid !important;
+        min-height: 68px !important;
+        grid-template-columns: minmax(0, 1fr) auto !important;
+        grid-template-rows: auto auto !important;
+        align-items: center !important;
+        gap: 3px 12px !important;
+        padding: 12px 14px !important;
+      }
+      .wallet-card small {
+        grid-column: 1 !important;
+        font-size: 11px !important;
+      }
+      .wallet-card strong {
+        grid-column: 1 !important;
+        margin: 0 !important;
+        font-size: 17px !important;
+      }
+      .wallet-card span {
+        grid-column: 2 !important;
+        grid-row: 1 / 3 !important;
+        margin: 0 !important;
+        font-size: 11px !important;
+        white-space: nowrap;
+      }
+      .position-symbol-link {
+        padding: 3px 0 !important;
+        border: 0 !important;
+        background: transparent !important;
+        color: #526c2d !important;
+        box-shadow: none !important;
+        font-weight: 700;
+        text-align: left;
+      }
+      .position-symbol-link:hover {
+        color: #2f4617 !important;
+        text-decoration: underline;
+        box-shadow: none !important;
+      }
+      .sim-market-card {
+        min-height: 0 !important;
+        margin: 10px 0 12px !important;
+        padding: 10px 13px !important;
+        border-radius: 11px !important;
+      }
+      .sim-market-card strong {
+        font-size: 15px !important;
+        line-height: 1.25 !important;
+      }
+      .sim-market-card span {
+        margin-top: 2px !important;
+        font-size: 11px !important;
+        line-height: 1.4 !important;
+      }
+      .search-area #results {
+        max-width: 720px !important;
+        max-height: 360px !important;
+      }
+      .search-area #results .result {
+        min-height: 0 !important;
+        padding: 9px 12px !important;
+        font-size: 14px !important;
+        line-height: 1.35 !important;
+        letter-spacing: 0 !important;
+      }
+      .search-area #results .result small {
+        font-size: 11px !important;
+      }
+      .moss-quote-card {
+        width: 100% !important;
+        max-width: 230px !important;
+        min-height: 290px !important;
+      }
+      .sim-reference-history-block {
+        margin-top: 18px;
+        padding-top: 16px;
+        border-top: 1px solid rgba(88, 75, 52, 0.12);
+      }
+      .sim-reference-history-block h3 {
+        margin: 0 0 10px !important;
+        font-size: 15px !important;
+      }
+      #sim-reference-history .history-item {
+        padding: 9px 10px !important;
+        font-size: 12px !important;
+      }
+      .site-disclaimer {
+        padding: 18px 28px 24px;
+        border-top: 1px solid rgba(88, 75, 52, 0.12);
+        background: #ece6dc;
+        color: #746d61;
+        font-size: 11px;
+        line-height: 1.7;
+        text-align: center;
+      }
+      .mobile-menu-toggle {
+        display: none !important;
+      }
       .sim-chart-toolbar {
         margin-top: 18px;
         flex-wrap: wrap;
@@ -2867,6 +3057,174 @@
         background: transparent !important;
         color: #3f4335 !important;
       }
+      /* Clean final UI layer: no decorative grids outside chart canvases. */
+      .container *:not(canvas) {
+        background-image: none !important;
+      }
+      .panel::before,
+      .panel::after,
+      .analysis-head::before,
+      .analysis-head::after,
+      .toolbar::before,
+      .toolbar::after,
+      .indicator-help::before,
+      .indicator-help::after,
+      .indicator-help summary::before,
+      .ranking-help summary::before {
+        display: none !important;
+      }
+      .toggle input[type="checkbox"] {
+        width: 13px !important;
+        height: 13px !important;
+        margin: 0 6px 0 0 !important;
+        appearance: none !important;
+        border: 1px solid #9b9588 !important;
+        border-radius: 50% !important;
+        background: #fffdf8 !important;
+        box-shadow: none !important;
+        vertical-align: -1px;
+      }
+      .toggle input[type="checkbox"]:checked {
+        border-color: #607c32 !important;
+        background: #607c32 !important;
+        box-shadow: inset 0 0 0 2px #eef2e7 !important;
+      }
+      .rank-row {
+        min-height: 52px !important;
+        padding: 11px 12px !important;
+        letter-spacing: 0 !important;
+      }
+      .rank-row > small:first-child {
+        font-size: 13px !important;
+      }
+      .rank-row span {
+        font-size: 16px !important;
+        line-height: 1.3 !important;
+        letter-spacing: 0 !important;
+      }
+      .rank-row span small {
+        font-size: 11px !important;
+      }
+      .rank-row b,
+      .rank-price,
+      .rank-change {
+        font-size: 14px !important;
+        letter-spacing: 0 !important;
+      }
+      .quote-chinese {
+        font-size: 12px !important;
+        line-height: 1.85 !important;
+        letter-spacing: 0 !important;
+      }
+      .toggle input[type="checkbox"]:checked {
+        border-color: #607c32 !important;
+        background: #607c32 !important;
+        box-shadow: none !important;
+      }
+      .toggle:has(input[type="checkbox"]:checked) {
+        border-color: rgba(96, 124, 50, 0.28) !important;
+        color: #435c25 !important;
+        background-color: #eef3e8 !important;
+      }
+      .ranking-help dl {
+        display: block !important;
+        padding: 4px 14px 14px !important;
+        border: 0 !important;
+      }
+      .ranking-help dt,
+      .ranking-help dd,
+      .ranking-help .help-note {
+        margin: 0 !important;
+        padding: 8px 0 0 !important;
+        border: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+      }
+      .ranking-help summary {
+        border: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+      }
+      .ranking-help summary::before {
+        display: none !important;
+        content: none !important;
+      }
+      .sim-wallet-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+      }
+      .wallet-card {
+        display: grid !important;
+        min-height: 68px !important;
+        grid-template-columns: minmax(0, 1fr) auto !important;
+        grid-template-rows: auto auto !important;
+        align-items: center !important;
+        gap: 3px 12px !important;
+        padding: 12px 14px !important;
+      }
+      .wallet-card small {
+        grid-column: 1 !important;
+        font-size: 11px !important;
+      }
+      .wallet-card strong {
+        grid-column: 1 !important;
+        margin: 0 !important;
+        font-size: 17px !important;
+      }
+      .wallet-card span {
+        grid-column: 2 !important;
+        grid-row: 1 / 3 !important;
+        margin: 0 !important;
+        font-size: 11px !important;
+        white-space: nowrap;
+      }
+      .position-symbol-link {
+        padding: 3px 0 !important;
+        border: 0 !important;
+        background: transparent !important;
+        color: #526c2d !important;
+        box-shadow: none !important;
+        font-weight: 700;
+        text-align: left;
+      }
+      .position-symbol-link:hover {
+        color: #2f4617 !important;
+        text-decoration: underline;
+        box-shadow: none !important;
+      }
+      .sim-market-card {
+        min-height: 0 !important;
+        margin: 10px 0 12px !important;
+        padding: 10px 13px !important;
+        border-radius: 11px !important;
+      }
+      .sim-market-card strong {
+        font-size: 15px !important;
+        line-height: 1.25 !important;
+      }
+      .sim-market-card span {
+        margin-top: 2px !important;
+        font-size: 11px !important;
+        line-height: 1.4 !important;
+      }
+      .search-area #results {
+        max-width: 720px !important;
+        max-height: 360px !important;
+      }
+      .search-area #results .result {
+        min-height: 0 !important;
+        padding: 9px 12px !important;
+        font-size: 14px !important;
+        line-height: 1.35 !important;
+        letter-spacing: 0 !important;
+      }
+      .search-area #results .result small {
+        font-size: 11px !important;
+      }
+      .mobile-menu-toggle {
+        display: none !important;
+      }
       .sim-chart-toolbar {
         margin-top: 18px;
         flex-wrap: wrap;
@@ -2894,9 +3252,1397 @@
         }
         header {
           left: 0 !important;
+          min-height: 70px !important;
+          padding: 10px 14px !important;
+          gap: 11px;
+          justify-content: flex-start !important;
         }
         .container {
-          padding: 104px 12px 92px !important;
+          padding: 88px 10px 36px !important;
+        }
+        .site-disclaimer {
+          padding: 15px 12px 22px;
+          font-size: 10px;
+        }
+        .mobile-menu-toggle {
+          display: inline-flex !important;
+          width: 40px;
+          height: 40px;
+          flex: 0 0 40px;
+          align-items: center;
+          justify-content: center;
+          padding: 0 !important;
+          border-color: rgba(255, 255, 255, 0.12) !important;
+          background: rgba(255, 255, 255, 0.08) !important;
+          color: #f6f1e8 !important;
+          font-size: 20px;
+        }
+        .app-sidebar {
+          position: fixed !important;
+          inset: 0 auto 0 0 !important;
+          z-index: 120 !important;
+          display: flex !important;
+          width: min(82vw, 290px) !important;
+          padding: 22px 16px !important;
+          transform: translateX(-105%);
+          transition: transform 180ms ease;
+          box-shadow: 14px 0 35px rgba(22, 17, 12, 0.25) !important;
+        }
+        .app-sidebar.mobile-open {
+          transform: translateX(0);
+        }
+        .app-nav {
+          display: grid !important;
+          grid-template-columns: 1fr !important;
+          gap: 8px !important;
+        }
+        .app-nav button {
+          min-height: 46px;
+          justify-content: flex-start !important;
+        }
+        .moss-quote-card {
+          display: block !important;
+          min-height: 260px !important;
+          margin-top: 22px !important;
+          padding: 24px 18px 62px !important;
+        }
+        .sim-wallet-grid {
+          display: grid !important;
+          grid-template-columns: repeat(3, minmax(138px, 1fr)) !important;
+          gap: 8px !important;
+          overflow-x: auto;
+          padding-bottom: 5px;
+          scroll-snap-type: x proximity;
+        }
+        .wallet-card {
+          min-height: 92px !important;
+          padding: 12px !important;
+          scroll-snap-align: start;
+        }
+        .wallet-card small {
+          font-size: 10px !important;
+        }
+        .wallet-card strong {
+          margin-top: 5px !important;
+          font-size: 16px !important;
+        }
+        .wallet-card span {
+          margin-top: 4px !important;
+          font-size: 10px !important;
+        }
+        #ranking-list .rank-row {
+          grid-template-columns: 28px minmax(0, 1fr) auto !important;
+          min-height: 46px !important;
+          padding: 8px 6px !important;
+        }
+        #ranking-list .rank-row span {
+          font-size: 14px !important;
+        }
+        #ranking-list .rank-row b,
+        #ranking-list .rank-price,
+        #ranking-list .rank-change {
+          font-size: 12px !important;
+        }
+      }
+    </style>
+    <style id="mosstrade-fintech-system">
+      :root {
+        --coffee-900: #251e16;
+        --coffee-700: #4b382a;
+        --coffee-100: #ede4d9;
+        --amber-700: #9a610f;
+        --amber-500: #c8871a;
+        --amber-100: #f5e7c9;
+        --neutral-900: #24211d;
+        --neutral-600: #6b665e;
+        --neutral-300: #d9d1c5;
+        --neutral-100: #f3eee6;
+        --surface-primary: #fffcf7;
+        --surface-secondary: #f8f4ed;
+        --surface-elevated: #ffffff;
+        --positive: #16765a;
+        --negative: #b23a35;
+        --warning: #9a610f;
+        --focus: #9a610f;
+        --chart-bg: #1d1713;
+        --chart-panel: #251d18;
+        --chart-grid: #44362c;
+        --chart-text: #d7cec2;
+        --radius-sm: 10px;
+        --radius-md: 14px;
+        --radius-lg: 18px;
+        --space-1: 4px;
+        --space-2: 8px;
+        --space-3: 12px;
+        --space-4: 16px;
+        --space-5: 24px;
+        --space-6: 32px;
+        --sidebar-size: 224px;
+        --shadow-card:
+          0 1px 2px rgba(37, 30, 22, 0.04),
+          0 10px 30px rgba(37, 30, 22, 0.06);
+      }
+
+      html {
+        min-width: 320px;
+        background: var(--neutral-100);
+      }
+
+      html body,
+      html body * {
+        font-family:
+          Inter, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei",
+          sans-serif !important;
+      }
+
+      body {
+        min-width: 320px;
+        padding-left: var(--sidebar-size) !important;
+        background: var(--neutral-100) !important;
+        color: var(--neutral-900) !important;
+        font-size: 16px !important;
+        line-height: 1.5;
+        text-rendering: optimizeLegibility;
+      }
+
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+
+      button,
+      select,
+      input {
+        min-height: 44px;
+      }
+
+      input[type="checkbox"],
+      input[type="radio"] {
+        min-height: 12px !important;
+      }
+
+      input[type="range"] {
+        min-height: 24px !important;
+      }
+
+      button:focus-visible,
+      input:focus-visible,
+      select:focus-visible,
+      summary:focus-visible,
+      .rank-row:focus-visible {
+        outline: 3px solid var(--focus) !important;
+        outline-offset: 2px;
+      }
+
+      .financial-number,
+      .rank-price,
+      .rank-change,
+      .wallet-card strong,
+      .sim-table td,
+      .trade-plan b,
+      .sim-strategy-levels strong {
+        font-variant-numeric: tabular-nums;
+        letter-spacing: -0.01em !important;
+      }
+
+      .app-sidebar {
+        width: var(--sidebar-size) !important;
+        padding: 24px 16px 18px !important;
+        overflow-y: auto;
+        background: var(--coffee-900) !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
+      }
+
+      .app-brand {
+        padding: 0 4px 22px !important;
+      }
+
+      .app-brand strong {
+        color: #ffd65b !important;
+        font-size: 20px !important;
+        line-height: 1.2;
+        letter-spacing: 0.025em !important;
+      }
+
+      .app-brand small {
+        display: block;
+        margin-top: 8px;
+        color: #cfc4b6 !important;
+        font-size: 12px !important;
+        line-height: 1.6;
+      }
+
+      .app-nav {
+        display: grid !important;
+        gap: 8px !important;
+      }
+
+      .app-nav button {
+        min-height: 44px !important;
+        justify-content: flex-start !important;
+        gap: 12px !important;
+        padding: 0 14px !important;
+        border: 1px solid transparent !important;
+        border-radius: 12px !important;
+        background: transparent !important;
+        color: #d7cdbf !important;
+        font-size: 14px !important;
+        font-weight: 650 !important;
+        box-shadow: none !important;
+      }
+
+      .app-nav button:hover {
+        background: var(--coffee-700) !important;
+        color: #fffaf3 !important;
+      }
+
+      .app-nav button.active {
+        background: rgba(200, 135, 26, 0.14) !important;
+        color: #ffe1a1 !important;
+        box-shadow: inset 3px 0 0 var(--amber-500) !important;
+      }
+
+      .nav-icon {
+        width: 20px;
+        color: currentColor;
+        font-size: 15px !important;
+        text-align: center;
+      }
+
+      .moss-quote-card {
+        position: relative !important;
+        width: 100% !important;
+        min-height: 250px !important;
+        margin-top: auto !important;
+        padding: 22px 16px 58px !important;
+        overflow: hidden;
+        border: 1px solid rgba(200, 135, 26, 0.22) !important;
+        border-radius: 16px !important;
+        background: #2c241b !important;
+        box-shadow: none !important;
+        transition: min-height 180ms ease, padding 180ms ease;
+      }
+
+      header {
+        z-index: 100 !important;
+        left: var(--sidebar-size) !important;
+        min-height: 82px !important;
+        padding: 14px 32px !important;
+        background: var(--coffee-900) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+      }
+
+      header h1 {
+        color: #fffaf3 !important;
+        font-size: 22px !important;
+        line-height: 1.25 !important;
+      }
+
+      header small {
+        padding: 0 !important;
+        border: 0 !important;
+        background: transparent !important;
+        color: #cfc4b6 !important;
+        font-size: 12px !important;
+      }
+
+      .container {
+        width: 100% !important;
+        max-width: 1600px !important;
+        margin: 0 auto !important;
+        padding: 114px 32px 72px !important;
+        background: var(--neutral-100) !important;
+      }
+
+      .panel,
+      .wallet-card,
+      .market-summary-card,
+      .ranking-help {
+        border: 1px solid var(--neutral-300) !important;
+        border-radius: var(--radius-lg) !important;
+        background: var(--surface-primary) !important;
+        color: var(--neutral-900) !important;
+        box-shadow: var(--shadow-card) !important;
+      }
+
+      .panel {
+        padding: var(--space-5) !important;
+      }
+
+      .home-heading {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 20px;
+      }
+
+      .home-heading h2,
+      #home-page > h2 {
+        margin: 3px 0 4px !important;
+        color: var(--neutral-900) !important;
+        font-size: clamp(24px, 2vw, 28px) !important;
+        line-height: 1.25 !important;
+      }
+
+      .home-heading p {
+        margin: 0;
+        color: var(--neutral-600);
+        font-size: 14px;
+      }
+
+      .eyebrow {
+        color: var(--amber-700);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.13em;
+      }
+
+      .data-updated {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        min-height: 32px;
+        padding: 5px 10px;
+        border-radius: 999px;
+        background: var(--surface-secondary);
+        color: var(--neutral-600);
+        font-size: 12px;
+        white-space: nowrap;
+      }
+
+      .data-updated::before {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--positive);
+        content: "";
+      }
+
+      .market-command-bar {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(320px, 1fr) auto;
+        align-items: end;
+        gap: 16px;
+        padding: 18px;
+        border: 1px solid var(--neutral-300);
+        border-radius: var(--radius-md);
+        background: var(--surface-primary);
+      }
+
+      .field-label {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--neutral-600);
+        font-size: 13px;
+        font-weight: 650;
+      }
+
+      .search-area {
+        position: relative !important;
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+      }
+
+      .search {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) auto !important;
+        gap: 8px !important;
+        width: 100% !important;
+        margin: 0 !important;
+      }
+
+      .search input,
+      .analysis-search input,
+      .sim-symbol-bar input,
+      .sim-form input,
+      .sim-form select,
+      .market-tabs select,
+      .toolbar select {
+        min-height: 44px !important;
+        padding: 9px 12px !important;
+        border: 1px solid #9d9387 !important;
+        border-radius: var(--radius-sm) !important;
+        background: var(--surface-primary) !important;
+        color: var(--neutral-900) !important;
+        font-size: 14px !important;
+        box-shadow: none !important;
+      }
+
+      .search button,
+      #sim-load,
+      #analysis-search-button {
+        min-height: 44px !important;
+        padding: 0 20px !important;
+        border: 1px solid transparent !important;
+        border-radius: 12px !important;
+        background: var(--amber-500) !important;
+        color: var(--coffee-900) !important;
+        font-size: 14px !important;
+        font-weight: 750 !important;
+        box-shadow: none !important;
+      }
+
+      .search button:hover,
+      #sim-load:hover,
+      #analysis-search-button:hover {
+        background: #b97813 !important;
+        box-shadow: 0 6px 18px rgba(154, 97, 15, 0.18) !important;
+      }
+
+      .search-area #results {
+        position: absolute !important;
+        z-index: 80 !important;
+        top: calc(100% + 8px) !important;
+        right: 0;
+        left: 0;
+        width: 100% !important;
+        max-width: none !important;
+        max-height: 360px !important;
+        overflow-y: auto;
+        padding: 8px !important;
+        border-radius: 14px !important;
+        background: var(--surface-elevated) !important;
+        box-shadow: 0 18px 44px rgba(37, 30, 22, 0.16) !important;
+      }
+
+      .search-area #results .result {
+        min-height: 48px !important;
+        padding: 10px 12px !important;
+        border-radius: 10px !important;
+        font-size: 14px !important;
+      }
+
+      .market-tabs {
+        display: grid !important;
+        grid-template-columns: minmax(230px, 1fr) minmax(130px, auto) !important;
+        align-items: end !important;
+        gap: 10px !important;
+        margin: 0 !important;
+      }
+
+      .market-tabs label {
+        display: block;
+      }
+
+      .market-tabs select {
+        width: 100% !important;
+      }
+
+      .market-summary {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin: 16px 0;
+      }
+
+      .market-summary-card {
+        min-height: 116px;
+        padding: 18px 20px;
+        box-shadow: none !important;
+      }
+
+      .market-summary-card small,
+      .market-summary-card span {
+        display: block;
+        color: var(--neutral-600);
+        font-size: 12px;
+      }
+
+      .market-summary-card strong {
+        display: block;
+        margin: 8px 0 4px;
+        color: var(--neutral-900);
+        font-size: 24px;
+        line-height: 1.15;
+      }
+
+      .market-summary-card strong.up {
+        color: var(--positive);
+      }
+
+      .market-summary-card strong.down {
+        color: var(--negative);
+      }
+
+      .ranking-help {
+        margin: 0 0 16px !important;
+        box-shadow: none !important;
+      }
+
+      .ranking-help summary,
+      .indicator-help summary {
+        min-height: 44px;
+        padding: 11px 15px !important;
+        color: var(--neutral-900) !important;
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        cursor: pointer;
+      }
+
+      .ranking-help dt,
+      .indicator-help dt {
+        color: var(--neutral-900) !important;
+        font-size: 14px !important;
+      }
+
+      .ranking-help dd,
+      .indicator-help dd {
+        color: var(--neutral-600) !important;
+        font-size: 13px !important;
+        line-height: 1.65 !important;
+      }
+
+      .ranking-panel {
+        padding: 20px 22px 8px !important;
+      }
+
+      #ranking-title {
+        margin: 0 !important;
+        padding: 0 0 12px !important;
+        color: var(--neutral-900) !important;
+        font-size: 18px !important;
+      }
+
+      .rank-row {
+        display: grid !important;
+        grid-template-columns: 42px minmax(220px, 1fr) minmax(230px, auto) !important;
+        align-items: center !important;
+        min-height: 54px !important;
+        padding: 0 12px !important;
+        border-bottom: 1px solid rgba(88, 75, 52, 0.1) !important;
+        cursor: pointer;
+      }
+
+      .rank-row:hover {
+        background: var(--surface-secondary) !important;
+      }
+
+      .rank-row > small:first-child {
+        color: var(--neutral-600) !important;
+        font-size: 13px !important;
+        font-weight: 650 !important;
+      }
+
+      .rank-row > span:not(.rank-quote) {
+        overflow: hidden;
+        color: var(--neutral-900) !important;
+        font-size: 14px !important;
+        font-weight: 650 !important;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .rank-quote {
+        display: grid !important;
+        grid-template-columns: minmax(100px, 1fr) minmax(92px, auto) !important;
+        align-items: center;
+        gap: 22px !important;
+      }
+
+      .rank-price,
+      .rank-change {
+        font-size: 14px !important;
+        font-style: normal !important;
+        font-weight: 700 !important;
+        text-align: right;
+      }
+
+      .rank-price {
+        color: var(--neutral-900) !important;
+      }
+
+      .rank-change.up {
+        color: var(--positive) !important;
+      }
+
+      .rank-change.down {
+        color: var(--negative) !important;
+      }
+
+      .layout,
+      .sim-grid {
+        display: grid !important;
+        grid-template-columns: minmax(0, 7fr) minmax(320px, 3fr) !important;
+        align-items: start !important;
+        gap: 18px !important;
+      }
+
+      .analysis-head,
+      .sim-section-title {
+        align-items: center !important;
+        gap: 14px !important;
+      }
+
+      .analysis-search,
+      .sim-symbol-bar {
+        gap: 8px !important;
+      }
+
+      .chart-panel__toolbar,
+      .toolbar {
+        min-height: 52px !important;
+        gap: 8px !important;
+        padding: 8px 10px !important;
+        border: 1px solid var(--neutral-300) !important;
+        border-radius: var(--radius-md) !important;
+        background: var(--surface-secondary) !important;
+      }
+
+      .toolbar strong {
+        margin-right: auto;
+        color: var(--neutral-900) !important;
+        font-size: 17px !important;
+      }
+
+      .live-status {
+        display: inline-flex !important;
+        min-height: 30px;
+        align-items: center;
+        padding: 4px 9px !important;
+        border-radius: 999px !important;
+        background: #edf3e9 !important;
+        color: #315b3f !important;
+        font-size: 12px !important;
+        font-weight: 700;
+      }
+
+      .toggle {
+        min-height: 36px !important;
+        display: inline-flex !important;
+        align-items: center;
+        padding: 0 10px !important;
+        border: 1px solid transparent !important;
+        border-radius: 999px !important;
+        color: var(--neutral-600) !important;
+        font-size: 13px !important;
+        cursor: pointer;
+      }
+
+      .toggle input[type="checkbox"] {
+        width: 12px !important;
+        height: 12px !important;
+      }
+
+      .toggle:has(input:checked) {
+        border-color: rgba(22, 118, 90, 0.26) !important;
+        background: #eaf3ef !important;
+        color: var(--positive) !important;
+      }
+
+      #chart,
+      #sim-chart {
+        min-height: 420px !important;
+        overflow: hidden;
+        border: 1px solid #4b3a2f !important;
+        border-radius: var(--radius-md) !important;
+        background: var(--chart-bg) !important;
+      }
+
+      #volume-chart,
+      #sim-volume-chart {
+        height: 150px !important;
+        margin-top: 8px !important;
+        overflow: hidden;
+        border: 1px solid #4b3a2f !important;
+        border-radius: var(--radius-md) !important;
+        background: var(--chart-bg) !important;
+      }
+
+      .chart-auto {
+        min-width: 52px !important;
+        min-height: 34px !important;
+        border: 1px solid rgba(255, 255, 255, 0.28) !important;
+        border-radius: 9px !important;
+        background: rgba(37, 30, 22, 0.88) !important;
+        color: #fffaf3 !important;
+        font-size: 11px !important;
+        font-weight: 800 !important;
+      }
+
+      .sim-wallet-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 12px !important;
+        margin-bottom: 18px !important;
+      }
+
+      .wallet-card {
+        min-height: 96px !important;
+        padding: 16px 18px !important;
+        box-shadow: none !important;
+      }
+
+      .wallet-card small,
+      .wallet-card span {
+        color: var(--neutral-600) !important;
+        font-size: 12px !important;
+      }
+
+      .wallet-card strong {
+        color: var(--neutral-900) !important;
+        font-size: 20px !important;
+      }
+
+      .sim-grid > aside.panel {
+        position: sticky;
+        top: 100px;
+        padding: 22px !important;
+      }
+
+      .sim-grid > aside.panel > h3 {
+        margin: 0 0 18px;
+        font-size: 19px !important;
+      }
+
+      .sim-form {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 13px !important;
+      }
+
+      .sim-form label {
+        display: grid !important;
+        gap: 7px !important;
+        color: var(--neutral-600) !important;
+        font-size: 13px !important;
+        font-weight: 650 !important;
+      }
+
+      .leverage-control {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) 76px !important;
+        gap: 10px !important;
+        align-items: center;
+      }
+
+      .sim-summary {
+        margin-top: 16px !important;
+        padding: 14px !important;
+        border: 1px solid #d9ddcc !important;
+        border-radius: 12px !important;
+        background: #f0f3e9 !important;
+        color: #35402e !important;
+        font-size: 13px !important;
+        line-height: 1.65 !important;
+      }
+
+      .sim-actions {
+        display: block !important;
+        margin-top: 14px !important;
+      }
+
+      #sim-submit-long {
+        width: 100% !important;
+        min-height: 46px !important;
+        border: 1px solid transparent !important;
+        border-radius: 12px !important;
+        background: var(--amber-500) !important;
+        color: var(--coffee-900) !important;
+        font-size: 14px !important;
+        font-weight: 800 !important;
+        box-shadow: none !important;
+      }
+
+      #sim-submit-long:hover {
+        background: #b97813 !important;
+        box-shadow: 0 6px 18px rgba(154, 97, 15, 0.18) !important;
+      }
+
+      .sim-strategy-card,
+      .trade-plan,
+      .sim-positions-panel {
+        border-radius: var(--radius-md) !important;
+      }
+
+      .trade-plan,
+      .sim-strategy-levels {
+        gap: 10px !important;
+      }
+
+      .trade-plan div,
+      .sim-strategy-levels div {
+        padding: 12px !important;
+        border: 1px solid var(--neutral-300) !important;
+        border-radius: var(--radius-sm) !important;
+        background: var(--surface-secondary) !important;
+      }
+
+      .sim-table {
+        min-width: 760px;
+      }
+
+      .sim-table th,
+      .sim-table td {
+        height: 50px;
+        padding: 10px 12px !important;
+        font-size: 13px !important;
+        text-align: left;
+      }
+
+      .site-disclaimer {
+        padding: 18px 24px 24px !important;
+        color: var(--neutral-600) !important;
+        font-size: 12.5px !important;
+        line-height: 1.65 !important;
+        text-align: center;
+      }
+
+      /* Simulator workspace: chart + strategy, with a floating order drawer. */
+      #sim-page .sim-grid {
+        display: block !important;
+      }
+
+      #sim-page .sim-grid > section.panel {
+        display: grid !important;
+        grid-template-columns: minmax(0, 7fr) minmax(300px, 3fr) !important;
+        gap: 12px 18px !important;
+        align-items: start;
+      }
+
+      #sim-page .sim-symbol-bar,
+      #sim-page .sim-market-card,
+      #sim-page .sim-chart-toolbar,
+      #sim-page .sim-indicator-help,
+      #sim-page .sim-chart-stage,
+      #sim-page #sim-volume-chart {
+        grid-column: 1;
+      }
+
+      #sim-page .sim-strategy-card {
+        grid-column: 2;
+        grid-row: 1 / span 6;
+        position: static;
+        min-width: 0;
+        margin: 0 !important;
+        padding: 17px !important;
+        overflow: hidden;
+        border: 1px solid rgba(105, 101, 92, 0.24) !important;
+        background: linear-gradient(
+          135deg,
+          rgba(226, 226, 220, 0.76),
+          rgba(255, 252, 247, 0.88)
+        ) !important;
+        box-shadow: inset 0 1px rgba(255, 255, 255, 0.72) !important;
+        backdrop-filter: blur(14px) saturate(120%);
+      }
+
+      #sim-page .sim-strategy-card.BUY {
+        border-color: rgba(22, 118, 90, 0.42) !important;
+        background: linear-gradient(
+          135deg,
+          rgba(111, 184, 145, 0.34),
+          rgba(237, 249, 241, 0.8)
+        ) !important;
+      }
+
+      #sim-page .sim-strategy-card.SELL {
+        border-color: rgba(178, 58, 53, 0.42) !important;
+        background: linear-gradient(
+          135deg,
+          rgba(211, 102, 93, 0.34),
+          rgba(253, 239, 236, 0.82)
+        ) !important;
+      }
+
+      #sim-page .sim-strategy-card.HOLD {
+        border-color: rgba(105, 101, 92, 0.28) !important;
+        background: linear-gradient(
+          135deg,
+          rgba(181, 181, 174, 0.3),
+          rgba(247, 245, 240, 0.84)
+        ) !important;
+      }
+
+      #sim-page .sim-strategy-levels {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      }
+
+      #sim-page .sim-strategy-levels > div {
+        min-width: 0;
+        padding: 10px !important;
+        background: rgba(255, 252, 247, 0.6) !important;
+      }
+
+      #sim-page .sim-strategy-levels strong {
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        font-size: clamp(12px, 1.05vw, 15px) !important;
+        line-height: 1.35;
+      }
+
+      .sim-order-toggle {
+        position: fixed;
+        z-index: 240;
+        bottom: 24px;
+        right: 24px;
+        width: 230px;
+        min-height: 46px;
+        border: 1px solid #a96e14 !important;
+        border-radius: 12px !important;
+        background: var(--amber-500) !important;
+        color: var(--coffee-900) !important;
+        font-size: 14px !important;
+        font-weight: 800 !important;
+        filter: drop-shadow(0 14px 32px rgba(37, 30, 22, 0.2));
+      }
+
+      .sim-order-panel {
+        position: fixed;
+        z-index: 250;
+        top: 96px;
+        right: 24px;
+        bottom: 24px;
+        width: min(390px, calc(100vw - 32px));
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border: 1px solid var(--neutral-300) !important;
+        border-radius: 16px !important;
+        background: var(--surface) !important;
+        box-shadow: 0 20px 52px rgba(37, 30, 22, 0.24) !important;
+      }
+
+      .sim-order-panel-head {
+        min-height: 54px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 12px 10px 18px;
+        border-bottom: 1px solid var(--neutral-300);
+        background: var(--surface-secondary);
+      }
+
+      .sim-order-panel-head h3 {
+        margin: 0;
+        font-size: 17px !important;
+      }
+
+      .sim-order-close {
+        width: 36px !important;
+        min-height: 36px !important;
+        padding: 0 !important;
+        border: 1px solid var(--neutral-300) !important;
+        border-radius: 10px !important;
+        background: var(--surface) !important;
+        color: var(--neutral-900) !important;
+        font-size: 20px !important;
+        box-shadow: none !important;
+      }
+
+      .sim-order-drawer-body {
+        min-height: 0;
+        flex: 1 1 auto;
+        overflow-y: auto;
+        padding: 20px;
+        background: var(--surface);
+      }
+
+      .sim-wallet-grid {
+        gap: 10px !important;
+        margin-bottom: 12px !important;
+      }
+
+      .wallet-card {
+        min-height: 70px !important;
+        padding: 10px 14px !important;
+      }
+
+      .wallet-card strong {
+        margin: 2px 0 !important;
+        font-size: 17px !important;
+      }
+
+      .wallet-page-heading {
+        margin-bottom: 18px;
+      }
+
+      .page-eyebrow {
+        color: var(--amber-700);
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+      }
+
+      .wallet-equity-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 18px;
+      }
+
+      .wallet-equity-card {
+        display: grid;
+        gap: 7px;
+        min-height: 112px;
+        padding: 18px;
+        border: 1px solid var(--neutral-300);
+        border-radius: var(--radius-md);
+        background: var(--surface);
+      }
+
+      .wallet-equity-card small,
+      .wallet-equity-card span {
+        color: var(--neutral-600);
+        font-size: 12px;
+      }
+
+      .wallet-equity-card strong {
+        color: var(--neutral-900);
+        font-size: 22px;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .wallet-overview-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 7fr) minmax(280px, 3fr);
+        gap: 18px;
+        margin-bottom: 18px;
+      }
+
+      .wallet-performance-panel,
+      .wallet-advice-card {
+        padding: 20px !important;
+      }
+
+      #wallet-equity-chart {
+        width: 100%;
+        height: 300px;
+        margin-top: 14px;
+        overflow: hidden;
+        border: 1px solid var(--neutral-300);
+        border-radius: var(--radius-md);
+        background: var(--surface-secondary);
+      }
+
+      .wallet-chart-legend {
+        display: flex;
+        gap: 12px;
+        color: var(--neutral-600);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .wallet-chart-legend span::before {
+        content: "";
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        margin-right: 5px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+
+      .wallet-chart-legend .twd { color: #9a610f; }
+      .wallet-chart-legend .usd { color: #16765a; }
+      .wallet-chart-legend .usdt { color: #6b5fb5; }
+
+      .wallet-advice-card > small {
+        color: var(--amber-700);
+        font-weight: 800;
+      }
+
+      .wallet-advice-card > p {
+        color: var(--neutral-600);
+        line-height: 1.7;
+      }
+
+      .wallet-risk-stats {
+        display: grid;
+        gap: 8px;
+        margin-top: 18px;
+      }
+
+      .wallet-risk-stats > div {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--neutral-300);
+      }
+
+      .wallet-risk-stats span { color: var(--neutral-600); }
+
+      .moss-quote-card {
+        transition: none !important;
+      }
+
+      @media (min-width: 1024px) and (max-width: 1279px) {
+        :root {
+          --sidebar-size: 76px;
+        }
+
+        .app-sidebar {
+          padding: 18px 10px !important;
+        }
+
+        .app-brand small,
+        .app-nav button span:last-child,
+        .moss-quote-card {
+          display: none !important;
+        }
+
+        .app-brand strong {
+          overflow: hidden;
+          display: block;
+          width: 36px;
+          font-size: 0 !important;
+        }
+
+        .app-brand strong::after {
+          content: "M";
+          font-size: 20px;
+        }
+
+        .app-nav button {
+          justify-content: center !important;
+          padding: 0 !important;
+        }
+
+        .container {
+          padding-inline: 24px !important;
+        }
+      }
+
+      @media (max-width: 1023px) {
+        .layout,
+        .sim-grid {
+          grid-template-columns: minmax(0, 1fr) !important;
+        }
+
+        .layout > *,
+        .sim-grid > * {
+          min-width: 0 !important;
+          width: 100% !important;
+        }
+
+        .sim-grid > aside.panel {
+          position: static;
+        }
+
+        #sim-page .sim-grid > section.panel {
+          grid-template-columns: minmax(0, 1fr) !important;
+        }
+
+        #sim-page .sim-symbol-bar,
+        #sim-page .sim-market-card,
+        #sim-page .sim-chart-toolbar,
+        #sim-page .sim-indicator-help,
+        #sim-page .sim-chart-stage,
+        #sim-page #sim-volume-chart,
+        #sim-page .sim-strategy-card {
+          grid-column: 1;
+        }
+
+        #sim-page .sim-strategy-card {
+          grid-row: auto;
+          position: static;
+        }
+
+        .wallet-overview-grid {
+          grid-template-columns: minmax(0, 1fr);
+        }
+
+        .market-command-bar {
+          grid-template-columns: 1fr;
+        }
+
+        .market-tabs {
+          grid-template-columns: minmax(0, 1fr) minmax(130px, 0.45fr) !important;
+        }
+      }
+
+      @media (max-width: 767px) {
+        :root {
+          --sidebar-size: 0px;
+        }
+
+        body {
+          padding: 0 0 74px !important;
+        }
+
+        header {
+          left: 0 !important;
+          min-height: 68px !important;
+          padding: 10px 16px !important;
+        }
+
+        header h1 {
+          font-size: 19px !important;
+        }
+
+        .mobile-menu-toggle {
+          display: none !important;
+        }
+
+        .container {
+          padding: 88px 12px 30px !important;
+        }
+
+        .app-sidebar {
+          position: fixed !important;
+          z-index: 150 !important;
+          inset: auto 0 0 !important;
+          display: block !important;
+          width: 100% !important;
+          height: 66px !important;
+          padding: 7px 10px !important;
+          transform: none !important;
+          background: var(--coffee-900) !important;
+          box-shadow: 0 -8px 24px rgba(37, 30, 22, 0.14) !important;
+        }
+
+        .app-brand,
+        .moss-quote-card {
+          display: none !important;
+        }
+
+        .app-nav {
+          grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+          height: 100%;
+          gap: 8px !important;
+        }
+
+        .app-nav button {
+          min-height: 50px !important;
+          justify-content: center !important;
+          padding: 0 10px !important;
+          font-size: 13px !important;
+        }
+
+        .home-heading {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .home-heading h2 {
+          font-size: 23px !important;
+        }
+
+        .market-command-bar,
+        .panel {
+          padding: 16px !important;
+          border-radius: 14px !important;
+        }
+
+        .market-tabs,
+        .market-summary {
+          grid-template-columns: 1fr !important;
+        }
+
+        .market-summary {
+          grid-template-columns: repeat(3, minmax(150px, 1fr)) !important;
+          overflow-x: auto;
+          padding-bottom: 4px;
+          scroll-snap-type: x proximity;
+        }
+
+        .market-summary-card {
+          min-height: 104px;
+          padding: 15px;
+          scroll-snap-align: start;
+        }
+
+        .market-summary-card strong {
+          font-size: 21px;
+        }
+
+        .ranking-panel {
+          padding: 16px 10px 6px !important;
+        }
+
+        .rank-row {
+          grid-template-columns: 30px minmax(0, 1fr) auto !important;
+          min-height: 58px !important;
+          padding: 6px 4px !important;
+        }
+
+        .rank-quote {
+          grid-template-columns: 1fr !important;
+          gap: 1px !important;
+        }
+
+        .rank-price,
+        .rank-change {
+          font-size: 12px !important;
+        }
+
+        #chart,
+        #sim-chart {
+          min-height: 320px !important;
+        }
+
+        #volume-chart,
+        #sim-volume-chart {
+          height: 120px !important;
+        }
+
+        .toolbar,
+        .chart-panel__toolbar {
+          flex-wrap: nowrap !important;
+          overflow-x: auto;
+        }
+
+        .toolbar > * {
+          flex: 0 0 auto;
+        }
+
+        .sim-wallet-grid {
+          grid-template-columns: repeat(3, minmax(190px, 1fr)) !important;
+          overflow-x: auto;
+          scroll-snap-type: x proximity;
+        }
+
+        .wallet-equity-grid {
+          grid-template-columns: repeat(3, minmax(190px, 1fr));
+          overflow-x: auto;
+          padding-bottom: 4px;
+        }
+
+        .sim-order-toggle {
+          inset: auto 10px 76px auto !important;
+          width: 210px !important;
+        }
+
+        .sim-order-panel {
+          inset: auto 10px 76px !important;
+          width: auto !important;
+          max-height: calc(100vh - 164px);
+        }
+
+        .sim-order-drawer-body {
+          flex: 0 1 auto;
+          max-height: min(68vh, 620px);
+        }
+
+        .sim-table-wrap {
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+
+        .wallet-card {
+          scroll-snap-align: start;
+        }
+
+        .site-disclaimer {
+          padding-bottom: 84px !important;
+          font-size: 12px !important;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          transition-duration: 0.01ms !important;
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
         }
       }
     </style>
@@ -2915,14 +4661,16 @@
         <button id="nav-sim" type="button">
           <span class="nav-icon">◈</span><span>模擬交易</span>
         </button>
+        <button id="nav-wallet" type="button">
+          <span class="nav-icon">▤</span><span>模擬錢包</span>
+        </button>
       </nav>
       <div class="moss-quote-card">
         <div class="quote-content">
           <p class="quote-chinese">
-            苔蘚不會一夜之間長滿森林，<br />
+            苔蘚不會一夜之間長滿森林。<br />
             投資也是如此。<br />
-            每一次交易、每一筆紀錄<br />
-            都像一個像素格，<br />
+            每一次交易、每一筆紀錄，都像一個像素格。<br />
             最終拼出完整的投資旅程。
           </p>
           <div class="pixel-divider" aria-hidden="true"></div>
@@ -2942,6 +4690,15 @@
       </div>
     </aside>
     <header>
+      <button
+        id="mobile-menu-toggle"
+        class="mobile-menu-toggle"
+        type="button"
+        aria-label="開啟導覽選單"
+        aria-expanded="false"
+      >
+        ☰
+      </button>
       <div>
         <h1 id="topbar-title">市場行情</h1>
         <small id="topbar-subtitle">循著訊號，讀懂市場</small>
@@ -2949,27 +4706,62 @@
     </header>
     <main class="container">
       <section id="home-page">
-        <h2>選擇市場或搜尋商品</h2>
-        <div class="search-area">
-          <div class="search">
-            <input
-              id="search-input"
-              placeholder="例如：2330.TW、AAPL、GLD、BTC-USDT"
-            /><button id="search-button">搜尋</button>
+        <div class="home-heading">
+          <div>
+            <span class="eyebrow">MARKET OVERVIEW</span>
+            <h2>選擇市場或搜尋商品</h2>
+            <p>快速比較不同市場的熱門商品與即時表現。</p>
           </div>
-          <div id="results" class="panel hidden"></div>
+          <span id="home-updated" class="data-updated" role="status"
+            >等待市場資料</span
+          >
         </div>
-        <div class="market-tabs">
-          <select id="market-select">
-            <option value="futures">合約市場（OKX）</option>
-            <option value="taiwan">台股市場（含台股 ETF）</option>
-            <option value="us">美股市場（含美國 ETF／美債）</option>
-            <option value="metals">貴金屬市場</option></select
-          ><select id="ranking-select">
-            <option value="gainers">漲幅榜</option>
-            <option value="losers">跌幅榜</option>
-            <option value="volume">成交量榜</option>
-          </select>
+        <div class="market-command-bar">
+          <div class="search-area">
+            <label class="field-label" for="search-input">搜尋商品</label>
+            <div class="search">
+              <input
+                id="search-input"
+                placeholder="例如：2330.TW、AAPL、GLD、BTC-USDT"
+              /><button id="search-button">搜尋</button>
+            </div>
+            <div id="results" class="panel hidden"></div>
+          </div>
+          <div class="market-tabs">
+            <label
+              ><span class="field-label">市場</span
+              ><select id="market-select">
+                <option value="futures">合約市場（OKX）</option>
+                <option value="taiwan">台股市場（含台股 ETF）</option>
+                <option value="us">美股市場（含美國 ETF／美債）</option>
+                <option value="metals">貴金屬市場</option>
+              </select></label
+            ><label
+              ><span class="field-label">排序</span
+              ><select id="ranking-select">
+                <option value="gainers">漲幅榜</option>
+                <option value="losers">跌幅榜</option>
+                <option value="volume">成交量榜</option>
+              </select></label
+            >
+          </div>
+        </div>
+        <div class="market-summary" aria-label="排行榜摘要">
+          <article class="market-summary-card">
+            <small>榜內商品</small>
+            <strong id="summary-count" class="financial-number">—</strong>
+            <span>目前排行筆數</span>
+          </article>
+          <article class="market-summary-card">
+            <small>榜首表現</small>
+            <strong id="summary-leader" class="financial-number">—</strong>
+            <span id="summary-leader-name">等待資料</span>
+          </article>
+          <article class="market-summary-card">
+            <small>資料狀態</small>
+            <strong id="summary-status">比對中</strong>
+            <span>依選擇市場更新</span>
+          </article>
         </div>
         <details class="indicator-help ranking-help">
           <summary>排行榜說明</summary>
@@ -2995,8 +4787,8 @@
             </dd>
           </dl>
         </details>
-        <div id="ranking-error" class="error"></div>
-        <section class="panel">
+        <div id="ranking-error" class="error" role="alert"></div>
+        <section class="panel ranking-panel">
           <h3 id="ranking-title">漲幅 Top 10</h3>
           <div id="ranking-list"><div class="empty">資料比對中…</div></div>
         </section>
@@ -3015,9 +4807,13 @@
         <div id="analysis-results" class="panel search-results hidden"></div>
         <div class="layout">
           <section class="panel">
-            <div class="toolbar">
+            <div class="toolbar chart-panel__toolbar">
               <strong id="chart-title">分析圖表</strong
-              ><span id="analysis-live-status" class="live-status"
+              ><span
+                id="analysis-live-status"
+                class="live-status"
+                role="status"
+                aria-live="polite"
                 >尚未連線</span
               ><select id="interval">
                 <optgroup label="分鐘">
@@ -3116,8 +4912,8 @@
               <div><small>止盈 2</small><b id="tp2-price">—</b></div>
             </div>
             <p id="reason"></p>
-            <p id="analysis-error" class="error"></p>
-            <h3>策略訊號紀錄</h3>
+            <p id="analysis-error" class="error" role="alert"></p>
+            <h3>參考策略進場紀錄</h3>
             <div id="signal-history" class="history-list">
               <div class="empty">尚無訊號紀錄</div>
             </div>
@@ -3130,7 +4926,7 @@
       <section id="sim-page" class="hidden">
         <div class="sim-section-title">
           <div>
-            <h2>模擬交易</h2>
+            <h2>模擬帳戶</h2>
             <p>使用虛擬資金練習現貨與 OKX 規格永續合約，不涉及真實資金。</p>
           </div>
           <button id="sim-reset" class="danger-action" type="button">
@@ -3139,17 +4935,17 @@
         </div>
         <div class="sim-wallet-grid">
           <article class="wallet-card">
-            <small>台股模擬錢包</small><strong id="wallet-twd">TWD —</strong
+            <small>台股模擬錢包</small><strong id="wallet-twd">— TWD</strong
             ><span id="wallet-twd-detail">可用餘額</span>
           </article>
           <article class="wallet-card">
             <small>美股／ETF 模擬錢包</small
-            ><strong id="wallet-usd">USD —</strong
+            ><strong id="wallet-usd">— USD</strong
             ><span id="wallet-usd-detail">可用餘額</span>
           </article>
           <article class="wallet-card">
             <small>OKX 合約模擬錢包</small
-            ><strong id="wallet-usdt">USDT —</strong
+            ><strong id="wallet-usdt">— USDT</strong
             ><span id="wallet-usdt-detail">可用餘額</span>
           </article>
         </div>
@@ -3167,9 +4963,14 @@
               <strong id="sim-market-symbol">尚未選擇商品</strong>
               <span id="sim-market-info">請輸入商品，或從分析頁帶入。</span>
             </div>
-            <div class="toolbar sim-chart-toolbar">
-              <strong>商品圖表</strong>
-              <span id="sim-live-status" class="live-status">尚未連線</span>
+            <div class="toolbar chart-panel__toolbar sim-chart-toolbar">
+              <span
+                id="sim-live-status"
+                class="live-status"
+                role="status"
+                aria-live="polite"
+                >尚未連線</span
+              >
               <select id="sim-interval" aria-label="模擬圖表時間週期">
                 <optgroup label="分鐘">
                   <option value="1m">1 分</option>
@@ -3269,8 +5070,34 @@
               >
             </section>
           </section>
-          <aside class="panel">
-            <h3>建立模擬訂單</h3>
+          <button
+            id="sim-order-toggle"
+            class="sim-order-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="sim-order-panel"
+          >
+            ＋ 建立模擬訂單
+          </button>
+          <aside
+            id="sim-order-panel"
+            class="sim-order-panel hidden"
+            role="dialog"
+            aria-modal="false"
+            aria-labelledby="sim-order-panel-title"
+          >
+            <div class="sim-order-panel-head">
+              <h3 id="sim-order-panel-title">建立模擬訂單</h3>
+              <button
+                id="sim-order-close"
+                class="sim-order-close"
+                type="button"
+                aria-label="收合建立模擬訂單"
+              >
+                ×
+              </button>
+            </div>
+            <div class="sim-order-drawer-body">
             <div class="sim-form">
               <label
                 >訂單類型<select id="sim-order-type">
@@ -3338,18 +5165,80 @@
             </div>
             <div class="sim-actions">
               <button id="sim-submit-long" class="long-action" type="button">
-                確認做多／買進
+                預覽並建立模擬訂單
               </button>
-              <button id="sim-submit-short" class="short-action" type="button">
-                確認做空
-              </button>
+              <button
+                id="sim-submit-short"
+                class="short-action hidden"
+                type="button"
+                aria-hidden="true"
+                tabindex="-1"
+              ></button>
             </div>
-            <p id="sim-error" class="error"></p>
+            <p id="sim-error" class="error" role="alert"></p>
             <p class="sim-notice">
               合約採 OKX
               公開商品規格與持倉檔位模擬；全倉會共用合約錢包可用餘額，逐倉僅使用該筆保證金。實際交易仍可能受到帳戶模式、VIP
               費率、地區與交易所即時風控影響。
             </p>
+            <div class="sim-reference-history-block">
+              <h3>參考策略進場紀錄</h3>
+              <div id="sim-reference-history" class="history-list">
+                <div class="empty">載入商品後顯示參考紀錄</div>
+              </div>
+            </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+      <section id="wallet-page" class="hidden">
+        <div class="sim-section-title wallet-page-heading">
+          <div>
+            <span class="page-eyebrow">PAPER PORTFOLIO</span>
+            <h2>模擬錢包</h2>
+            <p>追蹤三種模擬資金、持倉損益與帳戶權益變化。</p>
+          </div>
+          <button id="wallet-refresh" type="button">更新市場價格</button>
+        </div>
+        <div class="wallet-equity-grid">
+          <article class="wallet-equity-card">
+            <small>台股帳戶權益</small>
+            <strong id="wallet-equity-twd">— TWD</strong>
+            <span id="wallet-equity-twd-change">尚無變化</span>
+          </article>
+          <article class="wallet-equity-card">
+            <small>美股帳戶權益</small>
+            <strong id="wallet-equity-usd">— USD</strong>
+            <span id="wallet-equity-usd-change">尚無變化</span>
+          </article>
+          <article class="wallet-equity-card">
+            <small>OKX 合約帳戶權益</small>
+            <strong id="wallet-equity-usdt">— USDT</strong>
+            <span id="wallet-equity-usdt-change">尚無變化</span>
+          </article>
+        </div>
+        <div class="wallet-overview-grid">
+          <section class="panel wallet-performance-panel">
+            <div class="sim-section-title">
+              <div>
+                <h3>資金變化</h3>
+                <p>依幣別分開呈現，避免不同貨幣直接相加造成誤判。</p>
+              </div>
+              <div class="wallet-chart-legend" aria-label="資金曲線圖例">
+                <span class="twd">TWD</span><span class="usd">USD</span><span class="usdt">USDT</span>
+              </div>
+            </div>
+            <div id="wallet-equity-chart" aria-label="模擬錢包資金變化線圖"></div>
+          </section>
+          <aside class="panel wallet-advice-card">
+            <small>風險參考</small>
+            <h3 id="wallet-advice-title">建立第一筆模擬紀錄</h3>
+            <p id="wallet-advice-text">完成模擬交易後，這裡會依帳戶變化提供風險管理提醒。</p>
+            <div class="wallet-risk-stats">
+              <div><span>總持倉</span><strong id="wallet-position-summary">0 筆</strong></div>
+              <div><span>待成交</span><strong id="wallet-order-summary">0 筆</strong></div>
+              <div><span>已實現紀錄</span><strong id="wallet-history-summary">0 筆</strong></div>
+            </div>
           </aside>
         </div>
         <section class="panel sim-positions-panel">
@@ -3368,6 +5257,7 @@
                   <th>方向</th>
                   <th>數量</th>
                   <th>進場價</th>
+                  <th>目前標記價格</th>
                   <th>槓桿／模式</th>
                   <th>未實現盈虧</th>
                   <th>操作</th>
@@ -3399,11 +5289,16 @@
         </section>
       </section>
     </main>
+    <footer class="site-disclaimer">
+      本站行情、技術指標、策略分析及模擬交易僅供學習與研究參考，不構成投資建議、交易邀約或獲利保證。金融商品具有風險，所有決策與結果應由使用者自行評估及承擔。
+    </footer>
     <script>
       (() => {
         const byId = (id) => document.getElementById(id);
         let activeSymbol = "";
         let rankingData = {};
+        let rankingLoading = false;
+        let rankingLastUpdated = 0;
         let structureData = null;
         let levelsData = null;
         let chochLines = [],
@@ -3435,8 +5330,13 @@
         let simSyncingRange = false;
         let simCrosshairReady = false;
         let simSearchTimer = null;
+        let walletEquityChart = null;
+        let walletEquitySeries = {};
+        let walletQuoteTimer = null;
         let analysisRealtime = null;
         let simulationRealtime = null;
+        let analysisPalette = { up: "#26a69a", down: "#ef5350" };
+        let simulationPalette = { up: "#26a69a", down: "#ef5350" };
 
         const userTimeZone =
           Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
@@ -3472,6 +5372,28 @@
             return new Date(Date.UTC(time.year, time.month - 1, time.day));
           }
           return new Date(0);
+        }
+
+        function marketCandlePalette(symbol) {
+          const value = String(symbol || "").toUpperCase();
+          const isTaiwan =
+            value.endsWith(".TW") ||
+            value.endsWith(".TWO") ||
+            value.includes(":TWSE") ||
+            value.includes(":TPEX");
+          return isTaiwan
+            ? { up: "#e25555", down: "#26a69a" }
+            : { up: "#26a69a", down: "#ef5350" };
+        }
+
+        function applyCandlePalette(series, palette) {
+          series?.applyOptions({
+            upColor: palette.up,
+            downColor: palette.down,
+            wickUpColor: palette.up,
+            wickDownColor: palette.down,
+            borderVisible: false,
+          });
         }
 
         function formatChartTick(time) {
@@ -3527,10 +5449,12 @@
           const histogram = simulation ? simVolumeSeries : volumeSeries;
           const rows = simulation ? simLastChartData : lastChartData;
           candleSeries?.update(bar);
+          const palette = simulation ? simulationPalette : analysisPalette;
           histogram?.update({
             time: bar.time,
             value: Number(bar.volume) || 0,
-            color: bar.close >= bar.open ? "#718f46aa" : "#b14e3daa",
+            color:
+              bar.close >= bar.open ? `${palette.up}aa` : `${palette.down}aa`,
           });
           mergeRealtimeBar(rows, bar);
           if (simulation) {
@@ -3570,6 +5494,9 @@
               if (simulation) {
                 simInstrument.analysis = data;
                 renderSimulationStrategy(data);
+                evaluateHistory(data.chart_data || [], symbol, interval);
+                saveSignal(data, symbol, interval, data.chart_data || []);
+                renderSimulationReferenceHistory();
               }
               setLiveStatus(simulation, "自動更新", "delayed");
             } catch (_error) {
@@ -3789,7 +5716,10 @@
             lastChartData.map((c) => ({
               time: c.time,
               value: Number(c.volume) || 0,
-              color: c.close >= c.open ? "#26a69a99" : "#ef535099",
+              color:
+                c.close >= c.open
+                  ? `${analysisPalette.up}99`
+                  : `${analysisPalette.down}99`,
             })),
           );
           volumeChart.applyOptions({
@@ -3872,7 +5802,7 @@
             );
           }
           if (byId("toggle-fvg").checked)
-            (structureData?.fvg_zones || []).slice(-3).forEach((zone) => {
+            (structureData?.fvg_zones || []).slice(-1).forEach((zone) => {
               const bullish = zone.side === "bullish";
               const color = bullish ? "#8b6de0" : "#e59445";
               fvgLines.push(
@@ -3911,9 +5841,50 @@
           requestAnimationFrame(ensureVolumeChart);
         }
 
+        function updateMarketSummary(rows, volumeMode = false, failed = false) {
+          const countNode = byId("summary-count");
+          const leaderNode = byId("summary-leader");
+          const leaderNameNode = byId("summary-leader-name");
+          const statusNode = byId("summary-status");
+          const updatedNode = byId("home-updated");
+          if (!countNode || !leaderNode || !leaderNameNode || !statusNode)
+            return;
+          countNode.textContent = String(rows.length || 0);
+          leaderNode.classList.remove("up", "down");
+          if (rows.length) {
+            const leader = rows[0];
+            const change = Number(leader.change || 0);
+            if (volumeMode) {
+              leaderNode.textContent = `${(Number(leader.volume || 0) / 1e6).toFixed(1)}M`;
+            } else {
+              leaderNode.textContent = `${change >= 0 ? "▲ +" : "▼ −"}${Math.abs(change)}%`;
+              leaderNode.classList.add(change >= 0 ? "up" : "down");
+            }
+            leaderNameNode.textContent = leader.name || leader.symbol || "—";
+            statusNode.textContent = "已更新";
+          } else {
+            leaderNode.textContent = "—";
+            leaderNameNode.textContent = failed ? "資料暫時無法取得" : "等待資料";
+            statusNode.textContent = failed ? "暫時中斷" : "比對中";
+          }
+          if (updatedNode) {
+            updatedNode.textContent = failed
+              ? "市場資料暫時中斷"
+              : rows.length
+                ? `最後更新 ${new Date().toLocaleTimeString("zh-TW", {
+                    hour12: false,
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                  })}`
+                : "正在比對市場資料";
+          }
+        }
+
         function rankingRows(rows, volumeMode = false) {
           const box = byId("ranking-list");
           box.replaceChildren();
+          updateMarketSummary(rows, volumeMode);
           if (!rows.length) {
             const empty = document.createElement("div");
             empty.className = "empty";
@@ -3924,9 +5895,11 @@
           rows.forEach((item, index) => {
             const row = document.createElement("div");
             row.className = "rank-row";
+            row.tabIndex = 0;
+            row.setAttribute("role", "button");
             const value = volumeMode
               ? `${(item.volume / 1e6).toFixed(1)}M`
-              : `${item.change > 0 ? "+" : ""}${item.change}%`;
+              : `${Number(item.change) >= 0 ? "▲ +" : "▼ −"}${Math.abs(Number(item.change) || 0)}%`;
             const numericPrice = Number(item.price);
             const price = Number.isFinite(numericPrice)
               ? numericPrice.toLocaleString("en-US", {
@@ -3948,17 +5921,27 @@
             quote.append(priceNode, change);
             row.append(rank, name, quote);
             row.onclick = () => openAnalysis(item.symbol);
+            row.onkeydown = (event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                openAnalysis(item.symbol);
+              }
+            };
             box.append(row);
           });
         }
-        async function loadRankings() {
+        async function loadRankings(silent = false) {
+          if (rankingLoading) return;
+          rankingLoading = true;
           const market = byId("market-select").value;
           const ranking = byId("ranking-select").value;
           const labels = { gainers: "漲幅", losers: "跌幅", volume: "成交量" };
           byId("ranking-title").textContent = labels[ranking] + " Top 10";
           byId("ranking-error").textContent = "";
-          byId("ranking-list").innerHTML =
-            '<div class="empty">資料比對中…</div>';
+          if (!silent)
+            byId("ranking-list").innerHTML =
+              '<div class="empty">資料比對中…</div>';
+          if (!silent) updateMarketSummary([], ranking === "volume");
           try {
             const response = await fetch(
               "/api/market-ranking?market=" +
@@ -3969,9 +5952,13 @@
             const data = await response.json();
             if (!response.ok) throw new Error(data.detail || "排行榜載入失敗");
             rankingRows(data.results || [], ranking === "volume");
+            rankingLastUpdated = Date.now();
           } catch (error) {
             byId("ranking-error").textContent = error.message;
-            rankingRows([], ranking === "volume");
+            if (!silent) rankingRows([], ranking === "volume");
+            updateMarketSummary([], ranking === "volume", true);
+          } finally {
+            rankingLoading = false;
           }
         }
 
@@ -4108,9 +6095,9 @@
           });
           writeHistory(history);
         }
-        function saveSignal(data, symbol, interval) {
+        function saveSignal(data, symbol, interval, chartRows = lastChartData) {
           if (!["BUY", "SELL"].includes(data.direction)) return;
-          const signalTime = lastChartData.at(-1)?.time;
+          const signalTime = chartRows.at(-1)?.time;
           if (!signalTime) return;
           const history = readHistory();
           const same = history.filter(
@@ -4246,6 +6233,49 @@
             box.append(row);
           });
         }
+
+        function renderSimulationReferenceHistory() {
+          const box = byId("sim-reference-history");
+          const symbol = simInstrument?.instrument;
+          const interval = byId("sim-interval").value;
+          if (!symbol) {
+            box.innerHTML = '<div class="empty">載入商品後顯示參考紀錄</div>';
+            return;
+          }
+          const rows = readHistory()
+            .filter(
+              (item) => item.symbol === symbol && item.interval === interval,
+            )
+            .sort((a, b) => b.signalTime - a.signalTime)
+            .slice(0, 6);
+          if (!rows.length) {
+            box.innerHTML = `<div class="empty">${interval} 尚無參考進場紀錄</div>`;
+            return;
+          }
+          const labels = {
+            OPEN: "進行中",
+            TP1: "止盈 1",
+            TP2: "止盈 2",
+            SL: "止損",
+          };
+          box.innerHTML = rows
+            .map(
+              (item) => `<div class="history-item ${item.status}" tabindex="0">
+                <div>${item.interval} · ${item.direction === "BUY" ? "多" : "空"} · 進場 ${item.entry} · ${labels[item.status] || item.status}</div>
+                <div class="history-detail">策略：${escapeHtml(item.strategy || "多因子策略")}<br>進場時間：${formatSignalTime(item.signalTime)}<br>進場點位：${item.entry}<br>止損：${item.sl}<br>止盈 1：${item.tp1}<br>止盈 2：${item.tp2}<br>出場點位：${item.exitPrice ?? "尚未出場"}</div>
+              </div>`,
+            )
+            .join("");
+          box.querySelectorAll(".history-item").forEach((row) => {
+            row.onclick = () => row.classList.toggle("active");
+            row.onkeydown = (event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                row.classList.toggle("active");
+              }
+            };
+          });
+        }
         function renderTradePlan(data) {
           const active = ["BUY", "SELL"].includes(data.direction);
           byId("trade-plan").classList.toggle("hidden", !active);
@@ -4266,6 +6296,14 @@
             positions: [],
             orders: [],
             history: [],
+            equityHistory: [
+              {
+                time: Math.floor(Date.now() / 1000),
+                TWD: SIM_INITIAL_BALANCE,
+                USD: SIM_INITIAL_BALANCE,
+                USDT: SIM_INITIAL_BALANCE,
+              },
+            ],
           };
         }
 
@@ -4279,8 +6317,10 @@
               Array.isArray(saved.positions) &&
               Array.isArray(saved.orders) &&
               Array.isArray(saved.history)
-            )
+            ) {
+              if (!Array.isArray(saved.equityHistory)) saved.equityHistory = [];
               return saved;
+            }
           } catch (_error) {
             // Invalid local data is replaced with a clean simulation account.
           }
@@ -4319,12 +6359,169 @@
             .reduce((sum, position) => sum + Number(position.margin || 0), 0);
         }
 
+        function walletEquity(currency) {
+          const wallet = simState.wallets[currency];
+          const positionValue = simState.positions
+            .filter((position) => position.currency === currency)
+            .reduce((sum, position) => {
+              const markedPrice = Number(position.lastPrice || position.entry);
+              return (
+                sum +
+                (position.market === "contract"
+                  ? Number(position.margin || 0) +
+                    positionPnl(position, markedPrice)
+                  : Number(position.quantity || 0) * markedPrice)
+              );
+            }, 0);
+          const reserved = simState.orders
+            .filter(
+              (order) => order.currency === currency && order.reserved,
+            )
+            .reduce((sum, order) => sum + Number(order.margin || 0), 0);
+          return Number(wallet?.balance || 0) + positionValue + reserved;
+        }
+
+        function recordEquitySnapshot(force = false) {
+          simState.equityHistory ??= [];
+          const last = simState.equityHistory.at(-1);
+          const values = {
+            TWD: walletEquity("TWD"),
+            USD: walletEquity("USD"),
+            USDT: walletEquity("USDT"),
+          };
+          const changed =
+            !last ||
+            ["TWD", "USD", "USDT"].some(
+              (currency) =>
+                Math.abs(Number(last[currency]) - values[currency]) > 0.005,
+            );
+          const now = Math.floor(Date.now() / 1000);
+          if (!last || (changed && (force || now - Number(last.time) >= 60))) {
+            simState.equityHistory.push({
+              time: last ? Math.max(now, Number(last.time) + 1) : now,
+              ...values,
+            });
+            simState.equityHistory = simState.equityHistory.slice(-500);
+          } else if (changed && last) {
+            Object.assign(last, values);
+          }
+        }
+
+        function ensureWalletEquityChart() {
+          const element = byId("wallet-equity-chart");
+          if (!element || element.clientWidth <= 0) return;
+          if (!walletEquityChart) {
+            walletEquityChart = LightweightCharts.createChart(element, {
+              width: element.clientWidth,
+              height: 300,
+              layout: {
+                background: { color: "#fffcf7" },
+                textColor: "#665f55",
+                fontFamily:
+                  "Inter, Noto Sans TC, Microsoft JhengHei, Arial, sans-serif",
+                fontSize: 12,
+              },
+              grid: {
+                vertLines: { color: "#eee7dc" },
+                horzLines: { color: "#eee7dc" },
+              },
+              rightPriceScale: { borderColor: "#d8cfc2" },
+              timeScale: {
+                borderColor: "#d8cfc2",
+                timeVisible: true,
+                secondsVisible: false,
+              },
+              localization: {
+                timeFormatter: (time) =>
+                  fullTimeFormatter.format(new Date(Number(time) * 1000)),
+              },
+            });
+            walletEquitySeries.TWD = walletEquityChart.addSeries(
+              LightweightCharts.LineSeries,
+              { color: "#9a610f", lineWidth: 2, title: "TWD" },
+            );
+            walletEquitySeries.USD = walletEquityChart.addSeries(
+              LightweightCharts.LineSeries,
+              { color: "#16765a", lineWidth: 2, title: "USD" },
+            );
+            walletEquitySeries.USDT = walletEquityChart.addSeries(
+              LightweightCharts.LineSeries,
+              { color: "#6b5fb5", lineWidth: 2, title: "USDT" },
+            );
+          } else {
+            walletEquityChart.applyOptions({ width: element.clientWidth });
+          }
+        }
+
+        function renderWalletDashboard() {
+          recordEquitySnapshot();
+          for (const currency of ["TWD", "USD", "USDT"]) {
+            const key = currency.toLowerCase();
+            const equity = walletEquity(currency);
+            const change = equity - SIM_INITIAL_BALANCE;
+            byId(`wallet-equity-${key}`).textContent =
+              `${formatSimNumber(equity)} ${currency}`;
+            const changeNode = byId(`wallet-equity-${key}-change`);
+            changeNode.textContent =
+              `${change >= 0 ? "+" : ""}${formatSimNumber(change)}（${change >= 0 ? "+" : ""}${((change / SIM_INITIAL_BALANCE) * 100).toFixed(2)}%）`;
+            changeNode.className = change >= 0 ? "up" : "down";
+          }
+          byId("wallet-position-summary").textContent =
+            `${simState.positions.length} 筆`;
+          byId("wallet-order-summary").textContent =
+            `${simState.orders.length} 筆`;
+          byId("wallet-history-summary").textContent =
+            `${simState.history.length} 筆`;
+
+          const lossRates = ["TWD", "USD", "USDT"].map(
+            (currency) =>
+              (walletEquity(currency) - SIM_INITIAL_BALANCE) /
+              SIM_INITIAL_BALANCE,
+          );
+          const worstLoss = Math.min(...lossRates);
+          const maxExposureRatio = Math.max(
+            ...["TWD", "USD", "USDT"].map(
+              (currency) => walletExposure(currency) / SIM_INITIAL_BALANCE,
+            ),
+          );
+          if (!simState.history.length && !simState.positions.length) {
+            byId("wallet-advice-title").textContent = "建立第一筆模擬紀錄";
+            byId("wallet-advice-text").textContent =
+              "先以小部位測試策略，並在下單前設定可接受的止損範圍。";
+          } else if (worstLoss <= -0.05) {
+            byId("wallet-advice-title").textContent = "帳戶回撤需要注意";
+            byId("wallet-advice-text").textContent =
+              "至少一個錢包較初始資金回撤超過 5%，建議降低單筆風險並檢查連續虧損來源。";
+          } else if (maxExposureRatio > 0.3) {
+            byId("wallet-advice-title").textContent = "持倉資金偏高";
+            byId("wallet-advice-text").textContent =
+              "目前保證金與持倉占用較高，請保留足夠可用資金因應波動與追加保證金。";
+          } else {
+            byId("wallet-advice-title").textContent = "風險配置保持穩定";
+            byId("wallet-advice-text").textContent =
+              "目前帳戶變化仍在溫和範圍，持續紀錄進出場原因，比單次盈虧更重要。";
+          }
+
+          if (!byId("wallet-page").classList.contains("hidden")) {
+            ensureWalletEquityChart();
+            for (const currency of ["TWD", "USD", "USDT"]) {
+              walletEquitySeries[currency]?.setData(
+                simState.equityHistory.map((point) => ({
+                  time: Number(point.time),
+                  value: Number(point[currency]),
+                })),
+              );
+            }
+            walletEquityChart?.timeScale().fitContent();
+          }
+        }
+
         function renderSimulation() {
           for (const currency of ["TWD", "USD", "USDT"]) {
             const key = currency.toLowerCase();
             const wallet = simState.wallets[currency];
             byId(`wallet-${key}`).textContent =
-              `${currency} ${formatSimNumber(wallet.balance)}`;
+              `${formatSimNumber(wallet.balance)} ${currency}`;
             byId(`wallet-${key}-detail`).textContent =
               `持倉占用 ${formatSimNumber(walletExposure(currency))}`;
           }
@@ -4332,7 +6529,7 @@
           const positionsBody = byId("sim-positions");
           if (!simState.positions.length) {
             positionsBody.innerHTML =
-              '<tr><td colspan="7" class="empty">目前沒有模擬持倉</td></tr>';
+              '<tr><td colspan="8" class="empty">目前沒有模擬持倉</td></tr>';
           } else {
             positionsBody.innerHTML = simState.positions
               .map((position) => {
@@ -4342,10 +6539,11 @@
                     : position.lastPrice || position.entry;
                 const pnl = positionPnl(position, price);
                 return `<tr>
-                  <td>${escapeHtml(position.symbol)}</td>
+                  <td><button class="position-symbol-link" type="button" data-position-symbol="${escapeHtml(position.symbol)}">${escapeHtml(position.symbol)}</button></td>
                   <td>${position.side === "short" ? "做空" : position.market === "contract" ? "做多" : "買進"}</td>
                   <td>${formatSimNumber(position.quantity, 4)}</td>
                   <td>${formatSimNumber(position.entry, 4)}</td>
+                  <td>${formatSimNumber(price, 4)}</td>
                   <td>${position.market === "contract" ? `${position.leverage}× · ${position.marginMode === "cross" ? "全倉" : "逐倉"}<br><small>預估強平 ${formatSimNumber(position.liquidationPrice, 4)}</small>` : "—"}</td>
                   <td class="${pnl >= 0 ? "up" : "down"}">${pnl >= 0 ? "+" : ""}${formatSimNumber(pnl)}</td>
                   <td><button type="button" data-close-position="${escapeHtml(position.id)}">平倉</button></td>
@@ -4389,25 +6587,39 @@
           byId("sim-reset").title = resetBlocked
             ? "尚有持倉或掛單，請全部平倉並取消掛單後再重設"
             : "將三個錢包重設為 99,999,999";
+          renderWalletDashboard();
           saveSimulationState();
         }
 
         function setActiveNavigation(page) {
-          ["home", "sim"].forEach((name) =>
+          ["home", "sim", "wallet"].forEach((name) =>
             byId(`nav-${name}`)?.classList.toggle("active", name === page),
           );
+        }
+
+        function openSimulationOrderPanel() {
+          byId("sim-order-panel").classList.remove("hidden");
+          byId("sim-order-toggle").setAttribute("aria-expanded", "true");
+          requestAnimationFrame(() => byId("sim-order-type").focus());
+        }
+
+        function closeSimulationOrderPanel() {
+          byId("sim-order-panel").classList.add("hidden");
+          byId("sim-order-toggle").setAttribute("aria-expanded", "false");
         }
 
         function showAppPage(page) {
           byId("home-page").classList.toggle("hidden", page !== "home");
           byId("analysis-page").classList.toggle("hidden", page !== "analysis");
           byId("sim-page").classList.toggle("hidden", page !== "sim");
-          const navPage = page === "sim" ? "sim" : "home";
+          byId("wallet-page").classList.toggle("hidden", page !== "wallet");
+          const navPage = ["sim", "wallet"].includes(page) ? page : "home";
           setActiveNavigation(navPage);
           const titles = {
             home: ["市場行情", "搜尋市場、查看排行榜與熱門商品"],
             analysis: ["市場行情", activeSymbol || "技術圖表與策略分析"],
             sim: ["模擬交易", "使用虛擬資金練習交易與風險管理"],
+            wallet: ["模擬錢包", "追蹤持倉、掛單與模擬資金變化"],
           };
           byId("topbar-title").textContent = titles[page][0];
           byId("topbar-subtitle").textContent = titles[page][1];
@@ -4418,8 +6630,17 @@
           if (page !== "sim") {
             stopRealtime(simulationRealtime);
             simulationRealtime = null;
+            closeSimulationOrderPanel();
           }
           if (page === "sim") renderSimulation();
+          clearInterval(walletQuoteTimer);
+          walletQuoteTimer = null;
+          if (page === "wallet") {
+            renderSimulation();
+            requestAnimationFrame(renderWalletDashboard);
+            refreshWalletQuotes();
+            walletQuoteTimer = setInterval(refreshWalletQuotes, 15000);
+          }
           window.scrollTo({ top: 0, behavior: "smooth" });
         }
 
@@ -4573,6 +6794,10 @@
             ? analysis.chart_data
             : [];
           simLastChartData = rows;
+          simulationPalette = marketCandlePalette(
+            simInstrument?.instrument || byId("sim-symbol").value,
+          );
+          applyCandlePalette(simCandleSeries, simulationPalette);
           simCandleSeries.setData(rows);
           simEmaFast.setData(analysis?.ema_data?.fast || []);
           simEmaSlow.setData(analysis?.ema_data?.slow || []);
@@ -4586,8 +6811,8 @@
               value: Number(row.volume) || 0,
               color:
                 Number(row.close) >= Number(row.open)
-                  ? "#718f4666"
-                  : "#b14e3d66",
+                  ? `${simulationPalette.up}88`
+                  : `${simulationPalette.down}88`,
             })),
           );
           drawSimulationIndicators(analysis);
@@ -4657,7 +6882,7 @@
             );
           }
           if (byId("sim-toggle-fvg").checked) {
-            (cached.structure?.fvg_zones || []).slice(-3).forEach((zone) => {
+            (cached.structure?.fvg_zones || []).slice(-1).forEach((zone) => {
               const bullish = zone.side === "bullish";
               const color = bullish ? "#8b6de0" : "#e59445";
               addLine(
@@ -4683,10 +6908,10 @@
           card.className = `sim-strategy-card ${direction}`;
           byId("sim-strategy-signal").textContent =
             direction === "BUY"
-              ? "多頭進場訊號"
+              ? "多頭趨勢"
               : direction === "SELL"
-                ? "空頭進場訊號"
-                : "目前沒有進場訊號";
+                ? "空頭趨勢"
+                : "趨勢尚未確認";
           byId("sim-strategy-name").textContent =
             analysis?.strategy_name || "多因子策略";
           byId("sim-strategy-reason").textContent =
@@ -4772,6 +6997,18 @@
           simPrice = Number(analysis.current_price);
           ensureSimulationChart(analysis);
           renderSimulationStrategy(analysis);
+          evaluateHistory(
+            analysis.chart_data || [],
+            symbol,
+            byId("sim-interval").value,
+          );
+          saveSignal(
+            analysis,
+            symbol,
+            byId("sim-interval").value,
+            analysis.chart_data || [],
+          );
+          renderSimulationReferenceHistory();
           byId("sim-search-results").classList.add("hidden");
           byId("sim-symbol").value = symbol;
           byId("sim-market-symbol").textContent = symbol;
@@ -4780,7 +7017,7 @@
           const isContract = spec.market === "contract";
           byId("sim-leverage-label").classList.toggle("hidden", !isContract);
           byId("sim-margin-mode-label").classList.toggle("hidden", !isContract);
-          byId("sim-submit-short").classList.toggle("hidden", !isContract);
+          byId("sim-submit-short").classList.add("hidden");
           byId("sim-margin-label").firstChild.textContent = isContract
             ? "保證金"
             : "投入金額";
@@ -4931,13 +7168,64 @@
                 ? entry * (1 + buffer) + crossBuffer
                 : Math.max(0, entry * (1 - buffer) - crossBuffer);
           }
-          simState.positions.push({
-            ...order,
-            entry,
-            lastPrice: entry,
-            liquidationPrice,
-            openingFee,
-          });
+          const existingPosition = simState.positions.find(
+            (position) =>
+              position.symbol === order.symbol &&
+              position.side === order.side &&
+              position.market === order.market &&
+              (position.marginMode || "isolated") ===
+                (order.marginMode || "isolated"),
+          );
+          if (existingPosition) {
+            const oldQuantity = Number(existingPosition.quantity) || 0;
+            const addedQuantity = Number(order.quantity) || 0;
+            const combinedQuantity = oldQuantity + addedQuantity;
+            existingPosition.entry =
+              combinedQuantity > 0
+                ? (existingPosition.entry * oldQuantity +
+                    entry * addedQuantity) /
+                  combinedQuantity
+                : entry;
+            existingPosition.quantity = combinedQuantity;
+            existingPosition.contracts =
+              Number(existingPosition.contracts || 0) +
+              Number(order.contracts || 0);
+            existingPosition.notional =
+              Number(existingPosition.notional || 0) +
+              Number(order.notional || 0);
+            existingPosition.margin =
+              Number(existingPosition.margin || 0) + Number(order.margin || 0);
+            existingPosition.openingFee =
+              Number(existingPosition.openingFee || 0) + openingFee;
+            existingPosition.leverage =
+              existingPosition.market === "contract"
+                ? Number(
+                    (
+                      existingPosition.notional /
+                      Math.max(existingPosition.margin, 1e-12)
+                    ).toFixed(2),
+                  )
+                : 1;
+            existingPosition.lastPrice = entry;
+            existingPosition.liquidationPrice =
+              oldQuantity + addedQuantity > 0
+                ? ((Number(existingPosition.liquidationPrice) ||
+                    liquidationPrice) *
+                    oldQuantity +
+                    liquidationPrice * addedQuantity) /
+                  (oldQuantity + addedQuantity)
+                : liquidationPrice;
+            existingPosition.stop = order.stop || existingPosition.stop;
+            existingPosition.take = order.take || existingPosition.take;
+          } else {
+            simState.positions.push({
+              ...order,
+              entry,
+              lastPrice: entry,
+              liquidationPrice,
+              openingFee,
+            });
+          }
           simState.history.push({
             time: Date.now(),
             symbol: order.symbol,
@@ -4949,14 +7237,28 @@
                   : "買進",
             price: entry,
             pnl: 0,
-            result: `已成交${order.market === "contract" ? `｜${order.marginMode === "cross" ? "全倉" : "逐倉"}` : ""}｜手續費 ${formatSimNumber(openingFee)}`,
+            result: `${existingPosition ? "已合併同方向持倉" : "已成交"}${order.market === "contract" ? `｜${order.marginMode === "cross" ? "全倉" : "逐倉"}` : ""}｜手續費 ${formatSimNumber(openingFee)}`,
           });
+          recordEquitySnapshot(true);
         }
 
         function submitSimulationOrder(side) {
           byId("sim-error").textContent = "";
           try {
             const order = buildSimulationOrder(side);
+            const direction = order.side === "short" ? "做空" : "做多／買進";
+            const preview = [
+              `商品：${order.symbol}`,
+              `方向：${direction}`,
+              `訂單：${order.orderType === "limit" ? "限價單" : "市價單"}`,
+              `投入／保證金：${formatSimNumber(order.margin)} ${order.currency}`,
+              order.market === "contract"
+                ? `槓桿：${order.leverage}×｜${order.marginMode === "cross" ? "全倉" : "逐倉"}`
+                : "現貨模擬，無槓桿",
+              "",
+              "確認建立這筆模擬訂單？",
+            ].join("\n");
+            if (!window.confirm(preview)) return;
             if (order.orderType === "limit") {
               simState.wallets[order.currency].balance -= order.margin;
               order.reserved = true;
@@ -4964,8 +7266,10 @@
             } else {
               executeSimulationOrder(order, simPrice);
             }
+            recordEquitySnapshot(true);
             renderSimulation();
             updateSimulationSummary();
+            closeSimulationOrderPanel();
           } catch (error) {
             byId("sim-error").textContent = error.message;
           }
@@ -4991,6 +7295,11 @@
         }
 
         function settleSimulationRisk(symbol, price) {
+          simState.positions.forEach((position) => {
+            if (position.symbol === symbol && Number.isFinite(Number(price))) {
+              position.lastPrice = Number(price);
+            }
+          });
           const triggered = simState.positions.filter((position) => {
             if (position.symbol !== symbol) return false;
             const isShort = position.side === "short";
@@ -5072,6 +7381,7 @@
             pnl,
             result: `${pnl >= 0 ? "獲利" : "虧損"} ${formatSimNumber(pnl)} ${position.currency}`,
           });
+          recordEquitySnapshot(true);
           renderSimulation();
         }
 
@@ -5081,6 +7391,7 @@
           if (order.reserved)
             simState.wallets[order.currency].balance += order.margin;
           simState.orders = simState.orders.filter((item) => item.id !== id);
+          recordEquitySnapshot(true);
           renderSimulation();
         }
 
@@ -5107,6 +7418,46 @@
             `${simInstrument.market === "contract" ? `保證金模式：${byId("sim-margin-mode").value === "cross" ? "全倉" : "逐倉"}<br>名目持倉：${formatSimNumber(notional)} USDT<br>預估開倉手續費：${formatSimNumber(fee)} USDT` : `預估投入：${formatSimNumber(amount)} ${simInstrument.currency}`}`;
         }
 
+        async function refreshWalletQuotes() {
+          const button = byId("wallet-refresh");
+          const symbols = [
+            ...new Set(simState.positions.map((position) => position.symbol)),
+          ];
+          if (button) {
+            button.disabled = true;
+            button.textContent = symbols.length ? "更新價格中…" : "目前沒有持倉";
+          }
+          try {
+            const quotes = await Promise.allSettled(
+              symbols.map(async (symbol) => {
+                const response = await fetch(
+                  `/api/analyze?symbol=${encodeURIComponent(symbol)}&interval=1h`,
+                );
+                const data = await response.json();
+                if (!response.ok)
+                  throw new Error(data.detail || `無法更新 ${symbol}`);
+                return { symbol, price: Number(data.current_price) };
+              }),
+            );
+            quotes.forEach((result) => {
+              if (
+                result.status === "fulfilled" &&
+                Number.isFinite(result.value.price) &&
+                result.value.price > 0
+              ) {
+                settleSimulationRisk(result.value.symbol, result.value.price);
+              }
+            });
+            recordEquitySnapshot(true);
+            renderSimulation();
+          } finally {
+            if (button) {
+              button.disabled = false;
+              button.textContent = `更新市場價格 · ${new Date().toLocaleTimeString("zh-TW", { hour12: false, hour: "2-digit", minute: "2-digit" })}`;
+            }
+          }
+        }
+
         async function openSimulator(symbol = "") {
           showAppPage("sim");
           if (symbol) {
@@ -5121,6 +7472,8 @@
 
         async function openAnalysis(symbol) {
           activeSymbol = symbol;
+          analysisPalette = marketCandlePalette(symbol);
+          applyCandlePalette(candles, analysisPalette);
           showAppPage("analysis");
           byId("analysis-results").classList.add("hidden");
           historyLines = removeLines(historyLines);
@@ -5188,11 +7541,50 @@
         byId("analysis-search-input").onkeydown = (e) => {
           if (e.key === "Enter") searchAnalysis();
         };
-        byId("market-select").onchange = loadRankings;
-        byId("ranking-select").onchange = loadRankings;
+        byId("market-select").onchange = () => {
+          rankingLastUpdated = 0;
+          loadRankings();
+        };
+        byId("ranking-select").onchange = () => {
+          rankingLastUpdated = 0;
+          loadRankings();
+        };
         byId("back-button").onclick = () => showAppPage("home");
-        byId("nav-home").onclick = () => showAppPage("home");
-        byId("nav-sim").onclick = () => openSimulator(activeSymbol);
+        function closeMobileMenu() {
+          byId("mobile-menu-toggle").setAttribute("aria-expanded", "false");
+          document
+            .querySelector(".app-sidebar")
+            .classList.remove("mobile-open");
+        }
+        byId("mobile-menu-toggle").onclick = () => {
+          const sidebar = document.querySelector(".app-sidebar");
+          const open = sidebar.classList.toggle("mobile-open");
+          byId("mobile-menu-toggle").setAttribute(
+            "aria-expanded",
+            String(open),
+          );
+        };
+        byId("nav-home").onclick = () => {
+          closeMobileMenu();
+          showAppPage("home");
+        };
+        byId("nav-sim").onclick = () => {
+          closeMobileMenu();
+          openSimulator(activeSymbol);
+        };
+        byId("nav-wallet").onclick = () => {
+          closeMobileMenu();
+          showAppPage("wallet");
+        };
+        byId("wallet-refresh").onclick = refreshWalletQuotes;
+        byId("sim-order-toggle").onclick = openSimulationOrderPanel;
+        byId("sim-order-close").onclick = closeSimulationOrderPanel;
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") {
+            closeMobileMenu();
+            closeSimulationOrderPanel();
+          }
+        });
         byId("sim-load").onclick = async () => {
           try {
             await loadSimulationInstrument();
@@ -5245,7 +7637,7 @@
           simChart.priceScale("right").applyOptions({ autoScale: true });
           simVolumeChart?.priceScale("right").applyOptions({ autoScale: true });
         };
-        byId("sim-submit-long").onclick = () => submitSimulationOrder("long");
+        byId("sim-submit-long").onclick = () => submitSimulationOrder();
         byId("sim-submit-short").onclick = () => submitSimulationOrder("short");
         [
           "sim-order-type",
@@ -5268,6 +7660,7 @@
           byId("sim-leverage-range").value = value;
           updateSimulationSummary();
         };
+        byId("sim-side").onchange = updateSimulationSummary;
         byId("sim-reset").onclick = () => {
           if (simState.positions.length || simState.orders.length) {
             alert("尚有持倉或掛單，請全部平倉並取消掛單後再重設。");
@@ -5278,8 +7671,19 @@
           renderSimulation();
         };
         byId("sim-positions").onclick = (event) => {
-          const button = event.target.closest("[data-close-position]");
-          if (button) closeSimulationPosition(button.dataset.closePosition);
+          const closeButton = event.target.closest("[data-close-position]");
+          if (closeButton) {
+            closeSimulationPosition(closeButton.dataset.closePosition);
+            return;
+          }
+          const symbolButton = event.target.closest("[data-position-symbol]");
+          if (symbolButton) {
+            openSimulator(symbolButton.dataset.positionSymbol).then(() => {
+              document
+                .querySelector(".sim-chart-toolbar")
+                ?.scrollIntoView({ behavior: "smooth", block: "start" });
+            });
+          }
         };
         byId("sim-history").onclick = (event) => {
           const button = event.target.closest("[data-cancel-order]");
@@ -5323,6 +7727,18 @@
         renderSimulation();
         showAppPage("home");
         loadRankings();
+        setInterval(() => {
+          if (
+            document.hidden ||
+            byId("home-page").classList.contains("hidden") ||
+            rankingLoading
+          )
+            return;
+          const market = byId("market-select").value;
+          const refreshEvery = market === "futures" ? 10000 : 60000;
+          if (Date.now() - rankingLastUpdated >= refreshEvery)
+            loadRankings(true);
+        }, 5000);
       })();
     </script>
   </body>

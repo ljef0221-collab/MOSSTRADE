@@ -670,8 +670,11 @@ def detect_structure(candles, pivot_size=2):
 
     zones = []
     recent_ranges = [item["high"] - item["low"] for item in candles[-50:]]
+    # Ignore tiny three-candle gaps. A meaningful FVG must be at least 45% of
+    # the recent average candle range; this prevents noisy micro-gaps from
+    # flooding short timeframes.
     minimum_gap = (
-        (sum(recent_ranges) / len(recent_ranges)) * 0.20 if recent_ranges else 0
+        (sum(recent_ranges) / len(recent_ranges)) * 0.45 if recent_ranges else 0
     )
     for index in range(2, len(candles)):
         first, last = candles[index - 2], candles[index]
@@ -697,7 +700,7 @@ def detect_structure(candles, pivot_size=2):
                     "time": last["time"],
                 }
             )
-    return {"markers": markers, "fvg_zones": zones[-3:], "choch": choch}
+    return {"markers": markers, "fvg_zones": zones[-1:], "choch": choch}
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -1552,14 +1555,14 @@ def analyze_market(symbol: str, interval: str = "1h"):
             and current["low"] <= zone["high"]
             and price > zone["low"]
         ):
-            long_score += 2
+            long_score += 1
             long_factors.append("多頭 FVG 回補")
         elif (
             zone["side"] == "bearish"
             and current["high"] >= zone["low"]
             and price < zone["high"]
         ):
-            short_score += 2
+            short_score += 1
             short_factors.append("空頭 FVG 回補")
     if volume_spike and price > current["open"]:
         long_score += 2
