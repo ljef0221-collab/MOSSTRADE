@@ -729,6 +729,102 @@ def site_stats():
     return {"visits": row[0] if row else 0}
 
 
+@app.get("/api/sim/spec")
+def simulation_instrument_spec(symbol: str):
+    """Return public trading constraints used by the local simulator."""
+    symbol = symbol.strip()
+    upper = symbol.upper()
+    if upper.startswith("OKX:") and upper.endswith("-SWAP"):
+        inst_id = upper.removeprefix("OKX:")
+        fallback = {
+            "market": "contract",
+            "currency": "USDT",
+            "instrument": inst_id,
+            "tick_size": 0.0001,
+            "lot_size": 1.0,
+            "min_size": 1.0,
+            "contract_value": 1.0,
+            "contract_value_currency": "",
+            "max_leverage": 50.0,
+            "tiers": [],
+            "source": "OKX fallback limits",
+        }
+        try:
+            instruments = cached_json(
+                "https://www.okx.com/api/v5/public/instruments",
+                {"instType": "SWAP", "instId": inst_id},
+                ttl=3600,
+            ).get("data", [])
+            if not instruments:
+                return fallback
+            item = instruments[0]
+            spec = {
+                **fallback,
+                "tick_size": float(item.get("tickSz") or fallback["tick_size"]),
+                "lot_size": float(item.get("lotSz") or fallback["lot_size"]),
+                "min_size": float(item.get("minSz") or fallback["min_size"]),
+                "contract_value": float(
+                    item.get("ctVal") or fallback["contract_value"]
+                ),
+                "contract_value_currency": item.get("ctValCcy", ""),
+                "max_leverage": float(item.get("lever") or fallback["max_leverage"]),
+                "source": "OKX public instruments",
+            }
+            try:
+                tier_rows = cached_json(
+                    "https://www.okx.com/api/v5/public/position-tiers",
+                    {
+                        "instType": "SWAP",
+                        "tdMode": "isolated",
+                        "instFamily": item.get("instFamily")
+                        or item.get("uly")
+                        or inst_id.removesuffix("-SWAP"),
+                    },
+                    ttl=3600,
+                ).get("data", [])
+                tiers = []
+                for row in tier_rows:
+                    tiers.append(
+                        {
+                            "tier": int(float(row.get("tier") or len(tiers) + 1)),
+                            "min_size": float(row.get("minSz") or 0),
+                            "max_size": float(row.get("maxSz") or 0),
+                            "maintenance_margin_rate": float(row.get("mmr") or 0.005),
+                            "initial_margin_rate": float(row.get("imr") or 0),
+                            "max_leverage": float(
+                                row.get("maxLever")
+                                or row.get("maxLeverage")
+                                or spec["max_leverage"]
+                            ),
+                        }
+                    )
+                if tiers:
+                    spec["tiers"] = tiers
+                    spec["max_leverage"] = max(tier["max_leverage"] for tier in tiers)
+                    spec["source"] = "OKX public instruments and position tiers"
+            except (requests.RequestException, ValueError, TypeError):
+                pass
+            return spec
+        except (requests.RequestException, ValueError, TypeError):
+            return fallback
+
+    if upper.endswith((".TW", ".TWO")):
+        return {
+            "market": "stock",
+            "currency": "TWD",
+            "instrument": symbol,
+            "max_leverage": 1,
+            "source": "MOSSTRADE cash simulation",
+        }
+    return {
+        "market": "stock",
+        "currency": "USD",
+        "instrument": symbol,
+        "max_leverage": 1,
+        "source": "MOSSTRADE cash simulation",
+    }
+
+
 @app.get("/api/search")
 def search_symbol(keyword: str):
     keyword = keyword.strip()

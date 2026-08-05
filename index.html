@@ -387,6 +387,817 @@
           box-shadow: 4px 4px 0 var(--pixel-shadow);
         }
       }
+
+      /* MOSSTRADE modern warm financial app shell */
+      body,
+      button,
+      input,
+      select,
+      option,
+      textarea {
+        font-family:
+          Inter, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", Arial,
+          sans-serif;
+        letter-spacing: 0;
+      }
+      body {
+        padding-left: 208px;
+        background: #f3eee6;
+        color: #251d17;
+      }
+      .pixel-scene {
+        opacity: 0.12;
+        filter: sepia(0.2) saturate(0.75);
+      }
+      .app-sidebar {
+        position: fixed;
+        inset: 0 auto 0 0;
+        z-index: 80;
+        display: flex;
+        width: 208px;
+        flex-direction: column;
+        padding: 26px 18px;
+        background: linear-gradient(180deg, #2b2119, #1d1712);
+        color: #f5ead7;
+        box-shadow: 8px 0 28px rgba(44, 30, 20, 0.18);
+      }
+      .app-brand {
+        padding: 6px 8px 26px;
+      }
+      .app-brand strong {
+        display: block;
+        color: #ffe166;
+        font-size: 25px;
+        letter-spacing: 0.04em;
+      }
+      .app-brand small {
+        display: block;
+        margin-top: 5px;
+        color: #bda98f;
+        line-height: 1.5;
+      }
+      .app-nav {
+        display: grid;
+        gap: 8px;
+      }
+      .app-nav button {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        width: 100%;
+        padding: 13px 14px;
+        border: 1px solid transparent;
+        border-radius: 12px;
+        background: transparent;
+        color: #d8cbb8;
+        box-shadow: none;
+        font-size: 16px;
+        text-align: left;
+      }
+      .app-nav button:hover,
+      .app-nav button.active {
+        border-color: rgba(255, 225, 102, 0.2);
+        background: rgba(255, 225, 102, 0.11);
+        color: #ffe166;
+        transform: none;
+      }
+      .app-nav .nav-icon {
+        width: 24px;
+        font-size: 19px;
+        text-align: center;
+      }
+      .app-sidebar-note {
+        margin-top: auto;
+        padding: 15px;
+        border: 1px solid rgba(255, 225, 102, 0.16);
+        border-radius: 14px;
+        background: rgba(255, 255, 255, 0.035);
+        color: #aa9a85;
+        font-size: 12px;
+        line-height: 1.65;
+      }
+      header {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 208px;
+        z-index: 60;
+        display: flex;
+        min-height: 82px;
+        align-items: center;
+        justify-content: space-between;
+        margin: 0;
+        padding: 15px 30px;
+        border: 0;
+        border-bottom: 1px solid #ded3c4;
+        background: rgba(250, 247, 242, 0.94);
+        box-shadow: 0 8px 24px rgba(61, 43, 29, 0.06);
+        backdrop-filter: blur(14px);
+      }
+      header:before,
+      header h1:before {
+        display: none;
+      }
+      header h1 {
+        color: #2d241d;
+        font-size: 21px;
+        font-weight: 700;
+        letter-spacing: 0;
+        text-shadow: none;
+      }
+      header small {
+        margin: 3px 0 0;
+        padding: 0;
+        background: none;
+        color: #8b7c69;
+        letter-spacing: 0;
+      }
+      .topbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .topbar-actions button {
+        padding: 9px 14px;
+      }
+      .container {
+        width: 100%;
+        max-width: none;
+        min-height: 100vh;
+        margin: 0;
+        padding: 112px 28px 70px;
+        background: rgba(247, 243, 237, 0.93);
+        backdrop-filter: none;
+      }
+      .container h2,
+      .container h3 {
+        color: #2d241d;
+        letter-spacing: 0;
+      }
+      .container h2:before,
+      .container h3:before {
+        display: none;
+      }
+      #home-page > h2 {
+        padding: 0;
+        border: 0;
+        background: none;
+        color: #2d241d;
+        text-shadow: none;
+        box-shadow: none;
+      }
+      button,
+      input,
+      select {
+        border: 1px solid #d9cdbd;
+        border-radius: 10px;
+        background: #fffdfa;
+        color: #30271f;
+        box-shadow: none;
+      }
+      button {
+        background: #ede2d2;
+      }
+      button:hover,
+      select:hover,
+      input:focus {
+        border-color: #9b754f;
+        background: #fff;
+        color: #231b15;
+        box-shadow: 0 0 0 3px rgba(155, 117, 79, 0.12);
+        transform: none;
+      }
+      .search button,
+      .primary-action {
+        border-color: #423226;
+        background: #423226;
+        color: #fff8ed;
+      }
+      .panel,
+      .analysis-head,
+      .indicator-help {
+        border: 1px solid #ded3c4;
+        border-radius: 16px;
+        background: rgba(255, 253, 249, 0.96);
+        box-shadow: 0 12px 30px rgba(61, 43, 29, 0.07);
+      }
+      .panel {
+        padding: 20px;
+      }
+      .rank-row {
+        border-color: #e7ded2;
+      }
+      .rank-row:hover,
+      .result:hover {
+        border-radius: 10px;
+        background: #f4ecdf;
+      }
+      .rank-price {
+        border: 0;
+        border-radius: 8px;
+        background: #fff3be;
+        color: #4e3e17;
+        text-shadow: none;
+      }
+      .market-tabs {
+        justify-content: flex-start;
+        margin-left: 0;
+      }
+      .analysis-head {
+        position: relative;
+        top: auto;
+        padding: 12px;
+      }
+      .toolbar strong,
+      .toggle,
+      .analysis-head span {
+        color: #3c3026;
+      }
+      .toggle input:checked {
+        border-color: #775636;
+        background: #b9844d;
+        box-shadow: inset 0 0 0 2px #fff4e4;
+      }
+      .indicator-help {
+        overflow: hidden;
+        box-shadow: none;
+      }
+      .indicator-help summary {
+        color: #4a392c;
+      }
+      .sim-wallet-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin: 18px 0;
+      }
+      .wallet-card {
+        padding: 18px;
+        border: 1px solid #ded3c4;
+        border-radius: 15px;
+        background: #fffdfa;
+        box-shadow: 0 8px 22px rgba(61, 43, 29, 0.06);
+      }
+      .wallet-card small {
+        color: #8a7b68;
+      }
+      .wallet-card strong {
+        display: block;
+        margin: 8px 0 4px;
+        font-size: 25px;
+      }
+      .wallet-card span {
+        color: #6e604f;
+        font-size: 12px;
+      }
+      .sim-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.7fr);
+        gap: 18px;
+      }
+      .sim-form {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .sim-form label {
+        display: grid;
+        gap: 6px;
+        color: #766755;
+        font-size: 13px;
+      }
+      .sim-form input,
+      .sim-form select {
+        width: 100%;
+      }
+      .sim-form .wide {
+        grid-column: 1 / -1;
+      }
+      .sim-symbol-bar {
+        display: flex;
+        gap: 9px;
+        margin-bottom: 16px;
+      }
+      .sim-symbol-bar input {
+        flex: 1;
+      }
+      .sim-market-card {
+        margin-bottom: 15px;
+        padding: 14px;
+        border-radius: 12px;
+        background: #f5ede1;
+      }
+      .sim-market-card strong {
+        display: block;
+        font-size: 22px;
+      }
+      .sim-market-card span {
+        color: #756653;
+      }
+      .sim-summary {
+        margin-top: 14px;
+        padding: 13px;
+        border-radius: 12px;
+        background: #2c231c;
+        color: #f7ead7;
+        line-height: 1.7;
+      }
+      .sim-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 9px;
+        margin-top: 13px;
+      }
+      .sim-actions .long-action {
+        border-color: #336c4c;
+        background: #3f815c;
+        color: #fff;
+      }
+      .sim-actions .short-action {
+        border-color: #9a453c;
+        background: #b75247;
+        color: #fff;
+      }
+      .sim-table-wrap {
+        overflow-x: auto;
+      }
+      .sim-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+      }
+      .sim-table th,
+      .sim-table td {
+        padding: 11px 9px;
+        border-bottom: 1px solid #e8dfd4;
+        text-align: right;
+        white-space: nowrap;
+      }
+      .sim-table th:first-child,
+      .sim-table td:first-child {
+        text-align: left;
+      }
+      .sim-section-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .danger-action {
+        border-color: #b65347;
+        background: #fff4f1;
+        color: #9a352d;
+      }
+      .danger-action:disabled {
+        cursor: not-allowed;
+        opacity: 0.45;
+      }
+      .sim-notice {
+        margin-top: 12px;
+        color: #8a6450;
+        font-size: 12px;
+        line-height: 1.6;
+      }
+      #sim-page.hidden {
+        display: none !important;
+      }
+      html body,
+      html body * {
+        font-family:
+          Inter, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", Arial,
+          sans-serif !important;
+      }
+      /* Final clean finance theme */
+      :root {
+        --surface: #fffdf8;
+        --surface-soft: #f7f3ec;
+        --ink: #22231e;
+        --muted: #777568;
+        --line: rgba(88, 75, 52, 0.12);
+        --moss: #607c32;
+        --sidebar-size: 220px;
+      }
+      body {
+        padding-left: var(--sidebar-size) !important;
+        background: #f3eee6 !important;
+      }
+      .pixel-scene {
+        display: none !important;
+      }
+      .app-sidebar {
+        width: var(--sidebar-size) !important;
+        padding: 24px 16px 18px !important;
+        overflow-x: hidden;
+        overflow-y: auto;
+        background: linear-gradient(180deg, #292219, #211b14) !important;
+        box-shadow: none !important;
+      }
+      header {
+        right: 0 !important;
+        left: var(--sidebar-size) !important;
+        min-height: 82px !important;
+        padding: 15px 28px !important;
+        border: 0 !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+        border-radius: 0 !important;
+        background: #292219 !important;
+        box-shadow: none !important;
+      }
+      header h1 {
+        color: #f6f1e8 !important;
+        font-size: 22px !important;
+        font-weight: 700 !important;
+        text-shadow: none !important;
+      }
+      header h1::before {
+        display: none !important;
+      }
+      header small {
+        color: #bdb5a5 !important;
+        font-size: 13px !important;
+      }
+      .container {
+        padding: 112px 28px 70px !important;
+        background: #f3eee6 !important;
+        backdrop-filter: none !important;
+      }
+      #home-page > h2 {
+        padding: 0 !important;
+        border: 0 !important;
+        background: none !important;
+        color: var(--ink) !important;
+        font-size: 20px !important;
+        text-shadow: none !important;
+        box-shadow: none !important;
+      }
+      button,
+      input,
+      select {
+        border: 1px solid var(--line) !important;
+        border-radius: 10px !important;
+        background: var(--surface) !important;
+        color: var(--ink) !important;
+        box-shadow: none !important;
+      }
+      button:hover,
+      input:focus,
+      select:hover {
+        border-color: rgba(96, 124, 50, 0.5) !important;
+        box-shadow: 0 0 0 3px rgba(96, 124, 50, 0.1) !important;
+        transform: none !important;
+      }
+      .search button,
+      .primary-action {
+        border-color: #3e4f29 !important;
+        background: #3e4f29 !important;
+        color: #fff !important;
+      }
+      .panel,
+      .analysis-head,
+      .indicator-help,
+      .wallet-card,
+      .sim-market-card {
+        border: 1px solid var(--line) !important;
+        border-radius: 16px !important;
+        background-color: rgba(255, 253, 248, 0.94) !important;
+        background-image: none !important;
+        box-shadow:
+          0 8px 24px rgba(50, 42, 26, 0.06),
+          0 2px 5px rgba(50, 42, 26, 0.04) !important;
+      }
+      .stat-card {
+        width: 230px;
+        padding: 22px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: rgba(255, 253, 248, 0.94);
+        box-shadow:
+          0 8px 24px rgba(50, 42, 26, 0.06),
+          0 2px 5px rgba(50, 42, 26, 0.04);
+      }
+      .stat-title {
+        color: var(--muted);
+        font-size: 14px;
+        font-weight: 500;
+      }
+      .stat-value {
+        margin-top: 10px;
+        color: var(--ink);
+        font-size: 28px;
+        font-weight: 750;
+        letter-spacing: -0.03em;
+      }
+      .stat-change {
+        margin-top: 8px;
+        color: var(--moss);
+        font-size: 14px;
+        font-weight: 600;
+      }
+      .panel::before,
+      .panel::after,
+      .indicator-help::before,
+      .indicator-help::after {
+        display: none !important;
+      }
+      #ranking-list,
+      #ranking-list::before,
+      #ranking-list::after,
+      .ranking-help,
+      .ranking-help dl {
+        background-image: none !important;
+      }
+      .ranking-help,
+      #home-page > .panel {
+        background: rgba(255, 253, 248, 0.96) !important;
+      }
+      .rank-row {
+        border: 0 !important;
+        border-bottom: 1px solid rgba(88, 75, 52, 0.09) !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+      }
+      .rank-row:last-child {
+        border-bottom: 0 !important;
+      }
+      .rank-row:hover {
+        background: #f7f3ec !important;
+      }
+      .rank-price {
+        border: 0 !important;
+        background: transparent !important;
+        color: #3f4335 !important;
+        box-shadow: none !important;
+      }
+      .container h2,
+      .container h3,
+      .toolbar strong,
+      .indicator-help summary,
+      .indicator-help dt {
+        color: var(--ink) !important;
+        text-shadow: none !important;
+      }
+      .moss-quote-card {
+        position: relative;
+        width: 100%;
+        min-height: 350px;
+        margin-top: auto;
+        padding: 28px 18px 68px;
+        overflow: hidden;
+        color: #eee8dc;
+        border: 1px solid rgba(145, 126, 86, 0.3);
+        border-radius: 16px;
+        background: linear-gradient(145deg, #3f3426, #231d16);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.05),
+          0 12px 30px rgba(28, 22, 15, 0.18);
+      }
+      .moss-quote-card::before {
+        position: absolute;
+        inset: 8px;
+        border: 1px solid rgba(154, 137, 94, 0.14);
+        border-radius: 11px;
+        content: "";
+        pointer-events: none;
+      }
+      .quote-content {
+        position: relative;
+        z-index: 3;
+      }
+      .quote-chinese {
+        margin: 0;
+        color: #eee8dc;
+        font-size: 13px;
+        line-height: 1.9;
+        letter-spacing: 0.02em;
+      }
+      .quote-english {
+        margin: 16px 0 0;
+        color: #bdb5a5;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 1.7;
+        letter-spacing: 0.04em;
+      }
+      .pixel-divider {
+        width: 50px;
+        height: 3px;
+        margin-top: 18px;
+        background: linear-gradient(
+          90deg,
+          #8ca546 0 10px,
+          transparent 10px 14px,
+          #667b2e 14px 29px,
+          transparent 29px 33px,
+          #42551f 33px 50px
+        );
+      }
+      .pixel-ground {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 2;
+        height: 55px;
+        background: linear-gradient(
+          to bottom,
+          transparent 0 8px,
+          #42551f 8px 14px,
+          #667b2e 14px 20px,
+          #795c38 20px 27px,
+          #59432c 27px 41px,
+          #34271b 41px 55px
+        );
+        image-rendering: pixelated;
+      }
+      .grass,
+      .soil {
+        position: absolute;
+        display: block;
+        image-rendering: pixelated;
+      }
+      .grass {
+        bottom: 35px;
+        width: 5px;
+        height: 12px;
+        background: #8ca546;
+        box-shadow:
+          5px 5px 0 #667b2e,
+          -5px 7px 0 #42551f;
+      }
+      .grass-1 {
+        left: 12%;
+      }
+      .grass-2 {
+        left: 31%;
+        transform: scale(0.7);
+      }
+      .grass-3 {
+        left: 55%;
+        transform: scale(1.1);
+      }
+      .grass-4 {
+        left: 76%;
+        transform: scale(0.8);
+      }
+      .grass-5 {
+        left: 91%;
+        transform: scale(0.6);
+      }
+      .soil {
+        z-index: 4;
+        width: 7px;
+        height: 7px;
+        background: #795c38;
+      }
+      .soil-1 {
+        bottom: 10px;
+        left: 18%;
+      }
+      .soil-2 {
+        bottom: 22px;
+        left: 43%;
+        background: #34271b;
+      }
+      .soil-3 {
+        right: 28%;
+        bottom: 9px;
+      }
+      .soil-4 {
+        right: 10%;
+        bottom: 24px;
+        background: #34271b;
+      }
+      @media (max-width: 760px) {
+        body {
+          padding-left: 0 !important;
+        }
+        header {
+          left: 0 !important;
+        }
+        .moss-quote-card {
+          display: none;
+        }
+      }
+      #sim-search-results {
+        position: absolute;
+        top: calc(100% + 6px);
+        right: 0;
+        left: 0;
+        z-index: 55;
+        max-height: 320px;
+        overflow-y: auto;
+        border: 1px solid #d9cdbd;
+        border-radius: 12px;
+        background: #fffdfa;
+        box-shadow: 0 14px 30px rgba(61, 43, 29, 0.16);
+      }
+      #sim-search-results button {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 14px;
+        border: 0;
+        border-bottom: 1px solid #ece3d8;
+        border-radius: 0;
+        background: transparent;
+        text-align: left;
+      }
+      #sim-search-results button:hover {
+        background: #f4ecdf;
+      }
+      #sim-search-results small {
+        color: #8a7b68;
+      }
+      .sim-symbol-bar {
+        position: relative;
+      }
+      #sim-chart {
+        height: 340px;
+        margin: 0 0 22px;
+        overflow: hidden;
+        border: 1px solid #3e3026;
+        border-radius: 14px;
+        background: #1b1714;
+      }
+      .leverage-control {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .leverage-control input[type="range"] {
+        flex: 1;
+        min-width: 120px;
+        padding: 0;
+        accent-color: #8d643e;
+        box-shadow: none;
+      }
+      .leverage-control input[type="number"] {
+        width: 82px;
+        flex: 0 0 82px;
+      }
+      @media (max-width: 900px) {
+        body {
+          padding-left: 0;
+          padding-bottom: 72px;
+        }
+        .app-sidebar {
+          inset: auto 0 0;
+          width: 100%;
+          height: 68px;
+          padding: 7px 9px;
+        }
+        .app-brand,
+        .app-sidebar-note {
+          display: none;
+        }
+        .app-nav {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 4px;
+        }
+        .app-nav button {
+          justify-content: center;
+          gap: 3px;
+          padding: 8px 4px;
+          font-size: 11px;
+        }
+        .app-nav .nav-icon {
+          width: auto;
+        }
+        header {
+          left: 0;
+          min-height: 72px;
+          padding: 12px 14px;
+        }
+        header h1 {
+          font-size: 18px;
+        }
+        .container {
+          padding: 94px 10px 30px;
+          background: rgba(247, 243, 237, 0.96);
+        }
+        .sim-wallet-grid,
+        .sim-grid {
+          grid-template-columns: 1fr;
+        }
+        .sim-form {
+          grid-template-columns: 1fr;
+        }
+        .sim-form .wide {
+          grid-column: auto;
+        }
+        .topbar-actions button:first-child {
+          display: none;
+        }
+      }
+      html body,
+      html body * {
+        font-family:
+          Inter, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", Arial,
+          sans-serif !important;
+      }
     </style>
     <style>
       /* Retro creature-battle handheld theme; no third-party character assets. */
@@ -610,6 +1421,315 @@
         .panel {
           border-width: 3px;
           padding: 12px;
+        }
+      }
+
+      /* Definitive overrides: keep after every legacy theme block. */
+      html body,
+      html body * {
+        font-family:
+          Inter, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", Arial,
+          sans-serif !important;
+      }
+      body {
+        padding-left: 220px !important;
+        background: #f3eee6 !important;
+      }
+      .pixel-scene {
+        display: none !important;
+      }
+      .app-sidebar {
+        width: 220px !important;
+      }
+      header {
+        position: fixed !important;
+        top: 0 !important;
+        right: 0 !important;
+        left: 220px !important;
+        width: auto !important;
+        min-height: 82px !important;
+        margin: 0 !important;
+        padding: 15px 22px !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        background: #292219 !important;
+        box-shadow: none !important;
+      }
+      header h1,
+      header small {
+        margin-left: 0 !important;
+        text-shadow: none !important;
+      }
+      header h1 {
+        color: #f6f1e8 !important;
+      }
+      header h1::before {
+        display: none !important;
+      }
+      header small {
+        color: #bdb5a5 !important;
+      }
+      .container {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 112px 28px 70px !important;
+        background: #f3eee6 !important;
+        backdrop-filter: none !important;
+      }
+      #home-page > h2 {
+        padding: 0 !important;
+        border: 0 !important;
+        background: transparent !important;
+        color: #22231e !important;
+        text-shadow: none !important;
+        box-shadow: none !important;
+      }
+      #home-page > .panel,
+      .ranking-help,
+      .ranking-help dl,
+      #ranking-list,
+      #ranking-list * {
+        background-image: none !important;
+        text-shadow: none !important;
+        box-shadow: none !important;
+      }
+      #home-page > .panel,
+      .ranking-help {
+        border: 1px solid rgba(88, 75, 52, 0.12) !important;
+        border-radius: 16px !important;
+        background-color: rgba(255, 253, 248, 0.96) !important;
+        box-shadow:
+          0 8px 24px rgba(50, 42, 26, 0.06),
+          0 2px 5px rgba(50, 42, 26, 0.04) !important;
+      }
+      #home-page > .panel::before,
+      #home-page > .panel::after,
+      .ranking-help::before,
+      .ranking-help::after,
+      .ranking-help summary::before {
+        display: none !important;
+      }
+      #ranking-title,
+      .rank-row,
+      .rank-row *,
+      .rank-price,
+      .rank-change {
+        text-shadow: none !important;
+        box-shadow: none !important;
+        filter: none !important;
+      }
+      #ranking-title {
+        padding: 0 0 14px !important;
+        border: 0 !important;
+        background: transparent !important;
+      }
+      .rank-row {
+        border: 0 !important;
+        border-bottom: 1px solid rgba(88, 75, 52, 0.09) !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+      }
+      .rank-price {
+        border: 0 !important;
+        background: transparent !important;
+        color: #3f4335 !important;
+      }
+      .sim-chart-toolbar {
+        margin-top: 18px;
+        flex-wrap: wrap;
+        background: #f7f3ec !important;
+      }
+      .live-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 9px;
+        border: 1px solid rgba(88, 75, 52, 0.14);
+        border-radius: 999px;
+        background: #eeeae2;
+        color: #777568;
+        font-size: 11px;
+        font-weight: 650;
+        white-space: nowrap;
+      }
+      .live-status::before {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #a7a399;
+        content: "";
+      }
+      .live-status.live {
+        border-color: rgba(74, 125, 65, 0.22);
+        background: #edf4e8;
+        color: #47683b;
+      }
+      .live-status.live::before {
+        background: #68a657;
+        box-shadow: 0 0 0 4px rgba(104, 166, 87, 0.12);
+      }
+      .live-status.delayed {
+        background: #f6efe2;
+        color: #896b3d;
+      }
+      .live-status.delayed::before {
+        background: #c58b3e;
+      }
+      .sim-indicator-help {
+        margin: 12px 0;
+      }
+      .sim-chart-stage {
+        position: relative;
+      }
+      #sim-chart,
+      #sim-volume-chart {
+        width: 100%;
+        border: 1px solid #725b46 !important;
+        background: #1b1310 !important;
+      }
+      #sim-volume-chart {
+        height: 150px;
+        margin-top: 8px;
+      }
+      #sim-page .panel,
+      #sim-page .panel *,
+      #sim-page .indicator-help,
+      #sim-page .indicator-help *,
+      #sim-page .sim-table,
+      #sim-page .sim-table * {
+        background-image: none !important;
+        text-shadow: none !important;
+      }
+      #sim-page .panel,
+      #sim-page .indicator-help,
+      .sim-positions-panel {
+        border: 1px solid rgba(88, 75, 52, 0.12) !important;
+        border-radius: 16px !important;
+        background-color: rgba(255, 253, 248, 0.96) !important;
+        box-shadow:
+          0 8px 24px rgba(50, 42, 26, 0.055),
+          0 2px 5px rgba(50, 42, 26, 0.035) !important;
+      }
+      #sim-page .panel::before,
+      #sim-page .panel::after,
+      #sim-page .indicator-help::before,
+      #sim-page .indicator-help::after,
+      #sim-page .indicator-help summary::before {
+        display: none !important;
+      }
+      #sim-page .sim-grid {
+        grid-template-columns: minmax(0, 1.65fr) minmax(300px, 0.65fr);
+        align-items: start;
+        gap: 20px;
+      }
+      #sim-page .sim-grid > .panel,
+      #sim-page .sim-grid > aside {
+        padding: 22px !important;
+      }
+      .sim-positions-panel {
+        margin-top: 20px !important;
+        padding: 22px !important;
+      }
+      .sim-table {
+        border-collapse: collapse;
+      }
+      .sim-table th {
+        color: #777568 !important;
+        font-size: 12px;
+        font-weight: 650;
+        letter-spacing: 0.02em;
+      }
+      .sim-table th,
+      .sim-table td {
+        border: 0 !important;
+        border-bottom: 1px solid rgba(88, 75, 52, 0.09) !important;
+        background: transparent !important;
+        box-shadow: none !important;
+      }
+      .sim-strategy-card {
+        margin-top: 16px;
+        padding: 20px;
+        border: 1px solid rgba(104, 104, 92, 0.18);
+        border-radius: 15px;
+        background: rgba(239, 239, 234, 0.88);
+        box-shadow: none;
+      }
+      .sim-strategy-card.BUY {
+        border-color: rgba(82, 140, 78, 0.35);
+        background: linear-gradient(
+          135deg,
+          rgba(223, 240, 216, 0.94),
+          rgba(249, 252, 245, 0.94)
+        );
+      }
+      .sim-strategy-card.SELL {
+        border-color: rgba(181, 84, 69, 0.34);
+        background: linear-gradient(
+          135deg,
+          rgba(247, 222, 215, 0.94),
+          rgba(253, 247, 244, 0.94)
+        );
+      }
+      .sim-strategy-card h3 {
+        margin: 4px 0 0;
+      }
+      .sim-strategy-card > p {
+        margin: 13px 0;
+        color: #625e53;
+        line-height: 1.65;
+      }
+      .sim-strategy-levels {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+      }
+      .sim-strategy-levels > div {
+        padding: 12px;
+        border: 1px solid rgba(88, 75, 52, 0.1);
+        border-radius: 11px;
+        background: rgba(255, 255, 255, 0.56);
+      }
+      .sim-strategy-levels small,
+      .sim-strategy-note {
+        color: #777568;
+      }
+      .sim-strategy-levels strong {
+        display: block;
+        margin-top: 5px;
+        color: #22231e;
+        font-size: 16px;
+        font-variant-numeric: tabular-nums;
+      }
+      .sim-strategy-note {
+        display: block;
+        margin-top: 13px;
+      }
+      #sim-page .sim-summary {
+        border: 1px solid rgba(96, 124, 50, 0.16) !important;
+        border-radius: 12px !important;
+        background: #eef1e6 !important;
+        color: #25291f !important;
+        box-shadow: none !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        line-height: 1.7;
+      }
+      @media (max-width: 760px) {
+        body {
+          padding-left: 0 !important;
+        }
+        header {
+          left: 0 !important;
+        }
+        .container {
+          padding: 104px 12px 92px !important;
+        }
+        #sim-page .sim-grid {
+          grid-template-columns: 1fr;
+        }
+        .sim-strategy-levels {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
         }
       }
     </style>
@@ -1636,13 +2756,196 @@
           letter-spacing: 0.06em;
         }
       }
+      /* FINAL OVERRIDES */
+      html body,
+      html body * {
+        font-family:
+          Inter, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", Arial,
+          sans-serif !important;
+      }
+      body {
+        padding-left: 220px !important;
+        background: #f3eee6 !important;
+      }
+      .pixel-scene {
+        display: none !important;
+      }
+      .app-sidebar {
+        width: 220px !important;
+      }
+      header {
+        position: fixed !important;
+        top: 0 !important;
+        right: 0 !important;
+        left: 220px !important;
+        width: auto !important;
+        min-height: 82px !important;
+        margin: 0 !important;
+        padding: 15px 22px !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        background: #292219 !important;
+        box-shadow: none !important;
+      }
+      header h1,
+      header small {
+        margin-left: 0 !important;
+        text-shadow: none !important;
+      }
+      header h1 {
+        color: #f6f1e8 !important;
+      }
+      header h1::before {
+        display: none !important;
+      }
+      header small {
+        color: #bdb5a5 !important;
+      }
+      .container {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 112px 28px 70px !important;
+        background: #f3eee6 !important;
+        backdrop-filter: none !important;
+      }
+      #home-page > h2 {
+        padding: 0 !important;
+        border: 0 !important;
+        background: transparent !important;
+        color: #22231e !important;
+        text-shadow: none !important;
+        box-shadow: none !important;
+      }
+      #home-page > .panel,
+      .ranking-help,
+      .ranking-help dl,
+      #ranking-list,
+      #ranking-list * {
+        background-image: none !important;
+        text-shadow: none !important;
+        box-shadow: none !important;
+      }
+      #home-page > .panel,
+      .ranking-help {
+        border: 1px solid rgba(88, 75, 52, 0.12) !important;
+        border-radius: 16px !important;
+        background-color: rgba(255, 253, 248, 0.96) !important;
+        box-shadow:
+          0 8px 24px rgba(50, 42, 26, 0.06),
+          0 2px 5px rgba(50, 42, 26, 0.04) !important;
+      }
+      #home-page > .panel::before,
+      #home-page > .panel::after,
+      .ranking-help::before,
+      .ranking-help::after,
+      .ranking-help summary::before {
+        display: none !important;
+      }
+      #ranking-title,
+      .rank-row,
+      .rank-row *,
+      .rank-price,
+      .rank-change {
+        text-shadow: none !important;
+        box-shadow: none !important;
+        filter: none !important;
+      }
+      #ranking-title {
+        padding: 0 0 14px !important;
+        border: 0 !important;
+        background: transparent !important;
+      }
+      .rank-row {
+        border: 0 !important;
+        border-bottom: 1px solid rgba(88, 75, 52, 0.09) !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+      }
+      .rank-price {
+        border: 0 !important;
+        background: transparent !important;
+        color: #3f4335 !important;
+      }
+      .sim-chart-toolbar {
+        margin-top: 18px;
+        flex-wrap: wrap;
+        background: #f7f3ec !important;
+      }
+      .sim-indicator-help {
+        margin: 12px 0;
+      }
+      .sim-chart-stage {
+        position: relative;
+      }
+      #sim-chart,
+      #sim-volume-chart {
+        width: 100%;
+        border: 1px solid #725b46 !important;
+        background: #1b1310 !important;
+      }
+      #sim-volume-chart {
+        height: 150px;
+        margin-top: 8px;
+      }
+      @media (max-width: 760px) {
+        body {
+          padding-left: 0 !important;
+        }
+        header {
+          left: 0 !important;
+        }
+        .container {
+          padding: 104px 12px 92px !important;
+        }
+      }
     </style>
   </head>
   <body>
     <div class="pixel-scene" aria-hidden="true"></div>
+    <aside class="app-sidebar">
+      <div class="app-brand">
+        <strong>⌂ MOSSTRADE</strong>
+        <small>讀懂市場，練習每一次決策。</small>
+      </div>
+      <nav class="app-nav" aria-label="主要導覽">
+        <button class="active" id="nav-home" type="button">
+          <span class="nav-icon">▥</span><span>市場行情</span>
+        </button>
+        <button id="nav-sim" type="button">
+          <span class="nav-icon">◈</span><span>模擬交易</span>
+        </button>
+      </nav>
+      <div class="moss-quote-card">
+        <div class="quote-content">
+          <p class="quote-chinese">
+            苔蘚不會一夜之間長滿森林，<br />
+            投資也是如此。<br />
+            每一次交易、每一筆紀錄<br />
+            都像一個像素格，<br />
+            最終拼出完整的投資旅程。
+          </p>
+          <div class="pixel-divider" aria-hidden="true"></div>
+          <p class="quote-english">Stay steady.<br />Grow daily.</p>
+        </div>
+        <div class="pixel-ground" aria-hidden="true">
+          <span class="grass grass-1"></span>
+          <span class="grass grass-2"></span>
+          <span class="grass grass-3"></span>
+          <span class="grass grass-4"></span>
+          <span class="grass grass-5"></span>
+          <span class="soil soil-1"></span>
+          <span class="soil soil-2"></span>
+          <span class="soil soil-3"></span>
+          <span class="soil soil-4"></span>
+        </div>
+      </div>
+    </aside>
     <header>
-      <h1>MOSSTRADE</h1>
-      <small>循著訊號，讀懂市場</small>
+      <div>
+        <h1 id="topbar-title">市場行情</h1>
+        <small id="topbar-subtitle">循著訊號，讀懂市場</small>
+      </div>
     </header>
     <main class="container">
       <section id="home-page">
@@ -1700,7 +3003,7 @@
       </section>
       <section id="analysis-page" class="hidden">
         <div class="analysis-head">
-          <button id="back-button">← 返回排行榜</button>
+          <button id="back-button">← 返回首頁</button>
           <div class="analysis-search">
             <input
               id="analysis-search-input"
@@ -1714,6 +3017,8 @@
           <section class="panel">
             <div class="toolbar">
               <strong id="chart-title">分析圖表</strong
+              ><span id="analysis-live-status" class="live-status"
+                >尚未連線</span
               ><select id="interval">
                 <optgroup label="分鐘">
                   <option value="1m">1 分</option>
@@ -1742,12 +3047,9 @@
               ><label class="toggle"
                 ><input id="toggle-levels" type="checkbox" /> 撐壓</label
               ><label class="toggle"
-                ><input id="toggle-choch" type="checkbox" checked />
-                CHoCH</label
+                ><input id="toggle-choch" type="checkbox" /> CHoCH</label
               ><label class="toggle"
                 ><input id="toggle-fvg" type="checkbox" /> FVG</label
-              ><label class="toggle"
-                ><input id="toggle-volume" type="checkbox" /> 成交量</label
               >
             </div>
             <details class="indicator-help">
@@ -1802,7 +3104,7 @@
                 AUTO
               </button>
             </div>
-            <div id="volume-chart" class="hidden"></div>
+            <div id="volume-chart"></div>
           </section>
           <aside class="panel">
             <h3>策略分析</h3>
@@ -1825,6 +3127,277 @@
           </aside>
         </div>
       </section>
+      <section id="sim-page" class="hidden">
+        <div class="sim-section-title">
+          <div>
+            <h2>模擬交易</h2>
+            <p>使用虛擬資金練習現貨與 OKX 規格永續合約，不涉及真實資金。</p>
+          </div>
+          <button id="sim-reset" class="danger-action" type="button">
+            重設模擬帳戶
+          </button>
+        </div>
+        <div class="sim-wallet-grid">
+          <article class="wallet-card">
+            <small>台股模擬錢包</small><strong id="wallet-twd">TWD —</strong
+            ><span id="wallet-twd-detail">可用餘額</span>
+          </article>
+          <article class="wallet-card">
+            <small>美股／ETF 模擬錢包</small
+            ><strong id="wallet-usd">USD —</strong
+            ><span id="wallet-usd-detail">可用餘額</span>
+          </article>
+          <article class="wallet-card">
+            <small>OKX 合約模擬錢包</small
+            ><strong id="wallet-usdt">USDT —</strong
+            ><span id="wallet-usdt-detail">可用餘額</span>
+          </article>
+        </div>
+        <div class="sim-grid">
+          <section class="panel">
+            <div class="sim-symbol-bar">
+              <input
+                id="sim-symbol"
+                placeholder="輸入商品代碼，例如 2330.TW、AAPL、OKX:BTC-USDT-SWAP"
+              />
+              <button id="sim-load" type="button">載入</button>
+              <div id="sim-search-results" class="hidden"></div>
+            </div>
+            <div class="sim-market-card">
+              <strong id="sim-market-symbol">尚未選擇商品</strong>
+              <span id="sim-market-info">請輸入商品，或從分析頁帶入。</span>
+            </div>
+            <div class="toolbar sim-chart-toolbar">
+              <strong>商品圖表</strong>
+              <span id="sim-live-status" class="live-status">尚未連線</span>
+              <select id="sim-interval" aria-label="模擬圖表時間週期">
+                <optgroup label="分鐘">
+                  <option value="1m">1 分</option>
+                  <option value="3m">3 分</option>
+                  <option value="5m">5 分</option>
+                  <option value="10m">10 分</option>
+                  <option value="15m">15 分</option>
+                  <option value="30m">30 分</option>
+                  <option value="45m">45 分</option>
+                </optgroup>
+                <optgroup label="小時">
+                  <option value="1h" selected>1 小時</option>
+                  <option value="2h">2 小時</option>
+                  <option value="3h">3 小時</option>
+                  <option value="4h">4 小時</option>
+                </optgroup>
+                <optgroup label="日線">
+                  <option value="1d">日線</option>
+                </optgroup>
+              </select>
+              <label class="toggle"
+                ><input id="sim-toggle-ema" type="checkbox" /> EMA</label
+              >
+              <label class="toggle"
+                ><input id="sim-toggle-bollinger" type="checkbox" /> 布林</label
+              >
+              <label class="toggle"
+                ><input id="sim-toggle-levels" type="checkbox" /> 撐壓</label
+              >
+              <label class="toggle"
+                ><input id="sim-toggle-choch" type="checkbox" /> CHoCH</label
+              >
+              <label class="toggle"
+                ><input id="sim-toggle-fvg" type="checkbox" /> FVG</label
+              >
+            </div>
+            <details class="indicator-help sim-indicator-help">
+              <summary>指標說明</summary>
+              <dl>
+                <dt>EMA 均線</dt>
+                <dd>
+                  以近期價格加權計算趨勢方向，短期 EMA 位於長期 EMA
+                  上方通常偏多，反之偏空。
+                </dd>
+                <dt>布林通道</dt>
+                <dd>利用中軌及上下波動帶觀察價格位置與波動擴張、收縮。</dd>
+                <dt>支撐／壓力</dt>
+                <dd>標示價格過去較容易止跌或遇到賣壓的區域。</dd>
+                <dt>CHoCH</dt>
+                <dd>市場結構轉變警示，代表重要擺動高點或低點被突破。</dd>
+                <dt>FVG</dt>
+                <dd>快速波動形成的價格失衡區，價格日後可能回到該區測試。</dd>
+                <dt>成交量</dt>
+                <dd>
+                  每根 K 線期間的交易活躍程度，固定顯示於主圖下方並與主圖同步。
+                </dd>
+              </dl>
+            </details>
+            <div class="chart-stage sim-chart-stage">
+              <div id="sim-chart" aria-label="模擬交易商品圖表"></div>
+              <button
+                id="sim-chart-auto"
+                class="chart-auto"
+                type="button"
+                title="將最新 K 線移到圖表中央"
+              >
+                AUTO
+              </button>
+            </div>
+            <div id="sim-volume-chart" aria-label="模擬交易成交量圖表"></div>
+            <section id="sim-strategy-card" class="sim-strategy-card HOLD">
+              <div class="sim-section-title">
+                <div>
+                  <small>我的策略判斷</small>
+                  <h3 id="sim-strategy-signal">等待商品資料</h3>
+                </div>
+                <span id="sim-strategy-name">—</span>
+              </div>
+              <p id="sim-strategy-reason">載入商品後顯示目前週期的策略判斷。</p>
+              <div class="sim-strategy-levels">
+                <div>
+                  <small>進場點位</small
+                  ><strong id="sim-strategy-entry">—</strong>
+                </div>
+                <div>
+                  <small>止損</small><strong id="sim-strategy-sl">—</strong>
+                </div>
+                <div>
+                  <small>止盈 1</small><strong id="sim-strategy-tp1">—</strong>
+                </div>
+                <div>
+                  <small>止盈 2</small><strong id="sim-strategy-tp2">—</strong>
+                </div>
+              </div>
+              <small class="sim-strategy-note"
+                >策略分析僅供模擬練習與參考，不構成投資建議。</small
+              >
+            </section>
+          </section>
+          <aside class="panel">
+            <h3>建立模擬訂單</h3>
+            <div class="sim-form">
+              <label
+                >訂單類型<select id="sim-order-type">
+                  <option value="market">市價單</option>
+                  <option value="limit">限價單</option>
+                </select></label
+              >
+              <label
+                >方向<select id="sim-side">
+                  <option value="long">做多／買進</option>
+                  <option value="short">做空</option>
+                </select></label
+              >
+              <label id="sim-margin-label"
+                >投入金額<input
+                  id="sim-margin"
+                  type="number"
+                  min="0"
+                  step="any"
+              /></label>
+              <label id="sim-leverage-label" class="wide hidden">
+                槓桿
+                <span class="leverage-control">
+                  <input
+                    id="sim-leverage-range"
+                    type="range"
+                    min="1"
+                    max="100"
+                    value="1"
+                    step="1"
+                  />
+                  <input
+                    id="sim-leverage"
+                    type="number"
+                    min="1"
+                    max="100"
+                    value="1"
+                    step="1"
+                  />
+                </span>
+              </label>
+              <label id="sim-margin-mode-label" class="hidden">
+                保證金模式
+                <select id="sim-margin-mode">
+                  <option value="isolated">逐倉</option>
+                  <option value="cross">全倉</option>
+                </select>
+              </label>
+              <label id="sim-limit-label" class="hidden"
+                >限價<input
+                  id="sim-limit-price"
+                  type="number"
+                  min="0"
+                  step="any"
+              /></label>
+              <label
+                >止損<input id="sim-stop" type="number" min="0" step="any"
+              /></label>
+              <label
+                >止盈<input id="sim-take" type="number" min="0" step="any"
+              /></label>
+            </div>
+            <div id="sim-order-summary" class="sim-summary">
+              請先載入商品並輸入金額。
+            </div>
+            <div class="sim-actions">
+              <button id="sim-submit-long" class="long-action" type="button">
+                確認做多／買進
+              </button>
+              <button id="sim-submit-short" class="short-action" type="button">
+                確認做空
+              </button>
+            </div>
+            <p id="sim-error" class="error"></p>
+            <p class="sim-notice">
+              合約採 OKX
+              公開商品規格與持倉檔位模擬；全倉會共用合約錢包可用餘額，逐倉僅使用該筆保證金。實際交易仍可能受到帳戶模式、VIP
+              費率、地區與交易所即時風控影響。
+            </p>
+          </aside>
+        </div>
+        <section class="panel sim-positions-panel">
+          <div class="sim-section-title">
+            <div>
+              <h3>目前持倉</h3>
+              <p>集中查看所有市場的持倉、保證金模式與未實現盈虧。</p>
+            </div>
+            <span id="sim-position-count">0 筆</span>
+          </div>
+          <div class="sim-table-wrap">
+            <table class="sim-table">
+              <thead>
+                <tr>
+                  <th>商品</th>
+                  <th>方向</th>
+                  <th>數量</th>
+                  <th>進場價</th>
+                  <th>槓桿／模式</th>
+                  <th>未實現盈虧</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="sim-positions"></tbody>
+            </table>
+          </div>
+        </section>
+        <section class="panel" style="margin-top: 18px">
+          <div class="sim-section-title">
+            <h3>掛單與歷史紀錄</h3>
+            <span id="sim-order-count">0 筆掛單</span>
+          </div>
+          <div class="sim-table-wrap">
+            <table class="sim-table">
+              <thead>
+                <tr>
+                  <th>時間</th>
+                  <th>商品</th>
+                  <th>動作</th>
+                  <th>價格</th>
+                  <th>盈虧／狀態</th>
+                </tr>
+              </thead>
+              <tbody id="sim-history"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
     </main>
     <script>
       (() => {
@@ -1841,6 +3414,29 @@
           volumeSyncReady = false,
           markerPlugin = null;
         let volumeByTime = new Map();
+        const SIM_STORAGE_KEY = "mosstrade-simulator-v1";
+        const SIM_INITIAL_BALANCE = 99999999;
+        let simInstrument = null;
+        let simPrice = 0;
+        let simState = loadSimulationState();
+        let simChart = null;
+        let simCandleSeries = null;
+        let simVolumeChart = null;
+        let simVolumeSeries = null;
+        let simEmaFast = null;
+        let simEmaSlow = null;
+        let simEmaTrend = null;
+        let simBbUpper = null;
+        let simBbMiddle = null;
+        let simBbLower = null;
+        let simIndicatorLines = [];
+        let simMarkerPlugin = null;
+        let simLastChartData = [];
+        let simSyncingRange = false;
+        let simCrosshairReady = false;
+        let simSearchTimer = null;
+        let analysisRealtime = null;
+        let simulationRealtime = null;
 
         const userTimeZone =
           Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
@@ -1886,11 +3482,191 @@
           return formatter.format(chartTimeToDate(time));
         }
 
+        function formatSimulationChartTick(time) {
+          const interval = byId("sim-interval")?.value || "1h";
+          const formatter =
+            interval === "1d" ? dateTickFormatter : intradayTickFormatter;
+          return formatter.format(chartTimeToDate(time));
+        }
+
+        const OKX_LIVE_CHANNELS = {
+          "1m": "candle1m",
+          "3m": "candle3m",
+          "5m": "candle5m",
+          "15m": "candle15m",
+          "30m": "candle30m",
+          "1h": "candle1H",
+          "2h": "candle2H",
+          "4h": "candle4H",
+          "1d": "candle1Dutc",
+        };
+
+        function stopRealtime(controller) {
+          if (!controller) return;
+          controller.stopped = true;
+          if (controller.timer) clearInterval(controller.timer);
+          if (controller.reconnectTimer)
+            clearTimeout(controller.reconnectTimer);
+          if (controller.socket) {
+            controller.socket.onclose = null;
+            controller.socket.close();
+          }
+        }
+
+        function mergeRealtimeBar(rows, bar) {
+          if (!rows.length || Number(rows.at(-1).time) < Number(bar.time)) {
+            rows.push(bar);
+            if (rows.length > 2000) rows.shift();
+          } else if (Number(rows.at(-1).time) === Number(bar.time)) {
+            rows[rows.length - 1] = { ...rows.at(-1), ...bar };
+          }
+        }
+
+        function applyRealtimeBar(bar, simulation = false) {
+          const candleSeries = simulation ? simCandleSeries : candles;
+          const histogram = simulation ? simVolumeSeries : volumeSeries;
+          const rows = simulation ? simLastChartData : lastChartData;
+          candleSeries?.update(bar);
+          histogram?.update({
+            time: bar.time,
+            value: Number(bar.volume) || 0,
+            color: bar.close >= bar.open ? "#718f46aa" : "#b14e3daa",
+          });
+          mergeRealtimeBar(rows, bar);
+          if (simulation) {
+            simPrice = Number(bar.close);
+            settleSimulationRisk(simInstrument?.instrument, simPrice);
+            matchSimulationOrders(simInstrument?.instrument, simPrice);
+            renderSimulation();
+          }
+        }
+
+        function setLiveStatus(simulation, text, state) {
+          const element = byId(
+            simulation ? "sim-live-status" : "analysis-live-status",
+          );
+          element.textContent = text;
+          element.className = `live-status ${state || ""}`.trim();
+        }
+
+        function startPollingRealtime(
+          symbol,
+          interval,
+          simulation,
+          controller,
+        ) {
+          setLiveStatus(simulation, "自動更新", "delayed");
+          const refresh = async () => {
+            if (controller.stopped) return;
+            try {
+              const response = await fetch(
+                `/api/analyze?symbol=${encodeURIComponent(symbol)}&interval=${encodeURIComponent(interval)}`,
+                { cache: "no-store" },
+              );
+              const data = await response.json();
+              if (!response.ok) throw new Error(data.detail || "行情更新失敗");
+              const latest = data.chart_data?.at(-1);
+              if (latest) applyRealtimeBar(latest, simulation);
+              if (simulation) {
+                simInstrument.analysis = data;
+                renderSimulationStrategy(data);
+              }
+              setLiveStatus(simulation, "自動更新", "delayed");
+            } catch (_error) {
+              setLiveStatus(simulation, "等待重連", "");
+            }
+          };
+          controller.timer = setInterval(
+            refresh,
+            symbol.startsWith("OKX:") ? 10000 : 30000,
+          );
+        }
+
+        function startRealtime(symbol, interval, simulation = false) {
+          if (simulation) stopRealtime(simulationRealtime);
+          else stopRealtime(analysisRealtime);
+          const controller = {
+            stopped: false,
+            socket: null,
+            timer: null,
+            reconnectTimer: null,
+            failures: 0,
+          };
+          if (simulation) simulationRealtime = controller;
+          else analysisRealtime = controller;
+          const channel = OKX_LIVE_CHANNELS[interval];
+          if (!symbol.startsWith("OKX:") || !channel || !window.WebSocket) {
+            startPollingRealtime(symbol, interval, simulation, controller);
+            return;
+          }
+          const instId = symbol.slice(4);
+          const connect = () => {
+            if (controller.stopped) return;
+            setLiveStatus(simulation, "連線中", "");
+            const socket = new WebSocket(
+              "wss://ws.okx.com:8443/ws/v5/business",
+            );
+            controller.socket = socket;
+            let heartbeat = null;
+            socket.onopen = () => {
+              socket.send(
+                JSON.stringify({
+                  op: "subscribe",
+                  args: [{ channel, instId }],
+                }),
+              );
+              setLiveStatus(simulation, "即時行情", "live");
+              heartbeat = setInterval(() => {
+                if (socket.readyState === WebSocket.OPEN) socket.send("ping");
+              }, 20000);
+            };
+            socket.onmessage = (event) => {
+              if (event.data === "pong") return;
+              try {
+                const message = JSON.parse(event.data);
+                if (message.event === "error") {
+                  socket.close();
+                  return;
+                }
+                const row = message.data?.[0];
+                if (!row || !Array.isArray(row)) return;
+                applyRealtimeBar(
+                  {
+                    time: Math.floor(Number(row[0]) / 1000),
+                    open: Number(row[1]),
+                    high: Number(row[2]),
+                    low: Number(row[3]),
+                    close: Number(row[4]),
+                    volume: Number(row[5]),
+                  },
+                  simulation,
+                );
+              } catch (_error) {
+                // Ignore acknowledgements and malformed packets.
+              }
+            };
+            socket.onerror = () => socket.close();
+            socket.onclose = () => {
+              if (heartbeat) clearInterval(heartbeat);
+              if (controller.stopped) return;
+              controller.failures += 1;
+              if (controller.failures >= 3) {
+                startPollingRealtime(symbol, interval, simulation, controller);
+                return;
+              }
+              setLiveStatus(simulation, "重新連線中", "");
+              controller.reconnectTimer = setTimeout(connect, 3000);
+            };
+          };
+          connect();
+        }
+
         const chart = LightweightCharts.createChart(byId("chart"), {
           layout: {
             background: { color: "#1b1310" },
             textColor: "#d8bd95",
-            fontFamily: "JerseyPixel, CubicPixelTW, monospace",
+            fontFamily:
+              "Inter, Noto Sans TC, Microsoft JhengHei, Arial, sans-serif",
             fontSize: 13,
           },
           grid: {
@@ -1984,7 +3760,8 @@
               layout: {
                 background: { color: "#1b1310" },
                 textColor: "#b99a72",
-                fontFamily: "JerseyPixel, CubicPixelTW, monospace",
+                fontFamily:
+                  "Inter, Noto Sans TC, Microsoft JhengHei, Arial, sans-serif",
               },
               grid: {
                 vertLines: { color: "#33231c" },
@@ -2086,27 +3863,34 @@
             chochLines.push(
               candles.createPriceLine({
                 price: structureData.choch.level,
-                color: bull ? "#00d4ff" : "#ff4560",
-                lineWidth: 2,
-                title: "CHoCH",
+                color: bull ? "#20c7b2" : "#f06464",
+                lineWidth: 3,
+                lineStyle: 0,
+                axisLabelVisible: true,
+                title: bull ? "多頭 CHoCH" : "空頭 CHoCH",
               }),
             );
           }
           if (byId("toggle-fvg").checked)
-            (structureData?.fvg_zones || []).forEach((zone) => {
-              const color = zone.side === "bullish" ? "#b56cff" : "#ff9f43";
+            (structureData?.fvg_zones || []).slice(-3).forEach((zone) => {
+              const bullish = zone.side === "bullish";
+              const color = bullish ? "#8b6de0" : "#e59445";
               fvgLines.push(
                 candles.createPriceLine({
                   price: zone.low,
                   color,
                   lineStyle: 2,
-                  title: "FVG",
+                  lineWidth: 2,
+                  axisLabelVisible: true,
+                  title: bullish ? "多頭 FVG 下緣" : "空頭 FVG 下緣",
                 }),
                 candles.createPriceLine({
                   price: zone.high,
                   color,
                   lineStyle: 2,
-                  title: "FVG",
+                  lineWidth: 2,
+                  axisLabelVisible: true,
+                  title: bullish ? "多頭 FVG 上緣" : "空頭 FVG 上緣",
                 }),
               );
             });
@@ -2124,11 +3908,7 @@
               }),
             );
           }
-          const showVolume = byId("toggle-volume").checked;
-          byId("volume-chart").classList.toggle("hidden", !showVolume);
-          if (showVolume) {
-            requestAnimationFrame(ensureVolumeChart);
-          }
+          requestAnimationFrame(ensureVolumeChart);
         }
 
         function rankingRows(rows, volumeMode = false) {
@@ -2475,10 +4255,873 @@
           byId("tp1-price").textContent = data.tp;
           byId("tp2-price").textContent = data.tp2;
         }
+
+        function createSimulationState() {
+          return {
+            wallets: {
+              TWD: { balance: SIM_INITIAL_BALANCE },
+              USD: { balance: SIM_INITIAL_BALANCE },
+              USDT: { balance: SIM_INITIAL_BALANCE },
+            },
+            positions: [],
+            orders: [],
+            history: [],
+          };
+        }
+
+        function loadSimulationState() {
+          try {
+            const saved = JSON.parse(localStorage.getItem(SIM_STORAGE_KEY));
+            if (
+              saved?.wallets?.TWD &&
+              saved?.wallets?.USD &&
+              saved?.wallets?.USDT &&
+              Array.isArray(saved.positions) &&
+              Array.isArray(saved.orders) &&
+              Array.isArray(saved.history)
+            )
+              return saved;
+          } catch (_error) {
+            // Invalid local data is replaced with a clean simulation account.
+          }
+          return createSimulationState();
+        }
+
+        function saveSimulationState() {
+          localStorage.setItem(SIM_STORAGE_KEY, JSON.stringify(simState));
+        }
+
+        function formatSimNumber(value, digits = 2) {
+          return Number(value || 0).toLocaleString("en-US", {
+            minimumFractionDigits: digits,
+            maximumFractionDigits: digits,
+          });
+        }
+
+        function escapeHtml(value) {
+          return String(value)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+        }
+
+        function positionPnl(position, price) {
+          if (!Number.isFinite(price) || price <= 0) return 0;
+          const direction = position.side === "short" ? -1 : 1;
+          return (price - position.entry) * position.quantity * direction;
+        }
+
+        function walletExposure(currency) {
+          return simState.positions
+            .filter((position) => position.currency === currency)
+            .reduce((sum, position) => sum + Number(position.margin || 0), 0);
+        }
+
+        function renderSimulation() {
+          for (const currency of ["TWD", "USD", "USDT"]) {
+            const key = currency.toLowerCase();
+            const wallet = simState.wallets[currency];
+            byId(`wallet-${key}`).textContent =
+              `${currency} ${formatSimNumber(wallet.balance)}`;
+            byId(`wallet-${key}-detail`).textContent =
+              `持倉占用 ${formatSimNumber(walletExposure(currency))}`;
+          }
+
+          const positionsBody = byId("sim-positions");
+          if (!simState.positions.length) {
+            positionsBody.innerHTML =
+              '<tr><td colspan="7" class="empty">目前沒有模擬持倉</td></tr>';
+          } else {
+            positionsBody.innerHTML = simState.positions
+              .map((position) => {
+                const price =
+                  simInstrument?.instrument === position.symbol && simPrice > 0
+                    ? simPrice
+                    : position.lastPrice || position.entry;
+                const pnl = positionPnl(position, price);
+                return `<tr>
+                  <td>${escapeHtml(position.symbol)}</td>
+                  <td>${position.side === "short" ? "做空" : position.market === "contract" ? "做多" : "買進"}</td>
+                  <td>${formatSimNumber(position.quantity, 4)}</td>
+                  <td>${formatSimNumber(position.entry, 4)}</td>
+                  <td>${position.market === "contract" ? `${position.leverage}× · ${position.marginMode === "cross" ? "全倉" : "逐倉"}<br><small>預估強平 ${formatSimNumber(position.liquidationPrice, 4)}</small>` : "—"}</td>
+                  <td class="${pnl >= 0 ? "up" : "down"}">${pnl >= 0 ? "+" : ""}${formatSimNumber(pnl)}</td>
+                  <td><button type="button" data-close-position="${escapeHtml(position.id)}">平倉</button></td>
+                </tr>`;
+              })
+              .join("");
+          }
+          byId("sim-position-count").textContent =
+            `${simState.positions.length} 筆`;
+
+          const historyRows = [
+            ...simState.orders.map((order) => ({
+              time: order.createdAt,
+              symbol: order.symbol,
+              action: `${order.side === "short" ? "做空" : "做多／買進"}限價單`,
+              price: order.limitPrice,
+              result: `等待成交｜${order.currency}`,
+              orderId: order.id,
+            })),
+            ...simState.history,
+          ].sort((a, b) => b.time - a.time);
+          byId("sim-history").innerHTML = historyRows.length
+            ? historyRows
+                .slice(0, 80)
+                .map(
+                  (item) => `<tr>
+                    <td>${new Date(item.time).toLocaleString("zh-TW", { hour12: false })}</td>
+                    <td>${escapeHtml(item.symbol)}</td>
+                    <td>${escapeHtml(item.action)}</td>
+                    <td>${formatSimNumber(item.price, 4)}</td>
+                    <td class="${Number(item.pnl) >= 0 ? "up" : "down"}">${escapeHtml(item.result)}${item.orderId ? ` <button type="button" data-cancel-order="${escapeHtml(item.orderId)}">取消</button>` : ""}</td>
+                  </tr>`,
+                )
+                .join("")
+            : '<tr><td colspan="5" class="empty">尚無模擬交易紀錄</td></tr>';
+          byId("sim-order-count").textContent =
+            `${simState.orders.length} 筆掛單`;
+          const resetBlocked =
+            simState.positions.length > 0 || simState.orders.length > 0;
+          byId("sim-reset").disabled = resetBlocked;
+          byId("sim-reset").title = resetBlocked
+            ? "尚有持倉或掛單，請全部平倉並取消掛單後再重設"
+            : "將三個錢包重設為 99,999,999";
+          saveSimulationState();
+        }
+
+        function setActiveNavigation(page) {
+          ["home", "sim"].forEach((name) =>
+            byId(`nav-${name}`)?.classList.toggle("active", name === page),
+          );
+        }
+
+        function showAppPage(page) {
+          byId("home-page").classList.toggle("hidden", page !== "home");
+          byId("analysis-page").classList.toggle("hidden", page !== "analysis");
+          byId("sim-page").classList.toggle("hidden", page !== "sim");
+          const navPage = page === "sim" ? "sim" : "home";
+          setActiveNavigation(navPage);
+          const titles = {
+            home: ["市場行情", "搜尋市場、查看排行榜與熱門商品"],
+            analysis: ["市場行情", activeSymbol || "技術圖表與策略分析"],
+            sim: ["模擬交易", "使用虛擬資金練習交易與風險管理"],
+          };
+          byId("topbar-title").textContent = titles[page][0];
+          byId("topbar-subtitle").textContent = titles[page][1];
+          if (page !== "analysis") {
+            stopRealtime(analysisRealtime);
+            analysisRealtime = null;
+          }
+          if (page !== "sim") {
+            stopRealtime(simulationRealtime);
+            simulationRealtime = null;
+          }
+          if (page === "sim") renderSimulation();
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        function normalizeSimulationSymbol(value) {
+          const text = value.trim().toUpperCase();
+          const compactSwap = text.match(/^([A-Z0-9]+)USDT\.P:OKX$/);
+          if (compactSwap) return `OKX:${compactSwap[1]}-USDT-SWAP`;
+          return text;
+        }
+
+        function ensureSimulationChart(analysis) {
+          const element = byId("sim-chart");
+          if (!simChart) {
+            simChart = LightweightCharts.createChart(element, {
+              width: element.clientWidth,
+              height: 420,
+              layout: {
+                background: { color: "#1b1310" },
+                textColor: "#f0dfc7",
+                fontFamily:
+                  "Inter, Noto Sans TC, Microsoft JhengHei, Arial, sans-serif",
+                fontSize: 14,
+              },
+              grid: {
+                vertLines: { color: "#33231c" },
+                horzLines: { color: "#33231c" },
+              },
+              crosshair: {
+                vertLine: { color: "#d8bd95", lineStyle: 2 },
+                horzLine: { color: "#9c704c", lineStyle: 2 },
+              },
+              rightPriceScale: { borderColor: "#725b46", minimumWidth: 76 },
+              timeScale: {
+                timeVisible: true,
+                secondsVisible: false,
+                borderColor: "#725b46",
+                tickMarkFormatter: formatSimulationChartTick,
+              },
+              localization: {
+                locale: "zh-TW",
+                timeFormatter: (time) =>
+                  fullTimeFormatter.format(chartTimeToDate(time)),
+              },
+            });
+            simCandleSeries = simChart.addSeries(
+              LightweightCharts.CandlestickSeries,
+              {
+                upColor: "#7fa34a",
+                downColor: "#c65d45",
+                borderVisible: false,
+                wickUpColor: "#9fbd69",
+                wickDownColor: "#dc765d",
+              },
+            );
+            const lineOptions = {
+              lineWidth: 1,
+              priceLineVisible: false,
+              lastValueVisible: false,
+              visible: false,
+            };
+            simEmaFast = simChart.addSeries(LightweightCharts.LineSeries, {
+              ...lineOptions,
+              color: "#f4d35e",
+            });
+            simEmaSlow = simChart.addSeries(LightweightCharts.LineSeries, {
+              ...lineOptions,
+              color: "#71c4d8",
+            });
+            simEmaTrend = simChart.addSeries(LightweightCharts.LineSeries, {
+              ...lineOptions,
+              color: "#a38bd4",
+            });
+            simBbUpper = simChart.addSeries(LightweightCharts.LineSeries, {
+              ...lineOptions,
+              color: "#65b8d0",
+              lineStyle: 2,
+            });
+            simBbMiddle = simChart.addSeries(LightweightCharts.LineSeries, {
+              ...lineOptions,
+              color: "#f0c960",
+            });
+            simBbLower = simChart.addSeries(LightweightCharts.LineSeries, {
+              ...lineOptions,
+              color: "#b18be0",
+              lineStyle: 2,
+            });
+            const volumeElement = byId("sim-volume-chart");
+            simVolumeChart = LightweightCharts.createChart(volumeElement, {
+              width: volumeElement.clientWidth,
+              height: 150,
+              layout: {
+                background: { color: "#1b1310" },
+                textColor: "#f0dfc7",
+                fontFamily:
+                  "Inter, Noto Sans TC, Microsoft JhengHei, Arial, sans-serif",
+                fontSize: 13,
+              },
+              grid: {
+                vertLines: { color: "#33231c" },
+                horzLines: { color: "#33231c" },
+              },
+              crosshair: {
+                vertLine: { color: "#d8bd95", lineStyle: 2 },
+                horzLine: { visible: false },
+              },
+              rightPriceScale: { borderColor: "#725b46", minimumWidth: 76 },
+              timeScale: {
+                timeVisible: true,
+                secondsVisible: false,
+                borderColor: "#725b46",
+                tickMarkFormatter: formatSimulationChartTick,
+              },
+            });
+            simVolumeSeries = simVolumeChart.addSeries(
+              LightweightCharts.HistogramSeries,
+              { priceFormat: { type: "volume" } },
+            );
+            const syncRanges = (source, target) => {
+              source.timeScale().subscribeVisibleLogicalRangeChange((range) => {
+                if (!range || simSyncingRange) return;
+                simSyncingRange = true;
+                target.timeScale().setVisibleLogicalRange(range);
+                simSyncingRange = false;
+              });
+            };
+            syncRanges(simChart, simVolumeChart);
+            syncRanges(simVolumeChart, simChart);
+            simChart.subscribeCrosshairMove((param) => {
+              if (param.time === undefined) {
+                simVolumeChart.clearCrosshairPosition?.();
+                return;
+              }
+              const row = simLastChartData.find(
+                (item) => String(item.time) === String(param.time),
+              );
+              if (row && simVolumeChart.setCrosshairPosition)
+                simVolumeChart.setCrosshairPosition(
+                  Number(row.volume) || 0,
+                  param.time,
+                  simVolumeSeries,
+                );
+            });
+            new ResizeObserver(() => {
+              simChart?.applyOptions({ width: element.clientWidth });
+              simVolumeChart?.applyOptions({
+                width: byId("sim-volume-chart").clientWidth,
+              });
+            }).observe(element);
+          }
+          const rows = Array.isArray(analysis?.chart_data)
+            ? analysis.chart_data
+            : [];
+          simLastChartData = rows;
+          simCandleSeries.setData(rows);
+          simEmaFast.setData(analysis?.ema_data?.fast || []);
+          simEmaSlow.setData(analysis?.ema_data?.slow || []);
+          simEmaTrend.setData(analysis?.ema_data?.trend || []);
+          simBbUpper.setData(analysis?.bollinger_data?.upper || []);
+          simBbMiddle.setData(analysis?.bollinger_data?.middle || []);
+          simBbLower.setData(analysis?.bollinger_data?.lower || []);
+          simVolumeSeries.setData(
+            rows.map((row) => ({
+              time: row.time,
+              value: Number(row.volume) || 0,
+              color:
+                Number(row.close) >= Number(row.open)
+                  ? "#718f4666"
+                  : "#b14e3d66",
+            })),
+          );
+          drawSimulationIndicators(analysis);
+          simChart.applyOptions({ width: element.clientWidth });
+          simChart.timeScale().fitContent();
+          simVolumeChart.timeScale().fitContent();
+        }
+
+        function drawSimulationIndicators(analysis = null) {
+          simEmaFast?.applyOptions({ visible: byId("sim-toggle-ema").checked });
+          simEmaSlow?.applyOptions({ visible: byId("sim-toggle-ema").checked });
+          simEmaTrend?.applyOptions({
+            visible: byId("sim-toggle-ema").checked,
+          });
+          simBbUpper?.applyOptions({
+            visible: byId("sim-toggle-bollinger").checked,
+          });
+          simBbMiddle?.applyOptions({
+            visible: byId("sim-toggle-bollinger").checked,
+          });
+          simBbLower?.applyOptions({
+            visible: byId("sim-toggle-bollinger").checked,
+          });
+          simIndicatorLines.forEach((line) =>
+            simCandleSeries?.removePriceLine(line),
+          );
+          simIndicatorLines = [];
+          const addLine = (price, color, title, lineStyle = 2) => {
+            if (!Number.isFinite(Number(price))) return;
+            simIndicatorLines.push(
+              simCandleSeries.createPriceLine({
+                price: Number(price),
+                color,
+                lineWidth: 2,
+                lineStyle,
+                axisLabelVisible: true,
+                title,
+              }),
+            );
+          };
+          const cached = analysis || simInstrument?.analysis || {};
+          if (typeof LightweightCharts.createSeriesMarkers === "function") {
+            simMarkerPlugin ??= LightweightCharts.createSeriesMarkers(
+              simCandleSeries,
+              [],
+            );
+            simMarkerPlugin.setMarkers(
+              byId("sim-toggle-choch").checked
+                ? cached.structure?.markers || []
+                : [],
+            );
+          }
+          if (byId("sim-toggle-levels").checked) {
+            addLine(cached.levels?.resistance, "#dc765d", "壓力");
+            addLine(cached.levels?.support, "#7fa34a", "支撐");
+          }
+          if (byId("sim-toggle-choch").checked && cached.structure?.choch) {
+            addLine(
+              cached.structure.choch.level,
+              cached.structure.choch.direction === "bullish"
+                ? "#20c7b2"
+                : "#f06464",
+              cached.structure.choch.direction === "bullish"
+                ? "多頭 CHoCH"
+                : "空頭 CHoCH",
+              0,
+            );
+          }
+          if (byId("sim-toggle-fvg").checked) {
+            (cached.structure?.fvg_zones || []).slice(-3).forEach((zone) => {
+              const bullish = zone.side === "bullish";
+              const color = bullish ? "#8b6de0" : "#e59445";
+              addLine(
+                zone.low,
+                color,
+                bullish ? "多頭 FVG 下緣" : "空頭 FVG 下緣",
+                2,
+              );
+              addLine(
+                zone.high,
+                color,
+                bullish ? "多頭 FVG 上緣" : "空頭 FVG 上緣",
+                2,
+              );
+            });
+          }
+        }
+
+        function renderSimulationStrategy(analysis) {
+          const direction = analysis?.direction || "HOLD";
+          const active = direction === "BUY" || direction === "SELL";
+          const card = byId("sim-strategy-card");
+          card.className = `sim-strategy-card ${direction}`;
+          byId("sim-strategy-signal").textContent =
+            direction === "BUY"
+              ? "多頭進場訊號"
+              : direction === "SELL"
+                ? "空頭進場訊號"
+                : "目前沒有進場訊號";
+          byId("sim-strategy-name").textContent =
+            analysis?.strategy_name || "多因子策略";
+          byId("sim-strategy-reason").textContent =
+            analysis?.reason || analysis?.message || "等待更多條件確認。";
+          byId("sim-strategy-entry").textContent = active
+            ? formatSimNumber(analysis.current_price, 4)
+            : "—";
+          byId("sim-strategy-sl").textContent = active ? analysis.sl : "—";
+          byId("sim-strategy-tp1").textContent = active ? analysis.tp : "—";
+          byId("sim-strategy-tp2").textContent = active ? analysis.tp2 : "—";
+        }
+
+        async function searchSimulationSuggestions() {
+          const keyword = byId("sim-symbol").value.trim();
+          const resultsBox = byId("sim-search-results");
+          if (!keyword) {
+            resultsBox.classList.add("hidden");
+            return;
+          }
+          try {
+            const response = await fetch(
+              `/api/search?keyword=${encodeURIComponent(keyword)}`,
+            );
+            const data = await response.json();
+            const results = (data.results || []).slice(0, 12);
+            resultsBox.innerHTML = results.length
+              ? results
+                  .map(
+                    (
+                      item,
+                    ) => `<button type="button" data-sim-symbol="${escapeHtml(item.symbol)}">
+                      <strong>${escapeHtml(item.symbol)}</strong>
+                      <small>${escapeHtml(item.name || item.market || "")}</small>
+                    </button>`,
+                  )
+                  .join("")
+              : '<div class="empty">找不到相符商品</div>';
+            resultsBox.classList.remove("hidden");
+          } catch (_error) {
+            resultsBox.classList.add("hidden");
+          }
+        }
+
+        async function loadSimulationInstrument(requestedSymbol) {
+          const input = normalizeSimulationSymbol(
+            requestedSymbol || byId("sim-symbol").value || activeSymbol,
+          );
+          if (!input) throw new Error("請先輸入商品代碼");
+          byId("sim-error").textContent = "";
+          byId("sim-market-info").textContent = "讀取商品與交易規格中…";
+          let symbol = input;
+          if (!input.startsWith("OKX:") && !input.endsWith(".TW")) {
+            try {
+              const searchResponse = await fetch(
+                `/api/search?keyword=${encodeURIComponent(input)}`,
+              );
+              const searchData = await searchResponse.json();
+              const results = searchData.results || [];
+              const exact = results.find(
+                (item) => item.symbol.toUpperCase() === input,
+              );
+              const selected = exact || results[0];
+              if (selected) symbol = selected.symbol;
+            } catch (_error) {
+              // Direct symbols such as AAPL can still be analyzed.
+            }
+          }
+          const [analysisResponse, specResponse] = await Promise.all([
+            fetch(
+              `/api/analyze?symbol=${encodeURIComponent(symbol)}&interval=${encodeURIComponent(byId("sim-interval").value)}`,
+            ),
+            fetch(`/api/sim/spec?symbol=${encodeURIComponent(symbol)}`),
+          ]);
+          const analysis = await analysisResponse.json();
+          const spec = await specResponse.json();
+          if (!analysisResponse.ok)
+            throw new Error(analysis.detail || "無法取得商品價格");
+          if (!specResponse.ok)
+            throw new Error(spec.detail || "無法取得交易規格");
+          simInstrument = spec;
+          simInstrument.instrument = symbol;
+          simInstrument.analysis = analysis;
+          simPrice = Number(analysis.current_price);
+          ensureSimulationChart(analysis);
+          renderSimulationStrategy(analysis);
+          byId("sim-search-results").classList.add("hidden");
+          byId("sim-symbol").value = symbol;
+          byId("sim-market-symbol").textContent = symbol;
+          byId("sim-market-info").textContent =
+            `最新價格 ${formatSimNumber(simPrice, 4)}｜${spec.currency}｜${spec.market === "contract" ? `OKX 永續合約，最高 ${spec.max_leverage}×` : "現貨模擬，無槓桿"}`;
+          const isContract = spec.market === "contract";
+          byId("sim-leverage-label").classList.toggle("hidden", !isContract);
+          byId("sim-margin-mode-label").classList.toggle("hidden", !isContract);
+          byId("sim-submit-short").classList.toggle("hidden", !isContract);
+          byId("sim-margin-label").firstChild.textContent = isContract
+            ? "保證金"
+            : "投入金額";
+          byId("sim-leverage").max = spec.max_leverage || 1;
+          byId("sim-leverage-range").max = spec.max_leverage || 1;
+          byId("sim-leverage").value = Math.min(
+            Number(byId("sim-leverage").value) || 1,
+            spec.max_leverage || 1,
+          );
+          byId("sim-leverage-range").value = byId("sim-leverage").value;
+          settleSimulationRisk(symbol, simPrice);
+          matchSimulationOrders(symbol, simPrice);
+          updateSimulationSummary();
+          renderSimulation();
+          startRealtime(symbol, byId("sim-interval").value, true);
+        }
+
+        function contractTierFor(contracts) {
+          const tiers = simInstrument?.tiers || [];
+          return (
+            tiers.find(
+              (tier) =>
+                contracts >= Number(tier.min_size || 0) &&
+                (!Number(tier.max_size) || contracts <= Number(tier.max_size)),
+            ) || tiers.at(-1)
+          );
+        }
+
+        function buildSimulationOrder(sideOverride) {
+          if (!simInstrument || simPrice <= 0) throw new Error("請先載入商品");
+          const amount = Number(byId("sim-margin").value);
+          const orderType = byId("sim-order-type").value;
+          const limitPrice = Number(byId("sim-limit-price").value);
+          const price = orderType === "limit" ? limitPrice : simPrice;
+          const side = sideOverride || byId("sim-side").value;
+          if (!Number.isFinite(amount) || amount <= 0)
+            throw new Error("請輸入有效金額");
+          if (!Number.isFinite(price) || price <= 0)
+            throw new Error("請輸入有效限價");
+          if (simInstrument.market !== "contract" && side === "short")
+            throw new Error("台股與美股模擬帳戶不提供放空");
+          const wallet = simState.wallets[simInstrument.currency];
+          if (amount > wallet.balance) throw new Error("模擬錢包可用餘額不足");
+          let leverage = 1;
+          let quantity = amount / price;
+          let notional = amount;
+          let requiredMargin = amount;
+          let contracts = 0;
+          let maintenanceMarginRate = 0;
+          const marginMode =
+            simInstrument.market === "contract"
+              ? byId("sim-margin-mode").value
+              : "cash";
+          if (simInstrument.market === "contract") {
+            leverage = Number(byId("sim-leverage").value);
+            if (
+              !Number.isFinite(leverage) ||
+              leverage < 1 ||
+              leverage > Number(simInstrument.max_leverage)
+            )
+              throw new Error(`槓桿必須介於 1–${simInstrument.max_leverage}×`);
+            notional = amount * leverage;
+            quantity = notional / price;
+            const contractValue = Number(simInstrument.contract_value || 1);
+            const contractNotional =
+              simInstrument.contract_value_currency === "USDT"
+                ? contractValue
+                : contractValue * price;
+            contracts = notional / Math.max(contractNotional, 1e-12);
+            const sameSymbolContracts = simState.positions
+              .filter(
+                (position) => position.symbol === simInstrument.instrument,
+              )
+              .reduce(
+                (sum, position) => sum + Number(position.contracts || 0),
+                0,
+              );
+            const tier = contractTierFor(contracts + sameSymbolContracts);
+            if (tier && leverage > Number(tier.max_leverage))
+              throw new Error(
+                `此持倉規模屬於第 ${tier.tier} 檔，最高只能使用 ${tier.max_leverage}×`,
+              );
+            if (
+              tier?.max_size &&
+              contracts + sameSymbolContracts > Number(tier.max_size)
+            )
+              throw new Error("訂單超過 OKX 對應持倉檔位上限");
+            maintenanceMarginRate = Number(
+              tier?.maintenance_margin_rate || 0.005,
+            );
+            const lot = Number(simInstrument.lot_size || 1);
+            const roundedContracts = Math.floor(contracts / lot) * lot;
+            if (roundedContracts < Number(simInstrument.min_size || lot))
+              throw new Error("訂單低於 OKX 最小下單張數");
+            contracts = roundedContracts;
+            notional = contracts * contractNotional;
+            quantity = notional / price;
+            requiredMargin = notional / leverage;
+          } else if (simInstrument.currency === "TWD") {
+            quantity = Math.floor(quantity);
+            if (quantity < 1) throw new Error("台股模擬下單至少需要 1 股");
+            notional = quantity * price;
+            requiredMargin = notional;
+          }
+          return {
+            id: crypto.randomUUID(),
+            createdAt: Date.now(),
+            symbol: simInstrument.instrument,
+            market: simInstrument.market,
+            currency: simInstrument.currency,
+            side,
+            orderType,
+            price,
+            limitPrice,
+            margin: requiredMargin,
+            notional,
+            quantity,
+            contracts,
+            leverage,
+            marginMode,
+            maintenanceMarginRate,
+            stop: Number(byId("sim-stop").value) || null,
+            take: Number(byId("sim-take").value) || null,
+          };
+        }
+
+        function executeSimulationOrder(order, executionPrice) {
+          const wallet = simState.wallets[order.currency];
+          const openingFee =
+            order.market === "contract" ? order.notional * 0.0005 : 0;
+          const required = order.margin + openingFee;
+          if (!order.reserved && required > wallet.balance)
+            throw new Error("成交時模擬錢包餘額不足");
+          if (order.reserved) {
+            wallet.balance += order.margin;
+          }
+          wallet.balance -= required;
+          const entry = executionPrice;
+          let liquidationPrice = null;
+          if (order.market === "contract") {
+            const buffer = 1 / order.leverage - order.maintenanceMarginRate;
+            const crossBuffer =
+              order.marginMode === "cross"
+                ? Math.max(0, wallet.balance) / Math.max(order.quantity, 1e-12)
+                : 0;
+            liquidationPrice =
+              order.side === "short"
+                ? entry * (1 + buffer) + crossBuffer
+                : Math.max(0, entry * (1 - buffer) - crossBuffer);
+          }
+          simState.positions.push({
+            ...order,
+            entry,
+            lastPrice: entry,
+            liquidationPrice,
+            openingFee,
+          });
+          simState.history.push({
+            time: Date.now(),
+            symbol: order.symbol,
+            action:
+              order.side === "short"
+                ? `開空 ${order.leverage}×`
+                : order.market === "contract"
+                  ? `開多 ${order.leverage}×`
+                  : "買進",
+            price: entry,
+            pnl: 0,
+            result: `已成交${order.market === "contract" ? `｜${order.marginMode === "cross" ? "全倉" : "逐倉"}` : ""}｜手續費 ${formatSimNumber(openingFee)}`,
+          });
+        }
+
+        function submitSimulationOrder(side) {
+          byId("sim-error").textContent = "";
+          try {
+            const order = buildSimulationOrder(side);
+            if (order.orderType === "limit") {
+              simState.wallets[order.currency].balance -= order.margin;
+              order.reserved = true;
+              simState.orders.push(order);
+            } else {
+              executeSimulationOrder(order, simPrice);
+            }
+            renderSimulation();
+            updateSimulationSummary();
+          } catch (error) {
+            byId("sim-error").textContent = error.message;
+          }
+        }
+
+        function matchSimulationOrders(symbol, price) {
+          const matched = simState.orders.filter(
+            (order) =>
+              order.symbol === symbol &&
+              ((order.side !== "short" && price <= order.limitPrice) ||
+                (order.side === "short" && price >= order.limitPrice)),
+          );
+          for (const order of matched) {
+            try {
+              executeSimulationOrder(order, order.limitPrice);
+              simState.orders = simState.orders.filter(
+                (item) => item.id !== order.id,
+              );
+            } catch (_error) {
+              // The order remains pending if account conditions changed.
+            }
+          }
+        }
+
+        function settleSimulationRisk(symbol, price) {
+          const triggered = simState.positions.filter((position) => {
+            if (position.symbol !== symbol) return false;
+            const isShort = position.side === "short";
+            const liquidation =
+              position.market === "contract" &&
+              position.liquidationPrice &&
+              (isShort
+                ? price >= position.liquidationPrice
+                : price <= position.liquidationPrice);
+            const stop =
+              position.stop &&
+              (isShort ? price >= position.stop : price <= position.stop);
+            const take =
+              position.take &&
+              (isShort ? price <= position.take : price >= position.take);
+            position.triggerReason = liquidation
+              ? "模擬強平"
+              : stop
+                ? "止損"
+                : take
+                  ? "止盈"
+                  : "";
+            return Boolean(position.triggerReason);
+          });
+          for (const position of triggered) {
+            const pnl = positionPnl(position, price);
+            const closingFee =
+              position.market === "contract" ? position.notional * 0.0005 : 0;
+            const returned =
+              position.triggerReason === "模擬強平"
+                ? 0
+                : position.market === "contract"
+                  ? Math.max(0, position.margin + pnl - closingFee)
+                  : Math.max(0, position.quantity * price);
+            simState.wallets[position.currency].balance += returned;
+            simState.positions = simState.positions.filter(
+              (item) => item.id !== position.id,
+            );
+            simState.history.push({
+              time: Date.now(),
+              symbol: position.symbol,
+              action: position.triggerReason,
+              price,
+              pnl,
+              result: `${position.triggerReason}｜${pnl >= 0 ? "+" : ""}${formatSimNumber(pnl)} ${position.currency}`,
+            });
+          }
+        }
+
+        async function closeSimulationPosition(id) {
+          const position = simState.positions.find((item) => item.id === id);
+          if (!position) return;
+          let price = position.lastPrice || position.entry;
+          try {
+            const response = await fetch(
+              `/api/analyze?symbol=${encodeURIComponent(position.symbol)}&interval=1h`,
+            );
+            const data = await response.json();
+            if (response.ok) price = Number(data.current_price) || price;
+          } catch (_error) {
+            // Last known price is used if the quote service is unavailable.
+          }
+          const pnl = positionPnl(position, price);
+          const closingFee =
+            position.market === "contract" ? position.notional * 0.0005 : 0;
+          const wallet = simState.wallets[position.currency];
+          wallet.balance +=
+            position.market === "contract"
+              ? Math.max(0, position.margin + pnl - closingFee)
+              : Math.max(0, position.quantity * price);
+          simState.positions = simState.positions.filter(
+            (item) => item.id !== id,
+          );
+          simState.history.push({
+            time: Date.now(),
+            symbol: position.symbol,
+            action: "平倉／賣出",
+            price,
+            pnl,
+            result: `${pnl >= 0 ? "獲利" : "虧損"} ${formatSimNumber(pnl)} ${position.currency}`,
+          });
+          renderSimulation();
+        }
+
+        function cancelSimulationOrder(id) {
+          const order = simState.orders.find((item) => item.id === id);
+          if (!order) return;
+          if (order.reserved)
+            simState.wallets[order.currency].balance += order.margin;
+          simState.orders = simState.orders.filter((item) => item.id !== id);
+          renderSimulation();
+        }
+
+        function updateSimulationSummary() {
+          byId("sim-limit-label").classList.toggle(
+            "hidden",
+            byId("sim-order-type").value !== "limit",
+          );
+          if (!simInstrument || simPrice <= 0) {
+            byId("sim-order-summary").textContent = "請先載入商品並輸入金額。";
+            return;
+          }
+          const amount = Number(byId("sim-margin").value) || 0;
+          const leverage =
+            simInstrument.market === "contract"
+              ? Number(byId("sim-leverage").value) || 1
+              : 1;
+          const notional = amount * leverage;
+          const fee =
+            simInstrument.market === "contract" ? notional * 0.0005 : 0;
+          byId("sim-order-summary").innerHTML =
+            `結算錢包：${simInstrument.currency}<br>` +
+            `參考價格：${formatSimNumber(simPrice, 4)}<br>` +
+            `${simInstrument.market === "contract" ? `保證金模式：${byId("sim-margin-mode").value === "cross" ? "全倉" : "逐倉"}<br>名目持倉：${formatSimNumber(notional)} USDT<br>預估開倉手續費：${formatSimNumber(fee)} USDT` : `預估投入：${formatSimNumber(amount)} ${simInstrument.currency}`}`;
+        }
+
+        async function openSimulator(symbol = "") {
+          showAppPage("sim");
+          if (symbol) {
+            byId("sim-symbol").value = symbol;
+            try {
+              await loadSimulationInstrument(symbol);
+            } catch (error) {
+              byId("sim-error").textContent = error.message;
+            }
+          }
+        }
+
         async function openAnalysis(symbol) {
           activeSymbol = symbol;
-          byId("home-page").classList.add("hidden");
-          byId("analysis-page").classList.remove("hidden");
+          showAppPage("analysis");
           byId("analysis-results").classList.add("hidden");
           historyLines = removeLines(historyLines);
           chart.applyOptions({ width: byId("chart").clientWidth });
@@ -2527,6 +5170,7 @@
             renderTradePlan(data);
             saveSignal(data, symbol, intervalValue);
             renderHistory();
+            startRealtime(symbol, intervalValue, false);
           } catch (error) {
             signal.className = "signal HOLD";
             signal.textContent = "無法生成圖表";
@@ -2546,9 +5190,100 @@
         };
         byId("market-select").onchange = loadRankings;
         byId("ranking-select").onchange = loadRankings;
-        byId("back-button").onclick = () => {
-          byId("analysis-page").classList.add("hidden");
-          byId("home-page").classList.remove("hidden");
+        byId("back-button").onclick = () => showAppPage("home");
+        byId("nav-home").onclick = () => showAppPage("home");
+        byId("nav-sim").onclick = () => openSimulator(activeSymbol);
+        byId("sim-load").onclick = async () => {
+          try {
+            await loadSimulationInstrument();
+          } catch (error) {
+            byId("sim-error").textContent = error.message;
+          }
+        };
+        byId("sim-symbol").onkeydown = (event) => {
+          if (event.key === "Enter") byId("sim-load").click();
+        };
+        byId("sim-symbol").oninput = () => {
+          clearTimeout(simSearchTimer);
+          simSearchTimer = setTimeout(searchSimulationSuggestions, 250);
+        };
+        byId("sim-search-results").onclick = (event) => {
+          const button = event.target.closest("[data-sim-symbol]");
+          if (!button) return;
+          byId("sim-symbol").value = button.dataset.simSymbol;
+          byId("sim-search-results").classList.add("hidden");
+          byId("sim-load").click();
+        };
+        byId("sim-interval").onchange = () => {
+          if (simInstrument?.instrument) byId("sim-load").click();
+        };
+        [
+          "sim-toggle-ema",
+          "sim-toggle-bollinger",
+          "sim-toggle-levels",
+          "sim-toggle-choch",
+          "sim-toggle-fvg",
+        ].forEach((id) => {
+          byId(id).checked = false;
+          byId(id).onchange = () =>
+            drawSimulationIndicators(simInstrument?.analysis || null);
+        });
+        byId("sim-chart-auto").onclick = () => {
+          if (!simLastChartData.length || !simChart) return;
+          const lastIndex = simLastChartData.length - 1;
+          const currentRange = simChart.timeScale().getVisibleLogicalRange();
+          const currentWidth = currentRange
+            ? currentRange.to - currentRange.from
+            : 80;
+          const visibleBars = Math.min(160, Math.max(30, currentWidth));
+          const centeredRange = {
+            from: lastIndex - visibleBars / 2,
+            to: lastIndex + visibleBars / 2,
+          };
+          simChart.timeScale().setVisibleLogicalRange(centeredRange);
+          simVolumeChart?.timeScale().setVisibleLogicalRange(centeredRange);
+          simChart.priceScale("right").applyOptions({ autoScale: true });
+          simVolumeChart?.priceScale("right").applyOptions({ autoScale: true });
+        };
+        byId("sim-submit-long").onclick = () => submitSimulationOrder("long");
+        byId("sim-submit-short").onclick = () => submitSimulationOrder("short");
+        [
+          "sim-order-type",
+          "sim-margin-mode",
+          "sim-margin",
+          "sim-limit-price",
+          "sim-stop",
+          "sim-take",
+        ].forEach((id) => (byId(id).oninput = updateSimulationSummary));
+        byId("sim-leverage-range").oninput = () => {
+          byId("sim-leverage").value = byId("sim-leverage-range").value;
+          updateSimulationSummary();
+        };
+        byId("sim-leverage").oninput = () => {
+          const maximum = Number(byId("sim-leverage").max) || 1;
+          const value = Math.min(
+            maximum,
+            Math.max(1, Number(byId("sim-leverage").value) || 1),
+          );
+          byId("sim-leverage-range").value = value;
+          updateSimulationSummary();
+        };
+        byId("sim-reset").onclick = () => {
+          if (simState.positions.length || simState.orders.length) {
+            alert("尚有持倉或掛單，請全部平倉並取消掛單後再重設。");
+            return;
+          }
+          if (!confirm("確定將 TWD、USD、USDT 都重設為 99,999,999？")) return;
+          simState = createSimulationState();
+          renderSimulation();
+        };
+        byId("sim-positions").onclick = (event) => {
+          const button = event.target.closest("[data-close-position]");
+          if (button) closeSimulationPosition(button.dataset.closePosition);
+        };
+        byId("sim-history").onclick = (event) => {
+          const button = event.target.closest("[data-cancel-order]");
+          if (button) cancelSimulationOrder(button.dataset.cancelOrder);
         };
         byId("interval").onchange = () =>
           activeSymbol && openAnalysis(activeSymbol);
@@ -2579,13 +5314,14 @@
           "toggle-levels",
           "toggle-choch",
           "toggle-fvg",
-          "toggle-volume",
         ].forEach((id) => (byId(id).onchange = drawIndicators));
         new ResizeObserver((entries) => {
           chart.applyOptions({ width: entries[0].contentRect.width });
           if (volumeChart)
             volumeChart.applyOptions({ width: entries[0].contentRect.width });
         }).observe(byId("chart"));
+        renderSimulation();
+        showAppPage("home");
         loadRankings();
       })();
     </script>
