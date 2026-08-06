@@ -1772,6 +1772,47 @@
       .sim-chart-stage {
         position: relative;
       }
+
+      .chart-time-detail {
+        position: relative;
+        height: 28px;
+        overflow: hidden;
+        border: 1px dashed rgba(114, 91, 70, 0.72);
+        border-top: 0;
+        background: #17110e;
+      }
+
+      .chart-time-detail span {
+        position: absolute;
+        top: 4px;
+        transform: translateX(-50%);
+        padding: 2px 7px;
+        border: 1px solid rgba(216, 189, 149, 0.55);
+        border-radius: 5px;
+        background: #2a201a;
+        color: #f2d8ac;
+        font-family: Arial, "Noto Sans TC", sans-serif !important;
+        font-size: 10px;
+        font-variant-numeric: tabular-nums;
+        line-height: 1.35;
+        white-space: nowrap;
+      }
+
+      .chart-countdown {
+        position: absolute;
+        z-index: 12;
+        top: 8px;
+        right: 8px;
+        padding: 3px 6px;
+        border: 1px solid rgba(216, 189, 149, 0.64);
+        border-radius: 6px;
+        background: rgba(27, 19, 16, 0.92);
+        color: #f2d8ac;
+        font-family: Arial, "Noto Sans TC", sans-serif !important;
+        font-size: 10px;
+        font-variant-numeric: tabular-nums;
+        line-height: 1.3;
+      }
       #sim-chart,
       #sim-volume-chart {
         width: 100%;
@@ -5321,6 +5362,7 @@
             </details>
             <div class="chart-stage">
               <div id="chart"></div>
+              <div id="chart-countdown" class="chart-countdown hidden" aria-live="polite"></div>
               <button
                 id="chart-auto"
                 class="chart-auto"
@@ -5330,6 +5372,7 @@
                 AUTO
               </button>
             </div>
+            <div id="chart-time-detail" class="chart-time-detail hidden" aria-live="polite"><span></span></div>
             <div id="volume-chart"></div>
           </section>
           <aside class="panel">
@@ -5462,6 +5505,7 @@
               </dl>
             </details>
             <div class="chart-stage sim-chart-stage">
+              <div id="sim-chart-countdown" class="chart-countdown hidden" aria-live="polite"></div>
               <div id="sim-chart" aria-label="模擬交易商品圖表"></div>
               <button
                 id="sim-chart-auto"
@@ -5782,6 +5826,8 @@
         let simulationPalette = { up: "#26a69a", down: "#ef5350" };
         let analysisUsesDateTicks = false;
         let simulationUsesDateTicks = false;
+        let analysisCountdownTime = null;
+        let simulationCountdownTime = null;
 
         const userTimeZone =
           Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
@@ -5925,7 +5971,7 @@
             "1m": 250,
             "3m": 235,
             "5m": 220,
-            "10m": 205,
+            "10m": 16,
             "15m": 190,
             "30m": 170,
             "45m": 160,
@@ -5944,6 +5990,101 @@
             to: lastIndex + 5,
           });
         }
+
+        function configureCandleTimeScale(chartInstance, interval) {
+          if (!chartInstance) return;
+          const showEveryCandle = interval === "10m";
+          chartInstance.timeScale().applyOptions({
+            barSpacing: showEveryCandle ? 42 : 3.5,
+            minBarSpacing: showEveryCandle ? 22 : 1,
+            rightOffset: showEveryCandle ? 2 : 8,
+          });
+        }
+
+        function detailTimeFormatter(time) {
+          return `${fullDateFormatter.format(chartTimeToDate(time))}   ${intradayTickFormatter.format(chartTimeToDate(time))}`;
+        }
+
+        function ensureChartTimeDetail(simulation) {
+          const id = simulation ? "sim-chart-time-detail" : "chart-time-detail";
+          let detail = byId(id);
+          if (detail) return detail;
+          const volume = byId(simulation ? "sim-volume-chart" : "volume-chart");
+          if (!volume) return null;
+          detail = document.createElement("div");
+          detail.id = id;
+          detail.className = "chart-time-detail hidden";
+          detail.setAttribute("aria-live", "polite");
+          detail.innerHTML = "<span></span>";
+          volume.before(detail);
+          return detail;
+        }
+
+        function updateChartTimeDetail(simulation, time, point) {
+          const detail = ensureChartTimeDetail(simulation);
+          if (!detail) return;
+          if (time === undefined || time === null) {
+            detail.classList.add("hidden");
+            return;
+          }
+          const label = detail.querySelector("span");
+          label.textContent = detailTimeFormatter(time);
+          const x = Number(point?.x);
+          const safeX = Number.isFinite(x)
+            ? Math.max(64, Math.min(detail.clientWidth - 64, x))
+            : detail.clientWidth / 2;
+          label.style.left = `${safeX}px`;
+          detail.classList.remove("hidden");
+        }
+
+        function candleDurationMs(interval) {
+          return {
+            "1m": 60_000,
+            "3m": 180_000,
+            "5m": 300_000,
+            "10m": 600_000,
+            "15m": 900_000,
+            "30m": 1_800_000,
+            "45m": 2_700_000,
+            "1h": 3_600_000,
+            "2h": 7_200_000,
+            "3h": 10_800_000,
+            "4h": 14_400_000,
+            "1d": 86_400_000,
+            "1w": 604_800_000,
+          }[interval] || null;
+        }
+
+        function updateCandleCountdown(simulation) {
+          const selectedTime = simulation
+            ? simulationCountdownTime
+            : analysisCountdownTime;
+          const rows = simulation ? simLastChartData : lastChartData;
+          const interval = byId(simulation ? "sim-interval" : "interval")?.value || "1h";
+          const box = byId(simulation ? "sim-chart-countdown" : "chart-countdown");
+          const lastTime = rows.at(-1)?.time;
+          const duration = candleDurationMs(interval);
+          if (!box || !duration || selectedTime === null || String(lastTime) !== String(selectedTime)) {
+            box?.classList.add("hidden");
+            return;
+          }
+          const startedAt = chartTimeToDate(lastTime).getTime();
+          const remaining = startedAt + duration - Date.now();
+          if (remaining <= 0 || Date.now() < startedAt) {
+            box.classList.add("hidden");
+            return;
+          }
+          const totalSeconds = Math.floor(remaining / 1000);
+          const minutes = Math.floor(totalSeconds / 60);
+          const seconds = String(totalSeconds % 60).padStart(2, "0");
+          box.textContent = `本根倒數 ${minutes}:${seconds}`;
+          box.classList.remove("hidden");
+        }
+
+        setInterval(() => {
+          updateCandleCountdown(false);
+          updateCandleCountdown(true);
+        }, 1000);
 
         const OKX_LIVE_CHANNELS = {
           "1m": "candle1m",
@@ -6217,6 +6358,11 @@
           visible: false,
         });
 
+        chart.subscribeClick((param) => {
+          analysisCountdownTime = param.time ?? null;
+          updateCandleCountdown(false);
+        });
+
         function ensureVolumeChart() {
           if (!volumeChart) {
             volumeChart = LightweightCharts.createChart(byId("volume-chart"), {
@@ -6278,6 +6424,7 @@
                 syncingRange = false;
               });
             chart.subscribeCrosshairMove((param) => {
+              updateChartTimeDetail(false, param.time, param.point);
               if (!volumeChart || param.time === undefined) {
                 volumeChart?.clearCrosshairPosition?.();
                 return;
@@ -7370,6 +7517,7 @@
             syncRanges(simChart, simVolumeChart);
             syncRanges(simVolumeChart, simChart);
             simChart.subscribeCrosshairMove((param) => {
+              updateChartTimeDetail(true, param.time, param.point);
               if (param.time === undefined) {
                 simVolumeChart.clearCrosshairPosition?.();
                 return;
@@ -7383,6 +7531,10 @@
                   param.time,
                   simVolumeSeries,
                 );
+            });
+            simChart.subscribeClick((param) => {
+              simulationCountdownTime = param.time ?? null;
+              updateCandleCountdown(true);
             });
             new ResizeObserver(() => {
               simChart?.applyOptions({ width: element.clientWidth });
@@ -7422,6 +7574,10 @@
           );
           drawSimulationIndicators(analysis);
           simChart.applyOptions({ width: element.clientWidth });
+          configureCandleTimeScale(
+            simChart,
+            byId("sim-interval")?.value || "1h",
+          );
           focusRecentChartRange(
             simChart,
             rows,
@@ -8120,6 +8276,8 @@
             structureData = data.structure;
             levelsData = data.levels;
             drawIndicators();
+            ensureVolumeChart();
+            configureCandleTimeScale(chart, intervalValue);
             focusRecentChartRange(chart, lastChartData, intervalValue);
             byId("source-status").textContent =
               `資料來源：${data.market_source}｜時區：${userTimeZone}（24 小時制）`;
