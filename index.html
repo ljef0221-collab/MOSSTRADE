@@ -4458,6 +4458,36 @@
         line-height: 1.7;
       }
 
+      /* Pixel type is reserved for supporting copy; figures and headings stay crisp. */
+      .page-eyebrow,
+      .home-heading p,
+      .analysis-head p,
+      .sim-section-title p,
+      .field-label,
+      .market-summary-card small,
+      .market-summary-card span,
+      .wallet-card small,
+      .wallet-card span,
+      .wallet-equity-card small,
+      .wallet-equity-card span,
+      .ranking-help,
+      .indicator-help,
+      .disclaimer,
+      .sim-notice,
+      .sim-strategy-note,
+      .sim-market-card span,
+      .live-status,
+      .history-item,
+      .history-item *,
+      .empty,
+      .error,
+      .wallet-advice-card p,
+      .wallet-risk-stats span,
+      .site-disclaimer {
+        font-family: "CubicPixelTW", "DotPixelTW", "MingLiU", monospace !important;
+        letter-spacing: 0.015em;
+      }
+
       .wallet-risk-stats {
         display: grid;
         gap: 8px;
@@ -4709,20 +4739,31 @@
         }
 
         .market-summary {
-          grid-template-columns: repeat(3, minmax(150px, 1fr)) !important;
-          overflow-x: auto;
-          padding-bottom: 4px;
-          scroll-snap-type: x proximity;
+          grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+          gap: 6px !important;
+          overflow: visible;
+          padding-bottom: 0;
         }
 
         .market-summary-card {
-          min-height: 104px;
-          padding: 15px;
-          scroll-snap-align: start;
+          min-width: 0;
+          min-height: 74px;
+          padding: 8px !important;
+          border-radius: 11px !important;
         }
 
         .market-summary-card strong {
-          font-size: 21px;
+          margin: 4px 0 2px !important;
+          font-size: 14px !important;
+          line-height: 1.2 !important;
+          overflow-wrap: anywhere;
+        }
+
+        .market-summary-card small,
+        .market-summary-card span {
+          font-size: 9px !important;
+          line-height: 1.25 !important;
+          overflow-wrap: anywhere;
         }
 
         .ranking-panel {
@@ -4820,9 +4861,10 @@
         }
 
         .sim-order-panel {
-          inset: auto 10px 76px !important;
+          inset: auto 8px 70px !important;
           width: auto !important;
-          max-height: calc(100vh - 164px);
+          max-height: min(46vh, 390px);
+          border-radius: 13px !important;
         }
 
         .global-position-dock {
@@ -4837,7 +4879,8 @@
 
         .sim-order-drawer-body {
           flex: 0 1 auto;
-          max-height: min(68vh, 620px);
+          max-height: min(39vh, 340px);
+          padding: 12px !important;
         }
 
         /* Keep the simulator dense enough for a phone viewport. */
@@ -4948,11 +4991,45 @@
         }
 
         .sim-order-toggle {
-          bottom: 72px !important;
-          width: 178px !important;
-          min-height: 40px !important;
-          padding: 7px 10px !important;
-          font-size: 13px !important;
+          bottom: 70px !important;
+          width: 156px !important;
+          min-height: 36px !important;
+          padding: 5px 8px !important;
+          font-size: 12px !important;
+        }
+
+        .sim-order-panel-head {
+          min-height: 42px !important;
+          padding: 6px 8px 6px 12px !important;
+        }
+
+        .sim-order-panel-head h3 {
+          font-size: 14px !important;
+        }
+
+        .sim-order-close {
+          width: 30px !important;
+          min-height: 30px !important;
+          font-size: 17px !important;
+        }
+
+        .sim-order-panel .sim-form {
+          gap: 8px !important;
+        }
+
+        .sim-order-panel label,
+        .sim-order-panel .sim-summary,
+        .sim-order-panel .sim-notice {
+          font-size: 11px !important;
+          line-height: 1.35 !important;
+        }
+
+        .sim-order-panel input,
+        .sim-order-panel select,
+        .sim-order-panel button:not(.sim-order-close) {
+          min-height: 34px !important;
+          padding: 5px 7px !important;
+          font-size: 12px !important;
         }
 
         .sim-table-wrap {
