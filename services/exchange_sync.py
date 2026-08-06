@@ -3,7 +3,7 @@ import requests
 
 def sync_binance_futures():
     """Compatibility name: load live OKX USDT perpetual and spot instruments."""
-    headers = {"User-Agent": "SmartNavigator/1.0"}
+    headers = {"User-Agent": "MOSSTRADE/1.0"}
     instruments = []
     for instrument_type in ("SWAP", "SPOT"):
         response = requests.get(
