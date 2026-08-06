@@ -1773,31 +1773,6 @@
         position: relative;
       }
 
-      .chart-time-detail {
-        position: relative;
-        height: 28px;
-        overflow: hidden;
-        border: 1px dashed rgba(114, 91, 70, 0.72);
-        border-top: 0;
-        background: #17110e;
-      }
-
-      .chart-time-detail span {
-        position: absolute;
-        top: 4px;
-        transform: translateX(-50%);
-        padding: 2px 7px;
-        border: 1px solid rgba(216, 189, 149, 0.55);
-        border-radius: 5px;
-        background: #2a201a;
-        color: #f2d8ac;
-        font-family: Arial, "Noto Sans TC", sans-serif !important;
-        font-size: 10px;
-        font-variant-numeric: tabular-nums;
-        line-height: 1.35;
-        white-space: nowrap;
-      }
-
       .chart-countdown {
         position: absolute;
         z-index: 12;
@@ -5372,7 +5347,6 @@
                 AUTO
               </button>
             </div>
-            <div id="chart-time-detail" class="chart-time-detail hidden" aria-live="polite"><span></span></div>
             <div id="volume-chart"></div>
           </section>
           <aside class="panel">
@@ -6001,42 +5975,6 @@
           });
         }
 
-        function detailTimeFormatter(time) {
-          return `${fullDateFormatter.format(chartTimeToDate(time))}   ${intradayTickFormatter.format(chartTimeToDate(time))}`;
-        }
-
-        function ensureChartTimeDetail(simulation) {
-          const id = simulation ? "sim-chart-time-detail" : "chart-time-detail";
-          let detail = byId(id);
-          if (detail) return detail;
-          const volume = byId(simulation ? "sim-volume-chart" : "volume-chart");
-          if (!volume) return null;
-          detail = document.createElement("div");
-          detail.id = id;
-          detail.className = "chart-time-detail hidden";
-          detail.setAttribute("aria-live", "polite");
-          detail.innerHTML = "<span></span>";
-          volume.before(detail);
-          return detail;
-        }
-
-        function updateChartTimeDetail(simulation, time, point) {
-          const detail = ensureChartTimeDetail(simulation);
-          if (!detail) return;
-          if (time === undefined || time === null) {
-            detail.classList.add("hidden");
-            return;
-          }
-          const label = detail.querySelector("span");
-          label.textContent = detailTimeFormatter(time);
-          const x = Number(point?.x);
-          const safeX = Number.isFinite(x)
-            ? Math.max(64, Math.min(detail.clientWidth - 64, x))
-            : detail.clientWidth / 2;
-          label.style.left = `${safeX}px`;
-          detail.classList.remove("hidden");
-        }
-
         function candleDurationMs(interval) {
           return {
             "1m": 60_000,
@@ -6077,7 +6015,7 @@
           const totalSeconds = Math.floor(remaining / 1000);
           const minutes = Math.floor(totalSeconds / 60);
           const seconds = String(totalSeconds % 60).padStart(2, "0");
-          box.textContent = `本根倒數 ${minutes}:${seconds}`;
+          box.textContent = `當前倒數 ${minutes}:${seconds}`;
           box.classList.remove("hidden");
         }
 
@@ -6424,7 +6362,6 @@
                 syncingRange = false;
               });
             chart.subscribeCrosshairMove((param) => {
-              updateChartTimeDetail(false, param.time, param.point);
               if (!volumeChart || param.time === undefined) {
                 volumeChart?.clearCrosshairPosition?.();
                 return;
@@ -7494,12 +7431,8 @@
               },
               rightPriceScale: { borderColor: "#725b46", minimumWidth: 76 },
               timeScale: {
-                timeVisible: true,
-                secondsVisible: false,
-                barSpacing: 3.5,
-                minBarSpacing: 1,
+                visible: false,
                 borderColor: "#725b46",
-                tickMarkFormatter: formatSimulationChartTick,
               },
             });
             simVolumeSeries = simVolumeChart.addSeries(
@@ -7517,7 +7450,6 @@
             syncRanges(simChart, simVolumeChart);
             syncRanges(simVolumeChart, simChart);
             simChart.subscribeCrosshairMove((param) => {
-              updateChartTimeDetail(true, param.time, param.point);
               if (param.time === undefined) {
                 simVolumeChart.clearCrosshairPosition?.();
                 return;
