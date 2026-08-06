@@ -4174,11 +4174,113 @@
         line-height: 1.35;
       }
 
+      #sim-page .sim-reference-history-block {
+        margin-top: 14px;
+        padding-top: 13px;
+      }
+
+      #sim-page .sim-reference-history-block h3 {
+        margin-bottom: 8px !important;
+        font-size: 13px !important;
+      }
+
+      #sim-reference-history {
+        max-height: 220px;
+        overflow-y: auto;
+        padding-right: 3px;
+      }
+
+      #sim-reference-history .history-item,
+      #sim-reference-history .empty {
+        font-size: 11px !important;
+        line-height: 1.45 !important;
+      }
+
+      .global-position-dock {
+        position: fixed;
+        z-index: 230;
+        right: 24px;
+        bottom: 82px;
+        width: min(310px, calc(100vw - 32px));
+        max-height: 260px;
+        overflow: hidden;
+        border: 1px solid rgba(88, 75, 52, 0.2);
+        border-radius: 13px;
+        background: rgba(255, 252, 247, 0.93);
+        box-shadow: 0 14px 34px rgba(37, 30, 22, 0.18);
+        backdrop-filter: blur(14px) saturate(120%);
+      }
+
+      .global-position-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        min-height: 38px;
+        padding: 7px 10px;
+        border-bottom: 1px solid rgba(88, 75, 52, 0.12);
+        background: rgba(243, 238, 230, 0.82);
+      }
+
+      .global-position-head strong {
+        font-size: 12px;
+      }
+
+      .global-position-head span {
+        color: var(--neutral-600);
+        font-size: 10px;
+      }
+
+      .global-position-list {
+        display: grid;
+        gap: 1px;
+        max-height: 220px;
+        overflow-y: auto;
+      }
+
+      .global-position-item {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 3px 8px;
+        align-items: center;
+        padding: 8px 10px;
+        border-bottom: 1px solid rgba(88, 75, 52, 0.08);
+      }
+
+      .global-position-symbol {
+        min-width: 0;
+        padding: 0 !important;
+        border: 0 !important;
+        background: transparent !important;
+        color: var(--neutral-900) !important;
+        font-size: 10.5px !important;
+        font-weight: 750 !important;
+        text-align: left;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        box-shadow: none !important;
+      }
+
+      .global-position-item small {
+        color: var(--neutral-600);
+        font-size: 9.5px;
+      }
+
+      .global-position-close {
+        grid-column: 2;
+        grid-row: 1 / 3;
+        min-height: 29px !important;
+        padding: 3px 8px !important;
+        border-radius: 7px !important;
+        font-size: 9.5px !important;
+      }
+
       .sim-order-toggle {
         position: fixed;
         z-index: 240;
         bottom: 24px;
-        right: 24px;
+        left: calc(var(--sidebar-size) + 24px);
         width: 230px;
         min-height: 46px;
         border: 1px solid #a96e14 !important;
@@ -4194,7 +4296,7 @@
         position: fixed;
         z-index: 250;
         top: 96px;
-        right: 24px;
+        left: calc(var(--sidebar-size) + 24px);
         bottom: 24px;
         width: min(390px, calc(100vw - 32px));
         display: flex;
@@ -4314,9 +4416,14 @@
         height: 300px;
         margin-top: 14px;
         overflow: hidden;
-        border: 1px solid var(--neutral-300);
-        border-radius: var(--radius-md);
-        background: var(--surface-secondary);
+        border: 1px solid rgba(76, 211, 232, 0.28);
+        border-radius: 12px;
+        background:
+          radial-gradient(circle at 78% 5%, rgba(62, 221, 202, 0.14), transparent 31%),
+          linear-gradient(145deg, #111b28, #0a111d 62%, #101728);
+        box-shadow:
+          inset 0 1px 0 rgba(212, 246, 255, 0.08),
+          0 12px 28px rgba(27, 44, 67, 0.16);
       }
 
       .wallet-chart-legend {
@@ -4337,9 +4444,9 @@
         background: currentColor;
       }
 
-      .wallet-chart-legend .twd { color: #9a610f; }
-      .wallet-chart-legend .usd { color: #16765a; }
-      .wallet-chart-legend .usdt { color: #6b5fb5; }
+      .wallet-chart-legend .twd { color: #f6b84a; }
+      .wallet-chart-legend .usd { color: #45e1c2; }
+      .wallet-chart-legend .usdt { color: #9d8cff; }
 
       .wallet-advice-card > small {
         color: var(--amber-700);
@@ -4369,6 +4476,67 @@
 
       .moss-quote-card {
         transition: none !important;
+      }
+
+      /* Compact wallet balances and place ranking controls below help text. */
+      .market-command-bar {
+        grid-template-columns: minmax(0, 1fr) !important;
+      }
+
+      .ranking-controls {
+        width: min(100%, 620px) !important;
+        margin: 0 0 16px !important;
+        grid-template-columns: minmax(220px, 1fr) minmax(160px, 0.7fr) !important;
+      }
+
+      .sim-wallet-grid {
+        gap: 8px !important;
+      }
+
+      .wallet-card {
+        min-height: 54px !important;
+        padding: 7px 11px !important;
+        gap: 1px 8px !important;
+        border-radius: 11px !important;
+      }
+
+      .wallet-card small {
+        font-size: 10px !important;
+        line-height: 1.25 !important;
+      }
+
+      .wallet-card strong {
+        margin: 0 !important;
+        font-size: 14px !important;
+        line-height: 1.25 !important;
+      }
+
+      .wallet-card span {
+        font-size: 10px !important;
+        line-height: 1.3 !important;
+      }
+
+      .wallet-equity-grid {
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+
+      .wallet-equity-card {
+        min-height: 78px;
+        gap: 3px;
+        padding: 11px 13px;
+        border-radius: 12px;
+      }
+
+      .wallet-equity-card small,
+      .wallet-equity-card span {
+        font-size: 10.5px;
+        line-height: 1.3;
+      }
+
+      .wallet-equity-card strong {
+        font-size: 17px;
+        line-height: 1.25;
       }
 
       @media (min-width: 1024px) and (max-width: 1279px) {
@@ -4535,6 +4703,11 @@
           grid-template-columns: 1fr !important;
         }
 
+        .ranking-controls {
+          width: 100% !important;
+          grid-template-columns: minmax(0, 1fr) !important;
+        }
+
         .market-summary {
           grid-template-columns: repeat(3, minmax(150px, 1fr)) !important;
           overflow-x: auto;
@@ -4593,15 +4766,52 @@
         }
 
         .sim-wallet-grid {
-          grid-template-columns: repeat(3, minmax(190px, 1fr)) !important;
+          grid-template-columns: repeat(3, minmax(142px, 1fr)) !important;
           overflow-x: auto;
           scroll-snap-type: x proximity;
         }
 
+        .wallet-card {
+          min-height: 58px !important;
+          grid-template-columns: minmax(0, 1fr) !important;
+          padding: 7px 9px !important;
+        }
+
+        .wallet-card small,
+        .wallet-card strong,
+        .wallet-card span {
+          grid-column: 1 !important;
+          grid-row: auto !important;
+        }
+
+        .wallet-card small,
+        .wallet-card span {
+          font-size: 9px !important;
+        }
+
+        .wallet-card strong {
+          font-size: 13px !important;
+        }
+
         .wallet-equity-grid {
-          grid-template-columns: repeat(3, minmax(190px, 1fr));
+          grid-template-columns: repeat(3, minmax(146px, 1fr));
           overflow-x: auto;
           padding-bottom: 4px;
+        }
+
+        .wallet-equity-card {
+          min-height: 64px;
+          padding: 8px 10px;
+          gap: 2px;
+        }
+
+        .wallet-equity-card small,
+        .wallet-equity-card span {
+          font-size: 9px;
+        }
+
+        .wallet-equity-card strong {
+          font-size: 14px;
         }
 
         .sim-order-toggle {
@@ -4615,9 +4825,134 @@
           max-height: calc(100vh - 164px);
         }
 
+        .global-position-dock {
+          inset: auto 10px 140px !important;
+          width: auto !important;
+          max-height: 210px;
+        }
+
+        .global-position-list {
+          max-height: 170px;
+        }
+
         .sim-order-drawer-body {
           flex: 0 1 auto;
           max-height: min(68vh, 620px);
+        }
+
+        /* Keep the simulator dense enough for a phone viewport. */
+        #sim-page .sim-section-title {
+          align-items: flex-start !important;
+          gap: 8px !important;
+        }
+
+        #sim-page .sim-section-title h2 {
+          margin: 0 !important;
+          font-size: 26px !important;
+          line-height: 1.2 !important;
+        }
+
+        #sim-page .sim-section-title p {
+          margin: 5px 0 0 !important;
+          font-size: 14px !important;
+          line-height: 1.45 !important;
+        }
+
+        #sim-page #sim-reset {
+          min-height: 38px !important;
+          padding: 6px 9px !important;
+          font-size: 12px !important;
+          line-height: 1.25 !important;
+        }
+
+        #sim-page .sim-wallet-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+          gap: 6px !important;
+          margin: 12px 0 !important;
+          overflow: visible !important;
+        }
+
+        #sim-page .wallet-card {
+          display: flex !important;
+          min-width: 0 !important;
+          min-height: 76px !important;
+          align-items: flex-start !important;
+          flex-direction: column !important;
+          gap: 2px !important;
+          padding: 8px !important;
+        }
+
+        #sim-page .wallet-card small,
+        #sim-page .wallet-card span {
+          font-size: 9px !important;
+          line-height: 1.25 !important;
+          white-space: normal !important;
+        }
+
+        #sim-page .wallet-card strong {
+          min-width: 0;
+          font-size: clamp(10px, 3.1vw, 13px) !important;
+          line-height: 1.2 !important;
+          letter-spacing: -0.045em !important;
+          overflow-wrap: anywhere;
+        }
+
+        #sim-page .sim-grid > .panel,
+        #sim-page .sim-grid > aside {
+          padding: 12px !important;
+        }
+
+        #sim-page .sim-symbol-bar {
+          gap: 6px !important;
+          margin-bottom: 10px !important;
+        }
+
+        #sim-page .sim-symbol-bar input,
+        #sim-page .sim-symbol-bar button {
+          min-height: 40px !important;
+          padding: 7px 10px !important;
+          font-size: 14px !important;
+        }
+
+        #sim-page .sim-market-card {
+          margin: 8px 0 !important;
+          padding: 9px 10px !important;
+        }
+
+        #sim-page .sim-market-card strong {
+          font-size: 14px !important;
+        }
+
+        #sim-page .sim-market-card span,
+        #sim-page .sim-strategy-note,
+        #sim-page .sim-reference-history-block .history-item {
+          font-size: 10px !important;
+          line-height: 1.4 !important;
+        }
+
+        #sim-page .sim-chart-toolbar {
+          min-height: 42px !important;
+          gap: 6px !important;
+          padding: 6px 8px !important;
+        }
+
+        #sim-page .sim-chart-toolbar select,
+        #sim-page .sim-chart-toolbar .toggle {
+          min-height: 34px !important;
+          font-size: 12px !important;
+        }
+
+        #sim-page .live-status {
+          padding: 4px 7px !important;
+          font-size: 10px !important;
+        }
+
+        .sim-order-toggle {
+          bottom: 72px !important;
+          width: 178px !important;
+          min-height: 40px !important;
+          padding: 7px 10px !important;
+          font-size: 13px !important;
         }
 
         .sim-table-wrap {
@@ -4727,24 +5062,6 @@
             </div>
             <div id="results" class="panel hidden"></div>
           </div>
-          <div class="market-tabs">
-            <label
-              ><span class="field-label">市場</span
-              ><select id="market-select">
-                <option value="futures">合約市場（OKX）</option>
-                <option value="taiwan">台股市場（含台股 ETF）</option>
-                <option value="us">美股市場（含美國 ETF／美債）</option>
-                <option value="metals">貴金屬市場</option>
-              </select></label
-            ><label
-              ><span class="field-label">排序</span
-              ><select id="ranking-select">
-                <option value="gainers">漲幅榜</option>
-                <option value="losers">跌幅榜</option>
-                <option value="volume">成交量榜</option>
-              </select></label
-            >
-          </div>
         </div>
         <div class="market-summary" aria-label="排行榜摘要">
           <article class="market-summary-card">
@@ -4787,6 +5104,24 @@
             </dd>
           </dl>
         </details>
+        <div class="market-tabs ranking-controls" aria-label="排行榜篩選">
+          <label
+            ><span class="field-label">選擇市場</span
+            ><select id="market-select">
+              <option value="futures">合約市場（OKX）</option>
+              <option value="taiwan">台股市場（含台股 ETF）</option>
+              <option value="us">美股市場（含美國 ETF／美債）</option>
+              <option value="metals">貴金屬市場</option>
+            </select></label
+          ><label
+            ><span class="field-label">排行榜排序</span
+            ><select id="ranking-select">
+              <option value="gainers">漲幅榜</option>
+              <option value="losers">跌幅榜</option>
+              <option value="volume">成交量榜</option>
+            </select></label
+          >
+        </div>
         <div id="ranking-error" class="error" role="alert"></div>
         <section class="panel ranking-panel">
           <h3 id="ranking-title">漲幅 Top 10</h3>
@@ -4987,8 +5322,10 @@
                   <option value="3h">3 小時</option>
                   <option value="4h">4 小時</option>
                 </optgroup>
-                <optgroup label="日線">
+                <optgroup label="長週期">
                   <option value="1d">日線</option>
+                  <option value="1w">週線</option>
+                  <option value="1mo">月線</option>
                 </optgroup>
               </select>
               <label class="toggle"
@@ -5068,6 +5405,12 @@
               <small class="sim-strategy-note"
                 >策略分析僅供模擬練習與參考，不構成投資建議。</small
               >
+              <div class="sim-reference-history-block">
+                <h3>參考策略進場紀錄</h3>
+                <div id="sim-reference-history" class="history-list">
+                  <div class="empty">載入商品後顯示參考紀錄</div>
+                </div>
+              </div>
             </section>
           </section>
           <button
@@ -5181,12 +5524,6 @@
               公開商品規格與持倉檔位模擬；全倉會共用合約錢包可用餘額，逐倉僅使用該筆保證金。實際交易仍可能受到帳戶模式、VIP
               費率、地區與交易所即時風控影響。
             </p>
-            <div class="sim-reference-history-block">
-              <h3>參考策略進場紀錄</h3>
-              <div id="sim-reference-history" class="history-list">
-                <div class="empty">載入商品後顯示參考紀錄</div>
-              </div>
-            </div>
             </div>
           </aside>
         </div>
@@ -5289,6 +5626,17 @@
         </section>
       </section>
     </main>
+    <aside
+      id="global-position-dock"
+      class="global-position-dock hidden"
+      aria-label="目前模擬持倉"
+    >
+      <div class="global-position-head">
+        <strong>目前持倉</strong>
+        <span id="global-position-count">0 筆</span>
+      </div>
+      <div id="global-position-list" class="global-position-list"></div>
+    </aside>
     <footer class="site-disclaimer">
       本站行情、技術指標、策略分析及模擬交易僅供學習與研究參考，不構成投資建議、交易邀約或獲利保證。金融商品具有風險，所有決策與結果應由使用者自行評估及承擔。
     </footer>
@@ -5337,6 +5685,8 @@
         let simulationRealtime = null;
         let analysisPalette = { up: "#26a69a", down: "#ef5350" };
         let simulationPalette = { up: "#26a69a", down: "#ef5350" };
+        let analysisUsesDateTicks = false;
+        let simulationUsesDateTicks = false;
 
         const userTimeZone =
           Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
@@ -5355,6 +5705,7 @@
           timeZone: userTimeZone,
           hour: "2-digit",
           minute: "2-digit",
+          second: "2-digit",
           hour12: false,
           hourCycle: "h23",
         });
@@ -5364,6 +5715,25 @@
           day: "2-digit",
           hour12: false,
         });
+        const hourlyTickFormatter = new Intl.DateTimeFormat("zh-TW", {
+          timeZone: userTimeZone,
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+          hourCycle: "h23",
+        });
+        const yearTickFormatter = new Intl.DateTimeFormat("zh-TW", {
+          timeZone: userTimeZone,
+          year: "numeric",
+        });
+        const fullDateFormatter = new Intl.DateTimeFormat("zh-TW", {
+          timeZone: userTimeZone,
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        });
 
         function chartTimeToDate(time) {
           if (typeof time === "number") return new Date(time * 1000);
@@ -5372,6 +5742,22 @@
             return new Date(Date.UTC(time.year, time.month - 1, time.day));
           }
           return new Date(0);
+        }
+
+        function shouldUseDateTicks(interval, rows = []) {
+          if (["1d", "1w", "1mo"].includes(interval)) return true;
+          const stamps = rows
+            .slice(-24)
+            .map((row) => chartTimeToDate(row.time).getTime())
+            .filter(Number.isFinite)
+            .sort((a, b) => a - b);
+          if (stamps.length < 2) return false;
+          const gaps = stamps
+            .slice(1)
+            .map((stamp, index) => stamp - stamps[index])
+            .sort((a, b) => a - b);
+          const medianGap = gaps[Math.floor(gaps.length / 2)] || 0;
+          return medianGap >= 12 * 60 * 60 * 1000;
         }
 
         function marketCandlePalette(symbol) {
@@ -5396,19 +5782,73 @@
           });
         }
 
+        function intervalTickFormatter(time, interval, usesDateTicks) {
+          const date = chartTimeToDate(time);
+          const isMidnightUtc =
+            date.getUTCHours() === 0 &&
+            date.getUTCMinutes() === 0 &&
+            date.getUTCSeconds() === 0;
+          if (["1w", "1mo"].includes(interval))
+            return yearTickFormatter.format(date);
+          if (interval === "1d" || usesDateTicks || isMidnightUtc)
+            return dateTickFormatter.format(date);
+          if (["1h", "2h", "3h", "4h"].includes(interval))
+            return hourlyTickFormatter.format(date);
+          return intradayTickFormatter.format(date);
+        }
+
         function formatChartTick(time) {
-          const interval = byId("interval")?.value || "1h";
-          const formatter = ["1d", "1w", "1mo"].includes(interval)
-            ? dateTickFormatter
-            : intradayTickFormatter;
-          return formatter.format(chartTimeToDate(time));
+          return intervalTickFormatter(
+            time,
+            byId("interval")?.value || "1h",
+            analysisUsesDateTicks,
+          );
         }
 
         function formatSimulationChartTick(time) {
-          const interval = byId("sim-interval")?.value || "1h";
-          const formatter =
-            interval === "1d" ? dateTickFormatter : intradayTickFormatter;
-          return formatter.format(chartTimeToDate(time));
+          return intervalTickFormatter(
+            time,
+            byId("sim-interval")?.value || "1h",
+            simulationUsesDateTicks,
+          );
+        }
+
+        function formatLocalizedChartTime(time, useDateTicks) {
+          const date = chartTimeToDate(time);
+          const isMidnightUtc =
+            date.getUTCHours() === 0 &&
+            date.getUTCMinutes() === 0 &&
+            date.getUTCSeconds() === 0;
+          return (useDateTicks || isMidnightUtc
+            ? fullDateFormatter
+            : fullTimeFormatter
+          ).format(date);
+        }
+
+        function focusRecentChartRange(chartInstance, rows, interval) {
+          if (!chartInstance || !rows.length) return;
+          const visibleBars = {
+            "1m": 190,
+            "3m": 180,
+            "5m": 170,
+            "10m": 160,
+            "15m": 150,
+            "30m": 135,
+            "45m": 125,
+            "1h": 150,
+            "2h": 135,
+            "3h": 125,
+            "4h": 120,
+          }[interval];
+          if (!visibleBars) {
+            chartInstance.timeScale().fitContent();
+            return;
+          }
+          const lastIndex = rows.length - 1;
+          chartInstance.timeScale().setVisibleLogicalRange({
+            from: Math.max(-0.5, lastIndex - visibleBars + 1),
+            to: lastIndex + 5,
+          });
         }
 
         const OKX_LIVE_CHANNELS = {
@@ -5593,8 +6033,8 @@
             background: { color: "#1b1310" },
             textColor: "#d8bd95",
             fontFamily:
-              "Inter, Noto Sans TC, Microsoft JhengHei, Arial, sans-serif",
-            fontSize: 13,
+              "Arial, Noto Sans TC, Microsoft JhengHei, sans-serif",
+            fontSize: 11,
           },
           grid: {
             vertLines: { color: "#33231c" },
@@ -5607,7 +6047,7 @@
           localization: {
             locale: "zh-TW",
             timeFormatter: (time) =>
-              fullTimeFormatter.format(chartTimeToDate(time)),
+              formatLocalizedChartTime(time, analysisUsesDateTicks),
           },
           rightPriceScale: {
             borderColor: "#6a432f",
@@ -5617,7 +6057,9 @@
           timeScale: {
             borderColor: "#6a432f",
             timeVisible: true,
-            secondsVisible: false,
+            secondsVisible: true,
+            barSpacing: 5,
+            minBarSpacing: 2,
             rightOffset: 8,
             tickMarkFormatter: formatChartTick,
           },
@@ -6415,21 +6857,30 @@
               width: element.clientWidth,
               height: 300,
               layout: {
-                background: { color: "#fffcf7" },
-                textColor: "#665f55",
+                background: { color: "transparent" },
+                textColor: "#9eb6ca",
                 fontFamily:
-                  "Inter, Noto Sans TC, Microsoft JhengHei, Arial, sans-serif",
-                fontSize: 12,
+                  "Arial, Noto Sans TC, Microsoft JhengHei, sans-serif",
+                fontSize: 11,
               },
               grid: {
-                vertLines: { color: "#eee7dc" },
-                horzLines: { color: "#eee7dc" },
+                vertLines: { color: "rgba(103, 164, 193, 0.15)" },
+                horzLines: { color: "rgba(103, 164, 193, 0.15)" },
               },
-              rightPriceScale: { borderColor: "#d8cfc2" },
+              crosshair: {
+                vertLine: { color: "rgba(119, 237, 255, 0.52)", lineStyle: 2 },
+                horzLine: { color: "rgba(119, 237, 255, 0.36)", lineStyle: 2 },
+              },
+              rightPriceScale: {
+                borderColor: "rgba(105, 204, 224, 0.28)",
+                scaleMargins: { top: 0.14, bottom: 0.14 },
+              },
               timeScale: {
-                borderColor: "#d8cfc2",
+                borderColor: "rgba(105, 204, 224, 0.28)",
                 timeVisible: true,
-                secondsVisible: false,
+                secondsVisible: true,
+                barSpacing: 8,
+                minBarSpacing: 4,
               },
               localization: {
                 timeFormatter: (time) =>
@@ -6438,15 +6889,43 @@
             });
             walletEquitySeries.TWD = walletEquityChart.addSeries(
               LightweightCharts.LineSeries,
-              { color: "#9a610f", lineWidth: 2, title: "TWD" },
+              {
+                color: "#f6b84a",
+                lineWidth: 3,
+                lineStyle: 0,
+                crosshairMarkerRadius: 5,
+                crosshairMarkerBorderColor: "#fff3cf",
+                crosshairMarkerBackgroundColor: "#f6b84a",
+                priceLineVisible: false,
+                lastValueVisible: true,
+                title: "TWD",
+              },
             );
             walletEquitySeries.USD = walletEquityChart.addSeries(
               LightweightCharts.LineSeries,
-              { color: "#16765a", lineWidth: 2, title: "USD" },
+              {
+                color: "#45e1c2",
+                lineWidth: 3,
+                crosshairMarkerRadius: 5,
+                crosshairMarkerBorderColor: "#d7fff6",
+                crosshairMarkerBackgroundColor: "#45e1c2",
+                priceLineVisible: false,
+                lastValueVisible: true,
+                title: "USD",
+              },
             );
             walletEquitySeries.USDT = walletEquityChart.addSeries(
               LightweightCharts.LineSeries,
-              { color: "#6b5fb5", lineWidth: 2, title: "USDT" },
+              {
+                color: "#9d8cff",
+                lineWidth: 3,
+                crosshairMarkerRadius: 5,
+                crosshairMarkerBorderColor: "#ede9ff",
+                crosshairMarkerBackgroundColor: "#9d8cff",
+                priceLineVisible: false,
+                lastValueVisible: true,
+                title: "USDT",
+              },
             );
           } else {
             walletEquityChart.applyOptions({ width: element.clientWidth });
@@ -6553,6 +7032,30 @@
           }
           byId("sim-position-count").textContent =
             `${simState.positions.length} 筆`;
+          const globalDock = byId("global-position-dock");
+          globalDock.classList.toggle("hidden", !simState.positions.length);
+          byId("global-position-count").textContent =
+            `${simState.positions.length} 筆`;
+          byId("global-position-list").innerHTML = simState.positions
+            .map((position) => {
+              const markedPrice =
+                simInstrument?.instrument === position.symbol && simPrice > 0
+                  ? simPrice
+                  : position.lastPrice || position.entry;
+              const pnl = positionPnl(position, markedPrice);
+              const direction =
+                position.side === "short"
+                  ? "空"
+                  : position.market === "contract"
+                    ? "多"
+                    : "買進";
+              return `<article class="global-position-item">
+                <button class="global-position-symbol" type="button" data-global-position-symbol="${escapeHtml(position.symbol)}" title="前往 ${escapeHtml(position.symbol)} 圖表">${escapeHtml(position.symbol)} · ${direction}</button>
+                <small>標記 ${formatSimNumber(markedPrice, 4)} · <span class="${pnl >= 0 ? "up" : "down"}">${pnl >= 0 ? "+" : ""}${formatSimNumber(pnl)} ${position.currency}</span></small>
+                <button class="global-position-close" type="button" data-global-close-position="${escapeHtml(position.id)}">平倉</button>
+              </article>`;
+            })
+            .join("");
 
           const historyRows = [
             ...simState.orders.map((order) => ({
@@ -6661,8 +7164,8 @@
                 background: { color: "#1b1310" },
                 textColor: "#f0dfc7",
                 fontFamily:
-                  "Inter, Noto Sans TC, Microsoft JhengHei, Arial, sans-serif",
-                fontSize: 14,
+                  "Arial, Noto Sans TC, Microsoft JhengHei, sans-serif",
+                fontSize: 11,
               },
               grid: {
                 vertLines: { color: "#33231c" },
@@ -6675,14 +7178,16 @@
               rightPriceScale: { borderColor: "#725b46", minimumWidth: 76 },
               timeScale: {
                 timeVisible: true,
-                secondsVisible: false,
+                secondsVisible: true,
+                barSpacing: 5,
+                minBarSpacing: 2,
                 borderColor: "#725b46",
                 tickMarkFormatter: formatSimulationChartTick,
               },
               localization: {
                 locale: "zh-TW",
                 timeFormatter: (time) =>
-                  fullTimeFormatter.format(chartTimeToDate(time)),
+                  formatLocalizedChartTime(time, simulationUsesDateTicks),
               },
             });
             simCandleSeries = simChart.addSeries(
@@ -6735,8 +7240,8 @@
                 background: { color: "#1b1310" },
                 textColor: "#f0dfc7",
                 fontFamily:
-                  "Inter, Noto Sans TC, Microsoft JhengHei, Arial, sans-serif",
-                fontSize: 13,
+                  "Arial, Noto Sans TC, Microsoft JhengHei, sans-serif",
+                fontSize: 10,
               },
               grid: {
                 vertLines: { color: "#33231c" },
@@ -6794,6 +7299,10 @@
             ? analysis.chart_data
             : [];
           simLastChartData = rows;
+          simulationUsesDateTicks = shouldUseDateTicks(
+            byId("sim-interval")?.value || "1h",
+            rows,
+          );
           simulationPalette = marketCandlePalette(
             simInstrument?.instrument || byId("sim-symbol").value,
           );
@@ -6817,8 +7326,11 @@
           );
           drawSimulationIndicators(analysis);
           simChart.applyOptions({ width: element.clientWidth });
-          simChart.timeScale().fitContent();
-          simVolumeChart.timeScale().fitContent();
+          focusRecentChartRange(
+            simChart,
+            rows,
+            byId("sim-interval")?.value || "1h",
+          );
         }
 
         function drawSimulationIndicators(analysis = null) {
@@ -7494,6 +8006,10 @@
             const data = await response.json();
             if (!response.ok) throw new Error(data.detail || "分析失敗");
             lastChartData = data.chart_data || [];
+            analysisUsesDateTicks = shouldUseDateTicks(
+              intervalValue,
+              lastChartData,
+            );
             evaluateHistory(lastChartData, symbol, intervalValue);
             volumeByTime = new Map(
               lastChartData.map((c) => [String(c.time), Number(c.volume) || 0]),
@@ -7508,7 +8024,7 @@
             structureData = data.structure;
             levelsData = data.levels;
             drawIndicators();
-            chart.timeScale().fitContent();
+            focusRecentChartRange(chart, lastChartData, intervalValue);
             byId("source-status").textContent =
               `資料來源：${data.market_source}｜時區：${userTimeZone}（24 小時制）`;
             signal.className = "signal " + data.direction;
@@ -7684,6 +8200,20 @@
                 ?.scrollIntoView({ behavior: "smooth", block: "start" });
             });
           }
+        };
+        byId("global-position-list").onclick = (event) => {
+          const closeButton = event.target.closest(
+            "[data-global-close-position]",
+          );
+          if (closeButton) {
+            closeSimulationPosition(closeButton.dataset.globalClosePosition);
+            return;
+          }
+          const symbolButton = event.target.closest(
+            "[data-global-position-symbol]",
+          );
+          if (symbolButton)
+            openSimulator(symbolButton.dataset.globalPositionSymbol);
         };
         byId("sim-history").onclick = (event) => {
           const button = event.target.closest("[data-cancel-order]");
