@@ -1880,6 +1880,48 @@
       .sim-strategy-card h3 {
         margin: 4px 0 0;
       }
+      .strategy-score-help {
+        margin: 0 0 14px;
+        border: 1px solid rgba(81, 86, 80, 0.2);
+        border-radius: 11px;
+        background: rgba(255, 255, 255, 0.5);
+        color: #4e5049;
+      }
+      .strategy-score-help summary {
+        cursor: pointer;
+        padding: 11px 13px;
+        color: #343a34;
+        font-weight: 700;
+      }
+      .strategy-score-help__body {
+        padding: 0 13px 13px;
+      }
+      .strategy-score-help p {
+        margin: 0 0 10px;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+      .strategy-score-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+        margin: 10px 0;
+      }
+      .strategy-score-grid div {
+        padding: 8px 9px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.58);
+        font-size: 12px;
+        line-height: 1.45;
+      }
+      .strategy-score-grid strong {
+        display: block;
+        color: #253c51;
+      }
+      .strategy-score-logic {
+        padding-top: 10px;
+        border-top: 1px solid rgba(81, 86, 80, 0.16);
+      }
       .sim-strategy-card > p {
         margin: 13px 0;
         color: #625e53;
@@ -5522,6 +5564,24 @@
             </div>
             <div id="sim-volume-chart" aria-label="模擬交易成交量圖表"></div>
             <section id="sim-strategy-card" class="sim-strategy-card HOLD">
+              <details class="strategy-score-help">
+                <summary>策略說明</summary>
+                <div class="strategy-score-help__body">
+                  <p>
+                    分數是目前 K 線符合的多空條件權重，不是勝率、獲利保證或建議下單金額。
+                    多方與空方會分開計分，再比較哪一方條件較強。
+                  </p>
+                  <div class="strategy-score-grid">
+                    <div><strong>趨勢 +2</strong>EMA 多頭／空頭排列</div>
+                    <div><strong>結構 +2</strong>多頭／空頭 CHoCH</div>
+                    <div><strong>量能 +2</strong>成交量放大且 K 棒同方向</div>
+                    <div><strong>確認 +1</strong>動能、突破、FVG、布林或斐波那契確認</div>
+                  </div>
+                  <p class="strategy-score-logic">
+                    <strong>開單邏輯：</strong>一般週期需同方向至少 3 分，且高於另一方分數；日、週、月線需至少 4 分，並同時符合趨勢與布林中軌方向。通過後才會顯示參考進場、止損與止盈；未通過則維持觀望。
+                  </p>
+                </div>
+              </details>
               <div class="sim-section-title">
                 <div>
                   <small>策略判斷</small>
