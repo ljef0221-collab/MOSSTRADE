@@ -4539,7 +4539,7 @@
       }
 
       .wallet-selected-balance small { color: var(--neutral-600); font-size: 11px; }
-      .wallet-selected-balance strong { color: #fff1ca; font-size: 18px; font-variant-numeric: tabular-nums; }
+      .wallet-selected-balance strong { font-size: 18px; font-variant-numeric: tabular-nums; }
       .wallet-selected-balance span { color: #d9c6a4; font-size: 11px; }
 
       .wallet-advice-card > small {
@@ -7149,9 +7149,11 @@
           const element = byId("wallet-equity-chart");
           if (!element || element.clientWidth <= 0) return;
           if (!walletEquityChart) {
-            const walletCurveType = LightweightCharts.LineType?.Curved;
+            // 帳戶權益是離散快照；使用直線可忠實連接資料點，避免平滑插值產生鋸齒或過度彎折。
             const walletLineOptions =
-              walletCurveType === undefined ? {} : { lineType: walletCurveType };
+              LightweightCharts.LineType?.Simple === undefined
+                ? {}
+                : { lineType: LightweightCharts.LineType.Simple };
             walletEquityChart = LightweightCharts.createChart(element, {
               width: element.clientWidth,
               height: 300,
@@ -7191,7 +7193,7 @@
               {
                 ...walletLineOptions,
                 color: "#d99a2b",
-                lineWidth: 3,
+                lineWidth: 2,
                 lineStyle: 0,
                 crosshairMarkerRadius: 5,
                 crosshairMarkerBorderColor: "#fff3cf",
@@ -7206,7 +7208,7 @@
               {
                 ...walletLineOptions,
                 color: "#42bca7",
-                lineWidth: 3,
+                lineWidth: 2,
                 crosshairMarkerRadius: 5,
                 crosshairMarkerBorderColor: "#d7fff6",
                 crosshairMarkerBackgroundColor: "#42bca7",
@@ -7220,7 +7222,7 @@
               {
                 ...walletLineOptions,
                 color: "#d96758",
-                lineWidth: 3,
+                lineWidth: 2,
                 crosshairMarkerRadius: 5,
                 crosshairMarkerBorderColor: "#ede9ff",
                 crosshairMarkerBackgroundColor: "#d96758",
@@ -7243,10 +7245,17 @@
             USD: "美股／ETF 帳戶權益",
             USDT: "OKX 合約帳戶權益",
           };
+          const selectedColors = {
+            TWD: "#d99a2b",
+            USD: "#42bca7",
+            USDT: "#d96758",
+          };
           byId("wallet-selected-label").textContent =
             selectedNames[selectedWalletCurrency];
           byId("wallet-selected-equity").textContent =
             `${formatSimNumber(selectedEquity)} ${selectedWalletCurrency}`;
+          byId("wallet-selected-equity").style.color =
+            selectedColors[selectedWalletCurrency];
           const selectedChangeNode = byId("wallet-selected-change");
           selectedChangeNode.textContent =
             `${selectedChange >= 0 ? "+" : ""}${formatSimNumber(selectedChange)}（${selectedChange >= 0 ? "+" : ""}${((selectedChange / SIM_INITIAL_BALANCE) * 100).toFixed(2)}%）`;
