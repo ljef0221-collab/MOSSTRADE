@@ -4506,6 +4506,42 @@
       .wallet-chart-legend .usd { color: #45e1c2; }
       .wallet-chart-legend .usdt { color: #9d8cff; }
 
+      .wallet-currency-switcher {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .wallet-currency-switcher button {
+        min-width: 64px;
+        padding: 7px 11px;
+        border: 1px solid #6b5238;
+        border-radius: 999px;
+        background: #1d1812;
+        color: #d9c6a4;
+        font: 700 12px "Arial", "Microsoft JhengHei", sans-serif;
+        cursor: pointer;
+      }
+
+      .wallet-currency-switcher button.active {
+        border-color: #d99a2b;
+        background: #3a2810;
+        color: #fff1ca;
+        box-shadow: 0 0 0 2px rgba(217, 154, 43, 0.14);
+      }
+
+      .wallet-selected-balance {
+        display: grid;
+        gap: 3px;
+        min-width: 156px;
+        text-align: right;
+      }
+
+      .wallet-selected-balance small { color: var(--neutral-600); font-size: 11px; }
+      .wallet-selected-balance strong { color: #fff1ca; font-size: 18px; font-variant-numeric: tabular-nums; }
+      .wallet-selected-balance span { color: #d9c6a4; font-size: 11px; }
+
       .wallet-advice-card > small {
         color: var(--amber-700);
         font-weight: 800;
@@ -5740,33 +5776,23 @@
           </div>
           <button id="wallet-refresh" type="button">更新市場價格</button>
         </div>
-        <div class="wallet-equity-grid">
-          <article class="wallet-equity-card">
-            <small>台股帳戶權益</small>
-            <strong id="wallet-equity-twd">— TWD</strong>
-            <span id="wallet-equity-twd-change">尚無變化</span>
-          </article>
-          <article class="wallet-equity-card">
-            <small>美股帳戶權益</small>
-            <strong id="wallet-equity-usd">— USD</strong>
-            <span id="wallet-equity-usd-change">尚無變化</span>
-          </article>
-          <article class="wallet-equity-card">
-            <small>OKX 合約帳戶權益</small>
-            <strong id="wallet-equity-usdt">— USDT</strong>
-            <span id="wallet-equity-usdt-change">尚無變化</span>
-          </article>
-        </div>
         <div class="wallet-overview-grid">
           <section class="panel wallet-performance-panel">
             <div class="sim-section-title">
               <div>
                 <h3>資金變化</h3>
-                <p>依幣別分開呈現，避免不同貨幣直接相加造成誤判。</p>
+                <p>選擇一種幣別查看帳戶權益與資金變化。</p>
               </div>
-              <div class="wallet-chart-legend" aria-label="資金曲線圖例">
-                <span class="twd">TWD</span><span class="usd">USD</span><span class="usdt">USDT</span>
+              <div class="wallet-selected-balance" aria-live="polite">
+                <small id="wallet-selected-label">台股帳戶權益</small>
+                <strong id="wallet-selected-equity">— TWD</strong>
+                <span id="wallet-selected-change">尚無變化</span>
               </div>
+            </div>
+            <div class="wallet-currency-switcher" role="group" aria-label="選擇資金幣別">
+              <button type="button" class="active" data-wallet-currency="TWD">TWD</button>
+              <button type="button" data-wallet-currency="USD">USD</button>
+              <button type="button" data-wallet-currency="USDT">USDT</button>
             </div>
             <div id="wallet-equity-chart" aria-label="模擬錢包資金變化線圖"></div>
           </section>
@@ -5883,6 +5909,7 @@
         let simSearchTimer = null;
         let walletEquityChart = null;
         let walletEquitySeries = {};
+        let selectedWalletCurrency = "TWD";
         let walletQuoteTimer = null;
         let analysisRealtime = null;
         let simulationRealtime = null;
@@ -7209,17 +7236,29 @@
 
         function renderWalletDashboard() {
           recordEquitySnapshot();
-          for (const currency of ["TWD", "USD", "USDT"]) {
-            const key = currency.toLowerCase();
-            const equity = walletEquity(currency);
-            const change = equity - SIM_INITIAL_BALANCE;
-            byId(`wallet-equity-${key}`).textContent =
-              `${formatSimNumber(equity)} ${currency}`;
-            const changeNode = byId(`wallet-equity-${key}-change`);
-            changeNode.textContent =
-              `${change >= 0 ? "+" : ""}${formatSimNumber(change)}（${change >= 0 ? "+" : ""}${((change / SIM_INITIAL_BALANCE) * 100).toFixed(2)}%）`;
-            changeNode.className = change >= 0 ? "up" : "down";
-          }
+          const selectedEquity = walletEquity(selectedWalletCurrency);
+          const selectedChange = selectedEquity - SIM_INITIAL_BALANCE;
+          const selectedNames = {
+            TWD: "台股帳戶權益",
+            USD: "美股／ETF 帳戶權益",
+            USDT: "OKX 合約帳戶權益",
+          };
+          byId("wallet-selected-label").textContent =
+            selectedNames[selectedWalletCurrency];
+          byId("wallet-selected-equity").textContent =
+            `${formatSimNumber(selectedEquity)} ${selectedWalletCurrency}`;
+          const selectedChangeNode = byId("wallet-selected-change");
+          selectedChangeNode.textContent =
+            `${selectedChange >= 0 ? "+" : ""}${formatSimNumber(selectedChange)}（${selectedChange >= 0 ? "+" : ""}${((selectedChange / SIM_INITIAL_BALANCE) * 100).toFixed(2)}%）`;
+          selectedChangeNode.className = selectedChange >= 0 ? "up" : "down";
+          document
+            .querySelectorAll("[data-wallet-currency]")
+            .forEach((button) =>
+              button.classList.toggle(
+                "active",
+                button.dataset.walletCurrency === selectedWalletCurrency,
+              ),
+            );
           byId("wallet-position-summary").textContent =
             `${simState.positions.length} 筆`;
           byId("wallet-order-summary").textContent =
@@ -7260,10 +7299,12 @@
             ensureWalletEquityChart();
             for (const currency of ["TWD", "USD", "USDT"]) {
               walletEquitySeries[currency]?.setData(
-                simState.equityHistory.map((point) => ({
-                  time: Number(point.time),
-                  value: Number(point[currency]),
-                })),
+                currency === selectedWalletCurrency
+                  ? simState.equityHistory.map((point) => ({
+                      time: Number(point.time),
+                      value: Number(point[currency]),
+                    }))
+                  : [],
               );
             }
             walletEquityChart?.timeScale().fitContent();
@@ -8376,6 +8417,12 @@
           showAppPage("wallet");
         };
         byId("wallet-refresh").onclick = refreshWalletQuotes;
+        document.querySelectorAll("[data-wallet-currency]").forEach((button) => {
+          button.onclick = () => {
+            selectedWalletCurrency = button.dataset.walletCurrency;
+            renderWalletDashboard();
+          };
+        });
         byId("sim-order-toggle").onclick = openSimulationOrderPanel;
         byId("sim-order-close").onclick = closeSimulationOrderPanel;
         document.addEventListener("keydown", (event) => {
