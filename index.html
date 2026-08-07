@@ -5988,13 +5988,9 @@
 
         function intervalTickFormatter(time, interval, usesDateTicks) {
           const date = chartTimeToDate(time);
-          const isMidnightUtc =
-            date.getUTCHours() === 0 &&
-            date.getUTCMinutes() === 0 &&
-            date.getUTCSeconds() === 0;
           if (["1w", "1mo"].includes(interval))
             return yearTickFormatter.format(date);
-          if (interval === "1d" || usesDateTicks || isMidnightUtc)
+          if (interval === "1d" || usesDateTicks)
             return dateTickFormatter.format(date);
           if (["1h", "2h", "3h", "4h"].includes(interval))
             return hourlyTickFormatter.format(date);
@@ -6019,14 +6015,9 @@
 
         function formatLocalizedChartTime(time, useDateTicks) {
           const date = chartTimeToDate(time);
-          const isMidnightUtc =
-            date.getUTCHours() === 0 &&
-            date.getUTCMinutes() === 0 &&
-            date.getUTCSeconds() === 0;
-          return (useDateTicks || isMidnightUtc
-            ? fullDateFormatter
-            : fullTimeFormatter
-          ).format(date);
+          return (useDateTicks ? fullDateFormatter : fullTimeFormatter).format(
+            date,
+          );
         }
 
         function focusRecentChartRange(chartInstance, rows, interval) {
@@ -7121,30 +7112,33 @@
           const element = byId("wallet-equity-chart");
           if (!element || element.clientWidth <= 0) return;
           if (!walletEquityChart) {
+            const walletCurveType = LightweightCharts.LineType?.Curved;
+            const walletLineOptions =
+              walletCurveType === undefined ? {} : { lineType: walletCurveType };
             walletEquityChart = LightweightCharts.createChart(element, {
               width: element.clientWidth,
               height: 300,
               layout: {
-                background: { color: "transparent" },
-                textColor: "#9eb6ca",
+                background: { color: "#15120e" },
+                textColor: "#e6cf9b",
                 fontFamily:
-                  "Arial, Noto Sans TC, Microsoft JhengHei, sans-serif",
-                fontSize: 9,
+                  "MingLiU, PMingLiU, Microsoft JhengHei, monospace",
+                fontSize: 10,
               },
               grid: {
-                vertLines: { color: "rgba(103, 164, 193, 0.15)" },
-                horzLines: { color: "rgba(103, 164, 193, 0.15)" },
+                vertLines: { color: "#35291e" },
+                horzLines: { color: "#35291e" },
               },
               crosshair: {
-                vertLine: { color: "rgba(119, 237, 255, 0.52)", lineStyle: 2 },
-                horzLine: { color: "rgba(119, 237, 255, 0.36)", lineStyle: 2 },
+                vertLine: { color: "#d99a2b", lineStyle: 2 },
+                horzLine: { color: "#6b5238", lineStyle: 2 },
               },
               rightPriceScale: {
-                borderColor: "rgba(105, 204, 224, 0.28)",
+                borderColor: "#6b5238",
                 scaleMargins: { top: 0.14, bottom: 0.14 },
               },
               timeScale: {
-                borderColor: "rgba(105, 204, 224, 0.28)",
+                borderColor: "#6b5238",
                 timeVisible: true,
                 secondsVisible: true,
                 barSpacing: 8,
@@ -7158,12 +7152,13 @@
             walletEquitySeries.TWD = walletEquityChart.addSeries(
               LightweightCharts.LineSeries,
               {
-                color: "#f6b84a",
+                ...walletLineOptions,
+                color: "#d99a2b",
                 lineWidth: 3,
                 lineStyle: 0,
                 crosshairMarkerRadius: 5,
                 crosshairMarkerBorderColor: "#fff3cf",
-                crosshairMarkerBackgroundColor: "#f6b84a",
+                crosshairMarkerBackgroundColor: "#d99a2b",
                 priceLineVisible: false,
                 lastValueVisible: true,
                 title: "TWD",
@@ -7172,11 +7167,12 @@
             walletEquitySeries.USD = walletEquityChart.addSeries(
               LightweightCharts.LineSeries,
               {
-                color: "#45e1c2",
+                ...walletLineOptions,
+                color: "#42bca7",
                 lineWidth: 3,
                 crosshairMarkerRadius: 5,
                 crosshairMarkerBorderColor: "#d7fff6",
-                crosshairMarkerBackgroundColor: "#45e1c2",
+                crosshairMarkerBackgroundColor: "#42bca7",
                 priceLineVisible: false,
                 lastValueVisible: true,
                 title: "USD",
@@ -7185,11 +7181,12 @@
             walletEquitySeries.USDT = walletEquityChart.addSeries(
               LightweightCharts.LineSeries,
               {
-                color: "#9d8cff",
+                ...walletLineOptions,
+                color: "#d96758",
                 lineWidth: 3,
                 crosshairMarkerRadius: 5,
                 crosshairMarkerBorderColor: "#ede9ff",
-                crosshairMarkerBackgroundColor: "#9d8cff",
+                crosshairMarkerBackgroundColor: "#d96758",
                 priceLineVisible: false,
                 lastValueVisible: true,
                 title: "USDT",
