@@ -5928,6 +5928,15 @@
           hour12: false,
           hourCycle: "h23",
         });
+        const compactHourlyTickPartsFormatter = new Intl.DateTimeFormat("en-CA", {
+          timeZone: userTimeZone,
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+          hourCycle: "h23",
+        });
         const yearTickFormatter = new Intl.DateTimeFormat("zh-TW", {
           timeZone: userTimeZone,
           year: "numeric",
@@ -5988,13 +5997,14 @@
 
         function intervalTickFormatter(time, interval, usesDateTicks) {
           const date = chartTimeToDate(time);
-          if (["1w", "1mo"].includes(interval))
-            return yearTickFormatter.format(date);
-          if (interval === "1d" || usesDateTicks)
-            return dateTickFormatter.format(date);
-          if (["1h", "2h", "3h", "4h"].includes(interval))
-            return hourlyTickFormatter.format(date);
-          return intradayTickFormatter.format(date);
+          const parts = Object.fromEntries(
+            compactHourlyTickPartsFormatter
+              .formatToParts(date)
+              .filter((part) => part.type !== "literal")
+              .map((part) => [part.type, part.value]),
+          );
+          // 統一每種週期：日期＋時間，避免跨日刻度退化成只有日期。
+          return `${parts.month}/${parts.day} ${parts.hour}:${parts.minute}`;
         }
 
         function formatChartTick(time) {
