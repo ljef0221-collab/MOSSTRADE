@@ -4592,6 +4592,12 @@
         gap: 8px;
         margin-top: 18px;
       }
+      .wallet-winrate-panel { margin-top: 18px; }
+      .wallet-winrate-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+      .wallet-winrate-help { margin-top: 16px; }
+      @media (max-width: 720px) {
+        .wallet-winrate-grid { grid-template-columns: 1fr; }
+      }
 
       .wallet-risk-stats > div {
         display: flex;
@@ -4901,6 +4907,8 @@
         #chart,
         #sim-chart {
           min-height: 320px !important;
+          height: 360px !important;
+          overflow: visible !important;
         }
 
         #volume-chart,
@@ -5412,7 +5420,7 @@
                 </dd>
                 <dt>布林通道</dt>
                 <dd>
-                  由中軌均線與上下波動帶組成，用來觀察波動擴張、收縮及價格相對位置；碰到上下軌不等於一定反轉。<span
+                  目前設定為<strong>20 期、2 倍標準差</strong>，由中軌均線與上下波動帶組成，用來觀察波動擴張、收縮及價格相對位置；碰到上下軌不等於一定反轉。<span
                     class="bb-key"
                     ><i class="bb-up"></i>上軌 <i class="bb-mid"></i>中軌
                     <i class="bb-low"></i>下軌</span
@@ -5458,6 +5466,18 @@
             <div id="volume-chart"></div>
           </section>
           <aside class="panel">
+            <details class="strategy-score-help analysis-strategy-help" open>
+              <summary>策略說明</summary>
+              <div class="strategy-score-help__body">
+                <p>多因子評分會把趨勢、動能、結構與波動條件轉成分數，分別計算多方與空方訊號。</p>
+                <div class="strategy-score-grid">
+                  <div><strong>多方分數</strong><span>EMA 多頭、突破、CHoCH、FVG 等條件</span></div>
+                  <div><strong>空方分數</strong><span>EMA 空頭、跌破、CHoCH、FVG 等條件</span></div>
+                </div>
+                <p class="strategy-score-logic">當一側分數達到門檻且高於另一側，才顯示 BUY 或 SELL；未達條件則顯示 HOLD。</p>
+                <p class="strategy-score-logic"><strong>風報比：</strong>預期獲利 ÷ 可承受損失。例：風報比 1.9，代表每承擔 1 單位風險，目標獲利約 1.9 單位；實際結果仍會受行情與執行價格影響。</p>
+              </div>
+            </details>
             <h3>策略分析</h3>
             <div id="signal" class="signal">等待分析</div>
             <div id="trade-plan" class="trade-plan hidden">
@@ -5465,6 +5485,7 @@
               <div><small>止損</small><b id="stop-price">—</b></div>
               <div><small>止盈 1</small><b id="tp1-price">—</b></div>
               <div><small>止盈 2</small><b id="tp2-price">—</b></div>
+              <div><small>風報比</small><b id="risk-reward-price">—</b></div>
             </div>
             <p id="reason"></p>
             <p id="analysis-error" class="error" role="alert"></p>
@@ -5573,7 +5594,7 @@
                   上方通常偏多，反之偏空。
                 </dd>
                 <dt>布林通道</dt>
-                <dd>利用中軌及上下波動帶觀察價格位置與波動擴張、收縮。</dd>
+                <dd>目前設定為 20 期、2 倍標準差，利用中軌及上下波動帶觀察價格位置與波動擴張、收縮。</dd>
                 <dt>支撐／壓力</dt>
                 <dd>標示價格過去較容易止跌或遇到賣壓的區域。</dd>
                 <dt>CHoCH</dt>
@@ -5637,13 +5658,17 @@
                 <div>
                   <small>止盈 1</small><strong id="sim-strategy-tp1">—</strong>
                 </div>
-                <div>
-                  <small>止盈 2</small><strong id="sim-strategy-tp2">—</strong>
-                </div>
+                  <div>
+                    <small>止盈 2</small><strong id="sim-strategy-tp2">—</strong>
+                  </div>
+                  <div>
+                    <small>風報比</small><strong id="sim-strategy-rr">—</strong>
+                  </div>
               </div>
               <small class="sim-strategy-note"
                 >策略分析僅供模擬練習與參考，不構成投資建議。</small
               >
+              <p class="strategy-score-logic sim-risk-reward-help"><strong>風報比說明：</strong>以止盈距離除以止損距離計算；風報比越高，代表每承擔一份風險所對應的目標報酬越高，但不代表一定獲利。</p>
               <div class="sim-reference-history-block">
                 <h3>參考策略進場紀錄</h3>
                 <div id="sim-reference-history" class="history-list">
@@ -5807,6 +5832,34 @@
             </div>
           </aside>
         </div>
+        <section class="panel wallet-winrate-panel" aria-labelledby="wallet-winrate-title">
+          <div class="sim-section-title">
+            <div>
+              <h3 id="wallet-winrate-title">勝率統計</h3>
+              <p>分開查看你的模擬交易結果，以及歷史策略回測結果。</p>
+            </div>
+          </div>
+          <div class="wallet-winrate-grid">
+            <article class="wallet-equity-card">
+              <small>我的模擬勝率</small>
+              <strong id="wallet-user-winrate">—</strong>
+              <span id="wallet-user-winrate-detail">完成交易後自動計算</span>
+            </article>
+            <article class="wallet-equity-card">
+              <small>歷史策略勝率</small>
+              <strong id="wallet-backtest-winrate">尚未回測</strong>
+              <span id="wallet-backtest-winrate-detail">需要指定商品、週期與回測區間</span>
+            </article>
+          </div>
+          <details class="strategy-score-help wallet-winrate-help">
+            <summary>勝率計算說明</summary>
+            <div class="strategy-score-help__body">
+              <p><strong>我的模擬勝率：</strong>獲利且已完成的模擬交易筆數 ÷ 已完成模擬交易總筆數 × 100%。未平倉部位不列入計算。</p>
+              <p><strong>歷史策略勝率：</strong>回推歷史 K 線中所有符合策略條件的訊號，套用進場、止損與止盈，統計先達到止盈的筆數 ÷ 已完成歷史訊號總數 × 100%。此數據需執行回測後才會顯示。</p>
+              <p class="help-note">勝率不代表未來獲利；仍應同時觀察風報比、平均盈虧、最大回撤與交易成本。</p>
+            </div>
+          </details>
+        </section>
         <section class="panel sim-positions-panel">
           <div class="sim-section-title">
             <div>
@@ -6349,12 +6402,25 @@
             borderColor: "#6a432f",
             timeVisible: true,
             secondsVisible: false,
+            visible: true,
+            ticksVisible: true,
+            fixLeftEdge: false,
+            fixRightEdge: false,
             barSpacing: 3.5,
             minBarSpacing: 1,
             rightOffset: 8,
             tickMarkFormatter: formatChartTick,
           },
         });
+        const chartResizeObserver = new ResizeObserver((entries) => {
+          const width = Math.floor(entries[0]?.contentRect?.width || byId("chart").clientWidth);
+          if (width > 0) {
+            chart.applyOptions({ width });
+            volumeChart?.applyOptions({ width });
+            chart.timeScale().applyOptions({ visible: true, timeVisible: true });
+          }
+        });
+        chartResizeObserver.observe(byId("chart"));
         let volumeChart = null,
           volumeSeries = null,
           lastChartData = [];
@@ -7022,6 +7088,22 @@
           byId("stop-price").textContent = data.sl;
           byId("tp1-price").textContent = data.tp;
           byId("tp2-price").textContent = data.tp2;
+          byId("risk-reward-price").textContent = formatRiskReward(
+            data.current_price,
+            data.sl,
+            data.tp,
+          );
+        }
+
+        function formatRiskReward(entry, stop, target) {
+          const e = Number(entry);
+          const s = Number(stop);
+          const t = Number(target);
+          const risk = Math.abs(e - s);
+          const reward = Math.abs(t - e);
+          return risk > 0 && Number.isFinite(reward / risk)
+            ? `1 : ${(reward / risk).toFixed(2)}`
+            : "—";
         }
 
         function createSimulationState() {
@@ -7237,6 +7319,19 @@
         }
 
         function renderWalletDashboard() {
+          const completedTrades = simState.history.filter((item) =>
+            Number.isFinite(Number(item.pnl)),
+          );
+          const wins = completedTrades.filter((item) => Number(item.pnl) > 0).length;
+          const userRate = completedTrades.length
+            ? (wins / completedTrades.length) * 100
+            : null;
+          byId("wallet-user-winrate").textContent = userRate === null ? "—" : `${userRate.toFixed(1)}%`;
+          byId("wallet-user-winrate-detail").textContent = completedTrades.length
+            ? `${wins} 勝 / ${completedTrades.length - wins} 負｜${completedTrades.length} 筆已完成交易`
+            : "完成交易後自動計算";
+          byId("wallet-backtest-winrate").textContent = "尚未回測";
+          byId("wallet-backtest-winrate-detail").textContent = "目前尚未執行歷史策略回測";
           recordEquitySnapshot();
           const selectedEquity = walletEquity(selectedWalletCurrency);
           const selectedChange = selectedEquity - SIM_INITIAL_BALANCE;
@@ -7765,6 +7860,9 @@
           byId("sim-strategy-sl").textContent = active ? analysis.sl : "—";
           byId("sim-strategy-tp1").textContent = active ? analysis.tp : "—";
           byId("sim-strategy-tp2").textContent = active ? analysis.tp2 : "—";
+          byId("sim-strategy-rr").textContent = active
+            ? formatRiskReward(analysis.current_price, analysis.sl, analysis.tp)
+            : "—";
         }
 
         async function searchSimulationSuggestions() {
