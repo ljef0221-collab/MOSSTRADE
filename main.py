@@ -7,7 +7,7 @@ import json
 import time
 import threading
 import requests
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -331,6 +331,34 @@ app.mount("/assets", StaticFiles(directory=BASE_DIR / "assets"), name="assets")
 VISITS_DB = Path(os.getenv("VISITS_DB_PATH", BASE_DIR / "MOSSTRADE.db"))
 HTTP = requests.Session()
 HTTP.headers.update({"User-Agent": "MOSSTRADE/1.0"})
+
+# Telegram 私人推播設定：敏感值只從後端環境變數讀取，不放進前端或 Git。
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
+TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "").strip()
+MOSSTRADE_ADMIN_KEY = os.getenv("MOSSTRADE_ADMIN_KEY", "").strip()
+
+
+def require_admin(admin_key: str | None) -> None:
+    if not MOSSTRADE_ADMIN_KEY or not admin_key or admin_key != MOSSTRADE_ADMIN_KEY:
+        raise HTTPException(status_code=403, detail="管理者驗證失敗")
+
+
+def send_telegram_message(message: str) -> dict:
+    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+        raise HTTPException(status_code=503, detail="尚未設定 Telegram 推播環境變數")
+    response = HTTP.post(
+        f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage",
+        json={"chat_id": TELEGRAM_CHAT_ID, "text": message},
+        timeout=10,
+    )
+    if not response.ok:
+        raise HTTPException(status_code=502, detail="Telegram 推播失敗")
+    return {"status": "sent"}
+
+# MOSSTRADE 預設布林通道參數：20 根 K 線、上下軌各 2 個標準差。
+# 圖表顯示與策略判斷共用，避免兩邊使用不同參數造成判讀落差。
+BB_PERIOD = 20
+BB_DEVIATIONS = 2.0
 API_CACHE = {}
 API_CACHE_LOCK = threading.Lock()
 
@@ -1297,6 +1325,21 @@ def market_ranking(market: str = "futures", ranking: str = "gainers"):
         ) from error
 
 
+@app.post("/api/admin/telegram/test")
+def telegram_test(x_mosstrade_admin_key: str | None = Header(default=None)):
+    require_admin(x_mosstrade_admin_key)
+    return send_telegram_message("MOSSTRADE 管理者推播測試成功")
+
+
+@app.post("/api/admin/telegram/send")
+def telegram_send(message: str, x_mosstrade_admin_key: str | None = Header(default=None)):
+    require_admin(x_mosstrade_admin_key)
+    cleaned = message.strip()
+    if not cleaned or len(cleaned) > 4000:
+        raise HTTPException(status_code=400, detail="推播內容不可為空或超過 4000 字")
+    return send_telegram_message(cleaned)
+
+
 @app.get("/api/analyze")
 def analyze_market(symbol: str, interval: str = "1h"):
     interval = interval.strip().lower()
@@ -1477,7 +1520,9 @@ def analyze_market(symbol: str, interval: str = "1h"):
     slow_ema = calculate_ema(closes, config["slow"])
     trend_ema = calculate_ema(closes, config["trend"])
     atr = calculate_atr(candles)
-    bb_middle, bb_upper, bb_lower = calculate_bollinger(closes)
+    bb_middle, bb_upper, bb_lower = calculate_bollinger(
+        closes, period=BB_PERIOD, deviations=BB_DEVIATIONS
+    )
 
     if atr is None or not fast_ema or not slow_ema or not trend_ema:
         raise HTTPException(status_code=422, detail="指標計算數據不足。")
@@ -1703,6 +1748,10 @@ def analyze_market(symbol: str, interval: str = "1h"):
         "levels": levels,
         "ema_data": ema_data,
         "bollinger_data": bollinger_data,
+        "bollinger_params": {
+            "period": BB_PERIOD,
+            "deviations": BB_DEVIATIONS,
+        },
         "fibonacci": {key: round(value, 4) for key, value in fibonacci.items()},
         "chart_data": [
             {

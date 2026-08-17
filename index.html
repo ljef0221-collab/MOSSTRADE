@@ -5793,6 +5793,15 @@
         </div>
       </section>
       <section id="wallet-page" class="hidden">
+        <details class="strategy-score-help admin-push-panel">
+          <summary>管理者 Telegram 推播</summary>
+          <div class="strategy-score-help__body">
+            <p>此功能只供管理者使用；Bot Token 與 Chat ID 僅保存在後端環境變數。</p>
+            <label>管理者密鑰 <input id="admin-push-key" type="password" autocomplete="off" /></label>
+            <button id="admin-push-test" type="button">發送測試推播</button>
+            <span id="admin-push-status" role="status"></span>
+          </div>
+        </details>
         <div class="sim-section-title wallet-page-heading">
           <div>
             <span class="page-eyebrow">PAPER PORTFOLIO</span>
@@ -8469,6 +8478,7 @@
               `${data.strategy_name}｜${data.reason}`;
             renderTradePlan(data);
             saveSignal(data, symbol, intervalValue);
+            maybePushSignal(data, symbol, intervalValue).catch(() => {});
             renderHistory();
             startRealtime(symbol, intervalValue, false);
           } catch (error) {
@@ -8524,6 +8534,44 @@
           showAppPage("wallet");
         };
         byId("wallet-refresh").onclick = refreshWalletQuotes;
+        byId("admin-push-test").onclick = async () => {
+          const key = byId("admin-push-key").value.trim();
+          if (key) sessionStorage.setItem("mosstrade_admin_key", key);
+          const status = byId("admin-push-status");
+          status.textContent = "傳送中…";
+          try {
+            const response = await fetch("/api/admin/telegram/test", {
+              method: "POST",
+              headers: { "X-MOSSTRADE-ADMIN-KEY": key },
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.detail || "推播失敗");
+            status.textContent = "測試推播已送出";
+          } catch (error) {
+            status.textContent = error.message;
+          }
+        };
+
+        async function maybePushSignal(data, symbol, interval) {
+          if (!data || !["BUY", "SELL"].includes(data.direction)) return;
+          const key = sessionStorage.getItem("mosstrade_admin_key");
+          if (!key) return;
+          const dedupeKey = `${symbol}|${interval}|${data.direction}|${data.current_price}`;
+          if (sessionStorage.getItem("mosstrade_last_push") === dedupeKey) return;
+          const message = [
+            `MOSSTRADE ${data.direction} 訊號`,
+            `商品：${symbol}`,
+            `時間週期：${interval}`,
+            `價格：${data.current_price}`,
+            `原因：${data.reason || "多因子條件達標"}`,
+            `止損：${data.sl}｜止盈：${data.tp}`,
+          ].join("\n");
+          const response = await fetch(`/api/admin/telegram/send?message=${encodeURIComponent(message)}`, {
+            method: "POST",
+            headers: { "X-MOSSTRADE-ADMIN-KEY": key },
+          });
+          if (response.ok) sessionStorage.setItem("mosstrade_last_push", dedupeKey);
+        }
         document.querySelectorAll("[data-wallet-currency]").forEach((button) => {
           button.onclick = () => {
             selectedWalletCurrency = button.dataset.walletCurrency;
