@@ -336,6 +336,10 @@ HTTP.headers.update({"User-Agent": "MOSSTRADE/1.0"})
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "").strip()
 MOSSTRADE_ADMIN_KEY = os.getenv("MOSSTRADE_ADMIN_KEY", "").strip()
+TELEGRAM_WATCHLIST = os.getenv("TELEGRAM_WATCHLIST", "BTC-USD:1h").strip()
+TELEGRAM_POLL_SECONDS = int(os.getenv("TELEGRAM_POLL_SECONDS", "60"))
+_telegram_started = False
+_telegram_last_signal = {}
 
 
 def require_admin(admin_key: str | None) -> None:
@@ -354,6 +358,144 @@ def send_telegram_message(message: str) -> dict:
     if not response.ok:
         raise HTTPException(status_code=502, detail="Telegram 推播失敗")
     return {"status": "sent"}
+
+
+def telegram_allowed(chat_id) -> bool:
+    return bool(TELEGRAM_CHAT_ID and str(chat_id) == str(TELEGRAM_CHAT_ID))
+
+
+def format_analysis_message(symbol: str, interval: str, data: dict) -> str:
+    direction = {"BUY": "多方／買入", "SELL": "空方／賣出"}.get(data.get("direction"), "觀望")
+    return (
+        f"MOSSTRADE 策略查詢\n\n商品：{symbol.upper()}\n時間線：{interval}\n"
+        f"方向：{direction}\n目前價格：{data.get('current_price', '--')}\n"
+        f"參考進場：{data.get('current_price', '--')}\n停利：{data.get('tp', '--')}\n"
+        f"停損：{data.get('sl', '--')}\n\n{data.get('reason', '')}"
+    )
+
+
+def telegram_symbol_suggestions(keyword: str) -> list[dict]:
+    query = keyword.strip().lower()
+    if not query:
+        return []
+    matches = []
+    for item in SYMBOL_DATABASE:
+        symbol = str(item.get("symbol", "")).upper()
+        name = str(item.get("name", ""))
+        haystack = " ".join([symbol, name, *[str(k) for k in item.get("keywords", [])]]).lower()
+        if query in haystack:
+            matches.append({"symbol": symbol, "name": name})
+    # Allow any exchange symbol even when it is not in the local catalogue.
+    if not matches and ("-" in keyword or "." in keyword or query.isalnum()):
+        matches.append({"symbol": keyword.strip().upper(), "name": "直接查詢此代號"})
+    unique = {}
+    for item in matches:
+        unique[item["symbol"]] = item
+    return list(unique.values())[:8]
+
+
+def telegram_keyboard_for_symbols(matches: list[dict]) -> dict:
+    return {"inline_keyboard": [[{"text": f"{item['symbol']}｜{item['name'][:24]}", "callback_data": f"sym|{item['symbol']}"}] for item in matches]}
+
+
+def telegram_keyboard_for_intervals(symbol: str) -> dict:
+    intervals = [("10 分鐘", "10m"), ("1 小時", "1h"), ("4 小時", "4h"), ("日線", "1d")]
+    return {"inline_keyboard": [[{"text": label, "callback_data": f"scan|{symbol}|{value}"} for label, value in intervals]]}
+
+
+def _telegram_api(method: str, payload: dict | None = None) -> dict:
+    response = HTTP.post(
+        f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/{method}",
+        json=payload or {}, timeout=25,
+    )
+    response.raise_for_status()
+    return response.json()
+
+
+def _telegram_worker() -> None:
+    """Telegram 查詢與背景訊號監控；只接受設定的管理者 Chat ID。"""
+    if not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+        return
+    offset = 0
+    last_monitor = 0.0
+    while True:
+        try:
+            updates = _telegram_api("getUpdates", {"offset": offset, "timeout": 20}).get("result", [])
+            for update in updates:
+                offset = max(offset, int(update.get("update_id", 0)) + 1)
+                message = update.get("message") or {}
+                chat_id = (message.get("chat") or {}).get("id")
+                if not telegram_allowed(chat_id):
+                    continue
+                text = (message.get("text") or "").strip()
+                if text.startswith("/start") or text == "/help":
+                    _telegram_api("sendMessage", {"chat_id": chat_id, "text": "MOSSTRADE Bot\n查詢格式：/scan 商品 時間線\n例如：/scan BTC-USD 1h"})
+                elif text.startswith("/scan"):
+                    parts = text.split()
+                    if len(parts) != 3:
+                        reply = "格式錯誤，請使用：/scan BTC-USD 1h"
+                    else:
+                        try:
+                            symbol, interval = parts[1].upper(), parts[2].lower()
+                            result = analyze_market(symbol=symbol, interval=interval)
+                            reply = format_analysis_message(symbol, interval, result)
+                        except Exception as error:
+                            reply = f"查詢失敗：{getattr(error, 'detail', str(error))}"
+                    _telegram_api("sendMessage", {"chat_id": chat_id, "text": reply})
+                elif text.startswith("/search") or text:
+                    keyword = text.split(maxsplit=1)[1] if " " in text else text.lstrip("/")
+                    matches = telegram_symbol_suggestions(keyword)
+                    if matches:
+                        _telegram_api("sendMessage", {"chat_id": chat_id, "text": "請選擇商品：", "reply_markup": telegram_keyboard_for_symbols(matches)})
+                    else:
+                        _telegram_api("sendMessage", {"chat_id": chat_id, "text": "找不到商品，請輸入代號或名稱，例如：BTC、台積電、AAPL"})
+            for callback in [item.get("callback_query") for item in updates]:
+                if not callback:
+                    continue
+                callback_id = callback.get("id")
+                chat_id = (callback.get("message", {}).get("chat") or {}).get("id")
+                if not telegram_allowed(chat_id):
+                    continue
+                data = callback.get("data", "")
+                _telegram_api("answerCallbackQuery", {"callback_query_id": callback_id})
+                if data.startswith("sym|"):
+                    symbol = data.split("|", 1)[1]
+                    _telegram_api("sendMessage", {"chat_id": chat_id, "text": f"已選擇 {symbol}，請選擇時間線：", "reply_markup": telegram_keyboard_for_intervals(symbol)})
+                elif data.startswith("scan|"):
+                    _, symbol, interval = data.split("|", 2)
+                    try:
+                        result = analyze_market(symbol=symbol, interval=interval)
+                        reply = format_analysis_message(symbol, interval, result)
+                    except Exception as error:
+                        reply = f"查詢失敗：{getattr(error, 'detail', str(error))}"
+                    _telegram_api("sendMessage", {"chat_id": chat_id, "text": reply})
+            now = time.time()
+            if now - last_monitor >= max(TELEGRAM_POLL_SECONDS, 30):
+                last_monitor = now
+                for item in TELEGRAM_WATCHLIST.split(","):
+                    if ":" not in item:
+                        continue
+                    symbol, interval = [part.strip() for part in item.split(":", 1)]
+                    try:
+                        result = analyze_market(symbol=symbol, interval=interval)
+                        direction = result.get("direction")
+                        key = f"{symbol.upper()}:{interval}:{result.get('chart_data', [{}])[-1].get('time')}:{direction}"
+                        if direction in ("BUY", "SELL") and _telegram_last_signal.get(f"{symbol}:{interval}") != key:
+                            _telegram_last_signal[f"{symbol}:{interval}"] = key
+                            _telegram_api("sendMessage", {"chat_id": TELEGRAM_CHAT_ID, "text": format_analysis_message(symbol, interval, result)})
+                    except Exception as error:
+                        print(f"Telegram monitor error ({symbol}:{interval}): {error}")
+        except Exception as error:
+            print(f"Telegram worker error: {error}")
+            time.sleep(10)
+
+
+@app.on_event("startup")
+def start_telegram_worker():
+    global _telegram_started
+    if not _telegram_started and TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID:
+        _telegram_started = True
+        threading.Thread(target=_telegram_worker, name="telegram-worker", daemon=True).start()
 
 # MOSSTRADE 預設布林通道參數：20 根 K 線、上下軌各 2 個標準差。
 # 圖表顯示與策略判斷共用，避免兩邊使用不同參數造成判讀落差。
