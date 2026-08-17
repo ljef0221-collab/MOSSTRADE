@@ -336,7 +336,7 @@ HTTP.headers.update({"User-Agent": "MOSSTRADE/1.0"})
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "").strip()
 TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", "").strip()
 MOSSTRADE_ADMIN_KEY = os.getenv("MOSSTRADE_ADMIN_KEY", "").strip()
-TELEGRAM_WATCHLIST = os.getenv("TELEGRAM_WATCHLIST", "BTC-USD:1h").strip()
+TELEGRAM_WATCHLIST = os.getenv("TELEGRAM_WATCHLIST", "OKX:BTC-USDT-SWAP:1h").strip()
 TELEGRAM_POLL_SECONDS = int(os.getenv("TELEGRAM_POLL_SECONDS", "60"))
 _telegram_started = False
 _telegram_last_signal = {}
@@ -475,7 +475,7 @@ def _telegram_worker() -> None:
                 for item in TELEGRAM_WATCHLIST.split(","):
                     if ":" not in item:
                         continue
-                    symbol, interval = [part.strip() for part in item.split(":", 1)]
+                    symbol, interval = [part.strip() for part in item.rsplit(":", 1)]
                     try:
                         result = analyze_market(symbol=symbol, interval=interval)
                         direction = result.get("direction")
