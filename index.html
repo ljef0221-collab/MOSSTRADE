@@ -5227,7 +5227,7 @@
       .ranking-panel #ranking-list .rank-change { display:inline-flex !important; align-items:center !important; justify-content:center !important; min-width:68px !important; padding:2px 6px !important; border-radius:999px !important; font-size:.76rem !important; font-weight:850 !important; line-height:1.25 !important; font-variant-numeric:tabular-nums; }
       .ranking-panel #ranking-list .rank-change.up { color:#0f766e !important; background:rgba(15,118,110,.12) !important; border:1px solid rgba(15,118,110,.3) !important; }
       .ranking-panel #ranking-list .rank-change.down { color:#b42318 !important; background:rgba(180,35,24,.1) !important; border:1px solid rgba(180,35,24,.3) !important; }
-      .ranking-panel #ranking-list .rank-quote { min-width:92px !important; width:92px !important; display:grid !important; grid-template-columns:1fr !important; gap:2px !important; justify-items:end !important; position:relative !important; z-index:3 !important; overflow:visible !important; }
+      .ranking-panel #ranking-list .rank-quote { min-width:92px !important; width:92px !important; display:grid !important; grid-template-columns:1fr !important; gap:2px !important; justify-items:end !important; position:relative !important; z-index:3 !important; overflow:visible !important; transform:translateX(-6px) !important; }
       @media (max-width: 760px) {
         #home-page { display:block !important; }
         #home-page.hidden { display:none !important; }
@@ -5236,7 +5236,7 @@
         .ranking-panel #ranking-list .rank-row > span:not(.rank-quote) { min-width:0 !important; overflow:hidden !important; text-overflow:ellipsis !important; white-space:nowrap !important; }
         .ranking-panel #ranking-list .rank-price { max-width:88px !important; overflow:visible !important; text-overflow:clip !important; white-space:nowrap !important; font-size:.82rem !important; }
         .ranking-panel #ranking-list .rank-change { max-width:88px !important; min-width:64px !important; overflow:visible !important; text-overflow:clip !important; white-space:nowrap !important; }
-        .ranking-panel #ranking-list .rank-quote { width:88px !important; grid-template-columns:1fr !important; justify-items:end !important; }
+        .ranking-panel #ranking-list .rank-quote { width:88px !important; min-width:88px !important; grid-template-columns:1fr !important; justify-items:end !important; transform:translateX(-4px) !important; }
       }
       .news-panel__head { display:flex; justify-content:space-between; gap:1rem; align-items:center; }
       .news-panel__actions { display:flex; align-items:center; gap:.6rem; }
