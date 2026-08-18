@@ -1,4 +1,5 @@
 from urllib.parse import quote
+from urllib.parse import urlparse
 from datetime import datetime, timezone
 from pathlib import Path
 import os
@@ -1374,13 +1375,15 @@ def _news_items_for_market(market: str) -> list[dict]:
     for news in payload.get("news", []):
         title = (news.get("title") or "").strip()
         url = news.get("link") or news.get("url")
-        if not title or not url:
+        if not title or not url or urlparse(url).scheme not in {"http", "https"}:
             continue
         timestamp = news.get("providerPublishTime") or news.get("published_at")
         try:
             published = datetime.fromtimestamp(int(timestamp), tz=timezone.utc).isoformat() if timestamp else None
         except (TypeError, ValueError, OSError):
             published = None
+        if not published:
+            continue
         items.append({
             "id": news.get("uuid") or url,
             "market": market,
@@ -1406,13 +1409,15 @@ def _news_items_for_market(market: str) -> list[dict]:
     for entry in root.findall("./channel/item")[:12]:
         title = (entry.findtext("title") or "").strip()
         link = (entry.findtext("link") or "").strip()
-        if not title or not link:
+        if not title or not link or urlparse(link).scheme not in {"http", "https"}:
             continue
         pub_date = entry.findtext("pubDate")
         try:
             published = datetime.strptime(pub_date, "%a, %d %b %Y %H:%M:%S %Z").replace(tzinfo=timezone.utc).isoformat() if pub_date else None
         except ValueError:
             published = None
+        if not published:
+            continue
         items.append({
             "id": link,
             "market": market,
@@ -1441,7 +1446,14 @@ def market_news(market: str = "ALL"):
         except Exception as error:
             errors.append(item_market)
             print(f"News provider error ({item_market}): {error}")
-    unique = {item["id"]: item for item in items}
+    unique = {}
+    for item in items:
+        dedupe_key = "|".join([
+            item.get("market", ""),
+            " ".join(item.get("title", "").lower().split()),
+            item.get("source", "").lower(),
+        ])
+        unique[dedupe_key] = item
     ordered = sorted(
         unique.values(), key=lambda item: item.get("published_at") or "", reverse=True
     )[:30]
