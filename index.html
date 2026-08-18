@@ -5213,9 +5213,22 @@
       .ranking-panel { padding: .7rem .8rem !important; }
       #home-page { display:grid !important; grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important; gap:1rem !important; align-items:start !important; }
       #home-page.hidden { display:none !important; }
-      #home-page > .home-heading, #home-page > .market-command-bar, #home-page > .market-summary, #home-page > .ranking-help, #home-page > .ranking-controls, #home-page > #ranking-error { grid-column:1 / -1 !important; }
+      #home-page > .home-heading, #home-page > .market-command-bar, #home-page > .market-summary, #home-page > .ranking-help, #home-page > .ranking-controls, #home-page > #ranking-error { grid-column:1 !important; }
       #home-page > .ranking-panel { grid-column:1 !important; grid-row:span 1 !important; min-width:0 !important; }
-      #home-page > .news-panel { grid-column:2 !important; grid-row:span 1 !important; min-width:0 !important; margin-top:0 !important; }
+      #home-page > .news-panel { grid-column:2 !important; grid-row:1 / span 8 !important; min-width:0 !important; margin-top:0 !important; align-self:start !important; }
+      #home-page > .home-heading { padding:0 !important; margin-bottom:.25rem !important; }
+      #home-page > .home-heading h2 { font-size:1.35rem !important; margin:.15rem 0 !important; }
+      #home-page > .home-heading p { font-size:.78rem !important; line-height:1.35 !important; margin:.2rem 0 !important; }
+      #home-page > .market-command-bar { padding:.65rem !important; margin:0 !important; }
+      #home-page > .market-command-bar .search-area { gap:.3rem !important; }
+      #home-page > .market-command-bar .search { gap:.4rem !important; }
+      #home-page > .market-command-bar input, #home-page > .market-command-bar button { min-height:36px !important; height:36px !important; font-size:.8rem !important; }
+      #home-page > .market-summary { gap:.5rem !important; margin:.25rem 0 !important; }
+      #home-page > .market-summary .market-summary-card { min-height:68px !important; padding:8px !important; }
+      #home-page > .market-summary .market-summary-card strong { font-size:1.05rem !important; margin:2px 0 !important; }
+      #home-page > .market-summary .market-summary-card small, #home-page > .market-summary .market-summary-card span { font-size:.68rem !important; }
+      #home-page > .ranking-help { margin:.25rem 0 !important; }
+      #home-page > .ranking-controls { gap:.5rem !important; padding:.35rem 0 !important; }
       #home-page > .ranking-panel, #home-page > .news-panel { width:100% !important; max-width:100% !important; overflow:hidden !important; box-sizing:border-box !important; }
       #home-page > .ranking-panel #ranking-list { width:100% !important; min-width:0 !important; overflow:visible !important; }
       #home-page > .ranking-panel #ranking-list .rank-row { max-width:100% !important; overflow:visible !important; position:relative !important; isolation:isolate !important; }
