@@ -5208,6 +5208,43 @@
         }
       }
     </style>
+    <style>
+      .news-panel { margin-top: 1rem; }
+      .ranking-panel { padding: .7rem .8rem !important; }
+      #home-page { display:grid !important; grid-template-columns:minmax(270px,.82fr) minmax(0,1.45fr) !important; gap:1rem !important; align-items:start !important; }
+      #home-page > .home-heading, #home-page > .market-command-bar, #home-page > .market-summary, #home-page > .ranking-help, #home-page > .ranking-controls, #home-page > #ranking-error { grid-column:1 / -1 !important; }
+      #home-page > .ranking-panel { grid-column:1 !important; grid-row:span 1 !important; min-width:0 !important; }
+      #home-page > .news-panel { grid-column:2 !important; grid-row:span 1 !important; min-width:0 !important; margin-top:0 !important; }
+      .ranking-panel #ranking-title { font-size: 1rem !important; padding-bottom: .45rem !important; }
+      .ranking-panel #ranking-list .rank-row { min-height: 40px !important; width: 100% !important; box-sizing: border-box !important; padding: 3px 6px !important; grid-template-columns: 24px minmax(0,1fr) 112px !important; }
+      .ranking-panel #ranking-list .rank-row > span:not(.rank-quote) { font-size: .78rem !important; }
+      .ranking-panel #ranking-list .rank-row > small:first-child { font-size: .7rem !important; }
+      .ranking-panel #ranking-list .rank-price, .ranking-panel #ranking-list .rank-change { font-size: .76rem !important; }
+      .ranking-panel #ranking-list .rank-quote { min-width: 0 !important; width: 112px !important; grid-template-columns: minmax(0,1fr) minmax(0,1fr) !important; gap: .25rem !important; }
+      @media (max-width: 760px) {
+        #home-page { display:block !important; }
+        #home-page > .news-panel { margin-top:1rem !important; }
+        .ranking-panel #ranking-list .rank-row { grid-template-columns: 22px minmax(0,1fr) 92px !important; }
+        .ranking-panel #ranking-list .rank-quote { width: 92px !important; grid-template-columns: minmax(0,1fr) minmax(0,1fr) !important; }
+      }
+      .news-panel__head { display:flex; justify-content:space-between; gap:1rem; align-items:center; }
+      .news-panel__actions { display:flex; align-items:center; gap:.6rem; }
+      .news-tabs { display:flex; gap:.45rem; overflow-x:auto; margin:.8rem 0; padding-bottom:.2rem; }
+      .news-tab { border:1px solid rgba(148,163,184,.35); background:rgba(15,23,42,.55); color:inherit; border-radius:999px; padding:.45rem .8rem; white-space:nowrap; cursor:pointer; }
+      .news-tab.is-active { background:#14b8a6; color:#07131f; border-color:#14b8a6; }
+      .news-list { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:.65rem; }
+      .news-card { display:flex; flex-direction:column; gap:.4rem; min-width:0; padding:.75rem; border:1px solid rgba(148,163,184,.2); border-radius:12px; background:rgba(18,18,18,.72); text-decoration:none; color:inherit; }
+      .news-card:hover { border-color:#14b8a6; transform:translateY(-1px); }
+      .news-card__meta { display:flex; justify-content:space-between; gap:.5rem; color:#94a3b8; font-size:.72rem; }
+      .news-card__title { font-weight:700; line-height:1.35; }
+      .news-card__summary { color:#cbd5e1; font-size:.82rem; line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+      .news-card__tag { color:#ffb020; font-size:.7rem; }
+      .news-status { color:#94a3b8; min-height:1.2rem; font-size:.82rem; }
+      .news-skeleton { display:grid; gap:.55rem; grid-column:1/-1; }
+      .news-skeleton i { display:block; height:4rem; border-radius:12px; background:linear-gradient(90deg,rgba(148,163,184,.12),rgba(148,163,184,.24),rgba(148,163,184,.12)); background-size:200% 100%; animation:news-shimmer 1.4s infinite; }
+      @keyframes news-shimmer { to { background-position:-200% 0; } }
+      @media (max-width: 760px) { .news-panel__head { align-items:flex-start; flex-direction:column; } .news-panel__actions { width:100%; justify-content:space-between; } .news-list { grid-template-columns:1fr; } }
+    </style>
   </head>
   <body>
     <div class="pixel-scene" aria-hidden="true"></div>
@@ -5353,6 +5390,21 @@
         <section class="panel ranking-panel">
           <h3 id="ranking-title">漲幅 Top 10</h3>
           <div id="ranking-list"><div class="empty">資料比對中…</div></div>
+        </section>
+      </section>
+        <section class="panel news-panel" aria-labelledby="news-title">
+          <div class="news-panel__head">
+            <div><span class="eyebrow">MARKET NEWS</span><h3 id="news-title">市場消息</h3></div>
+            <div class="news-panel__actions"><span id="news-updated" class="data-updated">尚未更新</span><button id="news-refresh" type="button" class="secondary-button">重新整理</button></div>
+          </div>
+          <div class="news-tabs" role="tablist" aria-label="市場消息分類">
+            <button class="news-tab is-active" data-news-market="ALL" role="tab">全部</button>
+            <button class="news-tab" data-news-market="TW" role="tab">台股</button>
+            <button class="news-tab" data-news-market="US" role="tab">美股</button>
+            <button class="news-tab" data-news-market="CRYPTO" role="tab">加密市場</button>
+          </div>
+          <div id="news-status" class="news-status" role="status" aria-live="polite"></div>
+          <div id="news-list" class="news-list"><div class="news-skeleton" aria-hidden="true"><i></i><i></i><i></i></div></div>
         </section>
       </section>
       <section id="analysis-page" class="hidden">
@@ -6818,6 +6870,70 @@
             box.textContent = "搜尋暫時失敗";
           }
         }
+        let activeNewsMarket = "ALL";
+        function formatNewsTime(value) {
+          if (!value) return "時間未知";
+          const date = new Date(value);
+          return Number.isNaN(date.getTime()) ? "時間未知" : date.toLocaleString("zh-TW", { hour12: false, year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" });
+        }
+        function renderNews(items, failedMarkets = []) {
+          const box = byId("news-list");
+          box.replaceChildren();
+          const unique = [...new Map((items || []).map((item) => [item.id || item.url, item])).values()];
+          if (!unique.length) {
+            const empty = document.createElement("div");
+            empty.className = "empty";
+            empty.textContent = failedMarkets.length ? "目前無法取得最新消息，請稍後再試" : "目前沒有可顯示的消息";
+            box.append(empty);
+            return;
+          }
+          unique.forEach((item) => {
+            const card = document.createElement("a");
+            card.className = "news-card";
+            card.href = item.url || "#";
+            card.target = "_blank";
+            card.rel = "noopener noreferrer";
+            const meta = document.createElement("div");
+            meta.className = "news-card__meta";
+            meta.innerHTML = `<span>${item.source || "未知來源"}</span><time datetime="${item.published_at || ""}">${formatNewsTime(item.published_at)}</time>`;
+            const title = document.createElement("div");
+            title.className = "news-card__title";
+            title.textContent = item.title || "未命名消息";
+            const summary = document.createElement("div");
+            summary.className = "news-card__summary";
+            summary.textContent = item.summary || "點擊查看原始消息";
+            const tag = document.createElement("span");
+            tag.className = "news-card__tag";
+            tag.textContent = `${item.market || "市場"}${item.symbol ? ` · ${item.symbol}` : ""}`;
+            card.append(meta, title, summary, tag);
+            box.append(card);
+          });
+        }
+        async function loadNews() {
+          const status = byId("news-status");
+          const box = byId("news-list");
+          status.textContent = "正在讀取最新消息…";
+          box.innerHTML = '<div class="news-skeleton" aria-hidden="true"><i></i><i></i><i></i></div>';
+          try {
+            const response = await fetch(`/api/news?market=${encodeURIComponent(activeNewsMarket)}`);
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.detail || "消息資料載入失敗");
+            renderNews(data.results || [], data.failed_markets || []);
+            const updated = data.updated_at ? formatNewsTime(data.updated_at) : "未知";
+            byId("news-updated").textContent = `更新於 ${updated}`;
+            status.textContent = data.failed_markets?.length ? "部分市場消息暫時無法取得" : "資料來源：Yahoo Finance";
+          } catch (error) {
+            renderNews([], [activeNewsMarket]);
+            status.textContent = "目前無法取得最新消息，請稍後再試";
+          }
+        }
+        document.querySelectorAll(".news-tab").forEach((button) => button.addEventListener("click", () => {
+          document.querySelectorAll(".news-tab").forEach((item) => item.classList.remove("is-active"));
+          button.classList.add("is-active");
+          activeNewsMarket = button.dataset.newsMarket || "ALL";
+          loadNews();
+        }));
+        byId("news-refresh")?.addEventListener("click", loadNews);
         const search = () => searchFrom("search-input", "results");
         const searchAnalysis = () =>
           searchFrom("analysis-search-input", "analysis-results");
@@ -8742,6 +8858,10 @@
         renderSimulation();
         showAppPage("home");
         loadRankings();
+        loadNews();
+        setInterval(() => {
+          if (!document.hidden && !byId("home-page").classList.contains("hidden")) loadNews();
+        }, 300000);
         setInterval(() => {
           if (
             document.hidden ||

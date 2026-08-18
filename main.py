@@ -6,6 +6,7 @@ import sqlite3
 import json
 import time
 import threading
+import xml.etree.ElementTree as ET
 import requests
 from fastapi import FastAPI, HTTPException, Header
 from fastapi.middleware.cors import CORSMiddleware
@@ -425,8 +426,6 @@ def _telegram_worker() -> None:
                 offset = max(offset, int(update.get("update_id", 0)) + 1)
                 message = update.get("message") or {}
                 chat_id = (message.get("chat") or {}).get("id")
-                if not telegram_allowed(chat_id):
-                    continue
                 text = (message.get("text") or "").strip()
                 if text.startswith("/start") or text == "/help":
                     _telegram_api("sendMessage", {"chat_id": chat_id, "text": "MOSSTRADE Bot\n查詢格式：/scan 商品 時間線\n例如：/scan BTC-USD 1h"})
@@ -454,8 +453,6 @@ def _telegram_worker() -> None:
                     continue
                 callback_id = callback.get("id")
                 chat_id = (callback.get("message", {}).get("chat") or {}).get("id")
-                if not telegram_allowed(chat_id):
-                    continue
                 data = callback.get("data", "")
                 _telegram_api("answerCallbackQuery", {"callback_query_id": callback_id})
                 if data.startswith("sym|"):
@@ -1354,6 +1351,106 @@ def market_rankings():
         raise HTTPException(
             status_code=502, detail="排行榜資料暫時無法載入，請稍後再試。"
         ) from error
+
+
+NEWS_QUERIES = {
+    "TW": "台股 台灣股市",
+    "US": "US stocks market",
+    "CRYPTO": "crypto bitcoin cryptocurrency market",
+}
+
+
+def _news_items_for_market(market: str) -> list[dict]:
+    query = NEWS_QUERIES[market]
+    try:
+        payload = yahoo_json(
+            "/v1/finance/search",
+            {"q": query, "quotesCount": 0, "newsCount": 12},
+            300,
+        )
+    except Exception:
+        payload = {}
+    items = []
+    for news in payload.get("news", []):
+        title = (news.get("title") or "").strip()
+        url = news.get("link") or news.get("url")
+        if not title or not url:
+            continue
+        timestamp = news.get("providerPublishTime") or news.get("published_at")
+        try:
+            published = datetime.fromtimestamp(int(timestamp), tz=timezone.utc).isoformat() if timestamp else None
+        except (TypeError, ValueError, OSError):
+            published = None
+        items.append({
+            "id": news.get("uuid") or url,
+            "market": market,
+            "title": title,
+            "summary": news.get("summary") or "",
+            "symbol": news.get("relatedTickers", [""])[0] if news.get("relatedTickers") else "",
+            "source": news.get("publisher") or "Yahoo Finance",
+            "url": url,
+            "published_at": published,
+            "importance": "medium",
+        })
+    if items:
+        return items
+    # Fallback to Google News RSS so the page can still show sourced headlines
+    # when Yahoo Finance is rate-limited or unavailable.
+    rss = HTTP.get(
+        "https://news.google.com/rss/search",
+        params={"q": query, "hl": "zh-TW", "gl": "TW", "ceid": "TW:zh-Hant"},
+        timeout=8,
+    )
+    rss.raise_for_status()
+    root = ET.fromstring(rss.text)
+    for entry in root.findall("./channel/item")[:12]:
+        title = (entry.findtext("title") or "").strip()
+        link = (entry.findtext("link") or "").strip()
+        if not title or not link:
+            continue
+        pub_date = entry.findtext("pubDate")
+        try:
+            published = datetime.strptime(pub_date, "%a, %d %b %Y %H:%M:%S %Z").replace(tzinfo=timezone.utc).isoformat() if pub_date else None
+        except ValueError:
+            published = None
+        items.append({
+            "id": link,
+            "market": market,
+            "title": title,
+            "summary": "",
+            "symbol": "",
+            "source": "Google News RSS",
+            "url": link,
+            "published_at": published,
+            "importance": "medium",
+        })
+    return items
+
+
+@app.get("/api/news")
+def market_news(market: str = "ALL"):
+    market = market.upper().strip()
+    markets = list(NEWS_QUERIES) if market == "ALL" else [market]
+    if any(item not in NEWS_QUERIES for item in markets):
+        raise HTTPException(status_code=400, detail="不支援的消息市場分類。")
+    items = []
+    errors = []
+    for item_market in markets:
+        try:
+            items.extend(_news_items_for_market(item_market))
+        except Exception as error:
+            errors.append(item_market)
+            print(f"News provider error ({item_market}): {error}")
+    unique = {item["id"]: item for item in items}
+    ordered = sorted(
+        unique.values(), key=lambda item: item.get("published_at") or "", reverse=True
+    )[:30]
+    return {
+        "status": "partial" if errors and ordered else "error" if errors else "success",
+        "results": ordered,
+        "updated_at": datetime.now(timezone.utc).isoformat(),
+        "failed_markets": errors,
+    }
 
 
 @app.get("/api/market-ranking")
