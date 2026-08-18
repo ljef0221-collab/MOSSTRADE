@@ -5217,25 +5217,25 @@
       #home-page > .ranking-panel { grid-column:1 !important; grid-row:span 1 !important; min-width:0 !important; }
       #home-page > .news-panel { grid-column:2 !important; grid-row:span 1 !important; min-width:0 !important; margin-top:0 !important; }
       #home-page > .ranking-panel, #home-page > .news-panel { width:100% !important; max-width:100% !important; overflow:hidden !important; box-sizing:border-box !important; }
-      #home-page > .ranking-panel #ranking-list { width:100% !important; min-width:0 !important; overflow:hidden !important; }
-      #home-page > .ranking-panel #ranking-list .rank-row { max-width:100% !important; overflow:hidden !important; }
+      #home-page > .ranking-panel #ranking-list { width:100% !important; min-width:0 !important; overflow:visible !important; }
+      #home-page > .ranking-panel #ranking-list .rank-row { max-width:100% !important; overflow:visible !important; position:relative !important; isolation:isolate !important; }
       .ranking-panel #ranking-title { font-size: 1rem !important; padding-bottom: .45rem !important; }
       .ranking-panel #ranking-list .rank-row { min-height:46px !important; width:100% !important; box-sizing:border-box !important; padding:4px 6px !important; grid-template-columns:24px minmax(0,1fr) 92px !important; min-width:0 !important; }
       .ranking-panel #ranking-list .rank-row > span:not(.rank-quote) { min-width:0 !important; overflow:hidden !important; text-overflow:ellipsis !important; white-space:nowrap !important; color:#334155 !important; font-size:.78rem !important; font-weight:650 !important; }
       .ranking-panel #ranking-list .rank-row > small:first-child { font-size: .7rem !important; }
-      .ranking-panel #ranking-list .rank-price { color:#111827 !important; font-size:.92rem !important; font-weight:850 !important; line-height:1.2 !important; font-variant-numeric:tabular-nums; }
+      .ranking-panel #ranking-list .rank-price { color:#B45309 !important; font-size:.92rem !important; font-weight:850 !important; line-height:1.2 !important; font-variant-numeric:tabular-nums; position:relative !important; z-index:2 !important; white-space:nowrap !important; }
       .ranking-panel #ranking-list .rank-change { display:inline-flex !important; align-items:center !important; justify-content:center !important; min-width:68px !important; padding:2px 6px !important; border-radius:999px !important; font-size:.76rem !important; font-weight:850 !important; line-height:1.25 !important; font-variant-numeric:tabular-nums; }
       .ranking-panel #ranking-list .rank-change.up { color:#0f766e !important; background:rgba(15,118,110,.12) !important; border:1px solid rgba(15,118,110,.3) !important; }
       .ranking-panel #ranking-list .rank-change.down { color:#b42318 !important; background:rgba(180,35,24,.1) !important; border:1px solid rgba(180,35,24,.3) !important; }
-      .ranking-panel #ranking-list .rank-quote { min-width:0 !important; width:92px !important; display:grid !important; grid-template-columns:1fr !important; gap:1px !important; justify-items:end !important; }
+      .ranking-panel #ranking-list .rank-quote { min-width:92px !important; width:92px !important; display:grid !important; grid-template-columns:1fr !important; gap:2px !important; justify-items:end !important; position:relative !important; z-index:3 !important; overflow:visible !important; }
       @media (max-width: 760px) {
         #home-page { display:block !important; }
         #home-page.hidden { display:none !important; }
         #home-page > .news-panel { margin-top:1rem !important; }
         .ranking-panel #ranking-list .rank-row { grid-template-columns: 22px minmax(0,1fr) 88px !important; width:100% !important; }
         .ranking-panel #ranking-list .rank-row > span:not(.rank-quote) { min-width:0 !important; overflow:hidden !important; text-overflow:ellipsis !important; white-space:nowrap !important; }
-        .ranking-panel #ranking-list .rank-price { max-width:88px !important; overflow:hidden !important; text-overflow:ellipsis !important; white-space:nowrap !important; font-size:.82rem !important; }
-        .ranking-panel #ranking-list .rank-change { max-width:88px !important; min-width:64px !important; overflow:hidden !important; text-overflow:ellipsis !important; white-space:nowrap !important; }
+        .ranking-panel #ranking-list .rank-price { max-width:88px !important; overflow:visible !important; text-overflow:clip !important; white-space:nowrap !important; font-size:.82rem !important; }
+        .ranking-panel #ranking-list .rank-change { max-width:88px !important; min-width:64px !important; overflow:visible !important; text-overflow:clip !important; white-space:nowrap !important; }
         .ranking-panel #ranking-list .rank-quote { width:88px !important; grid-template-columns:1fr !important; justify-items:end !important; }
       }
       .news-panel__head { display:flex; justify-content:space-between; gap:1rem; align-items:center; }
