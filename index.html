@@ -5211,7 +5211,7 @@
     <style>
       .news-panel { margin-top: 1rem; }
       .ranking-panel { padding: .7rem .8rem !important; }
-      #home-page { display:grid !important; grid-template-columns:minmax(270px,.82fr) minmax(0,1.45fr) !important; gap:1rem !important; align-items:start !important; }
+      #home-page { display:grid !important; grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important; gap:1rem !important; align-items:start !important; }
       #home-page.hidden { display:none !important; }
       #home-page > .home-heading, #home-page > .market-command-bar, #home-page > .market-summary, #home-page > .ranking-help, #home-page > .ranking-controls, #home-page > #ranking-error { grid-column:1 / -1 !important; }
       #home-page > .ranking-panel { grid-column:1 !important; grid-row:span 1 !important; min-width:0 !important; }
@@ -5243,19 +5243,19 @@
       .news-tabs { display:flex; gap:.45rem; overflow-x:auto; margin:.8rem 0; padding-bottom:.2rem; }
       .news-tab { border:1px solid rgba(148,163,184,.35); background:rgba(15,23,42,.55); color:inherit; border-radius:999px; padding:.45rem .8rem; white-space:nowrap; cursor:pointer; }
       .news-tab.is-active { background:#14b8a6; color:#07131f; border-color:#14b8a6; }
-      .news-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.65rem; }
-      .news-card { display:flex; flex-direction:column; gap:.4rem; min-width:0; padding:.75rem; border:1px solid rgba(20,184,166,.32); border-radius:12px; background:linear-gradient(145deg,rgba(20,184,166,.12),rgba(10,25,47,.84)); text-decoration:none; color:inherit; box-shadow:0 8px 20px rgba(2,8,23,.16); }
-      .news-card:hover { border-color:#ffb020; background:linear-gradient(145deg,rgba(255,176,32,.16),rgba(10,25,47,.9)); transform:translateY(-1px); }
+      .news-list { display:flex; flex-direction:column; gap:0; }
+      .news-card { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:.25rem .65rem; min-width:0; padding:.65rem .2rem; border:0; border-bottom:1px solid rgba(148,163,184,.2); border-radius:0; background:transparent; text-decoration:none; color:inherit; }
+      .news-card:hover { border-color:rgba(255,176,32,.55); background:rgba(20,184,166,.08); transform:none; }
       .news-card__meta { display:flex; justify-content:space-between; gap:.5rem; color:#94a3b8; font-size:.72rem; }
-      .news-card__title { font-weight:700; line-height:1.35; }
-      .news-card__summary { color:#cbd5e1; font-size:.82rem; line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-      .news-card__tag { color:#ffb020; font-size:.7rem; }
+      .news-card__title { grid-column:1; font-weight:700; line-height:1.35; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+      .news-card__summary { display:none; }
+      .news-card__tag { grid-column:2; grid-row:1 / span 2; align-self:center; color:#5eead4; font-size:.7rem; white-space:nowrap; }
       .news-status { color:#94a3b8; min-height:1.2rem; font-size:.82rem; }
       .news-skeleton { display:grid; gap:.55rem; grid-column:1/-1; }
       .news-skeleton i { display:block; height:4rem; border-radius:12px; background:linear-gradient(90deg,rgba(148,163,184,.12),rgba(148,163,184,.24),rgba(148,163,184,.12)); background-size:200% 100%; animation:news-shimmer 1.4s infinite; }
       @keyframes news-shimmer { to { background-position:-200% 0; } }
       @media (max-width: 760px) { .news-panel__head { align-items:flex-start; flex-direction:column; } .news-panel__actions { width:100%; justify-content:space-between; } .news-list { grid-template-columns:1fr; } }
-      @media (min-width:761px) and (max-width:1100px) { #home-page { grid-template-columns:minmax(245px,.9fr) minmax(0,1.2fr) !important; } .news-list { grid-template-columns:1fr; } }
+      @media (min-width:761px) and (max-width:1100px) { #home-page { grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important; } }
     </style>
   </head>
   <body>
@@ -5400,7 +5400,7 @@
         </div>
         <div id="ranking-error" class="error" role="alert"></div>
         <section class="panel ranking-panel">
-          <h3 id="ranking-title">漲幅 Top 10</h3>
+          <h3 id="ranking-title">漲幅</h3>
           <div id="ranking-list"><div class="empty">資料比對中…</div></div>
         </section>
         <section class="panel news-panel" aria-labelledby="news-title">
@@ -6768,7 +6768,7 @@
             box.append(empty);
             return;
           }
-          rows.forEach((item, index) => {
+          rows.slice(0, 10).forEach((item, index) => {
             const row = document.createElement("div");
             row.className = "rank-row";
             row.tabIndex = 0;
@@ -6812,7 +6812,7 @@
           const market = byId("market-select").value;
           const ranking = byId("ranking-select").value;
           const labels = { gainers: "漲幅", losers: "跌幅", volume: "成交量" };
-          byId("ranking-title").textContent = labels[ranking] + " Top 10";
+          byId("ranking-title").textContent = labels[ranking];
           byId("ranking-error").textContent = "";
           if (!silent)
             byId("ranking-list").innerHTML =
@@ -6890,7 +6890,7 @@
         function renderNews(items, failedMarkets = []) {
           const box = byId("news-list");
           box.replaceChildren();
-          const unique = [...new Map((items || []).map((item) => [item.id || item.url, item])).values()];
+          const unique = [...new Map((items || []).map((item) => [item.id || item.url, item])).values()].slice(0, 5);
           if (!unique.length) {
             const empty = document.createElement("div");
             empty.className = "empty";
