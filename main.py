@@ -1359,6 +1359,8 @@ NEWS_QUERIES = {
     "US": "US stocks market",
     "CRYPTO": "crypto bitcoin cryptocurrency market",
 }
+NEWS_CACHE = {}
+NEWS_CACHE_LOCK = threading.Lock()
 
 
 def _news_items_for_market(market: str) -> list[dict]:
@@ -1396,6 +1398,8 @@ def _news_items_for_market(market: str) -> list[dict]:
             "importance": "medium",
         })
     if items:
+        with NEWS_CACHE_LOCK:
+            NEWS_CACHE[market] = items
         return items
     # Fallback to Google News RSS so the page can still show sourced headlines
     # when Yahoo Finance is rate-limited or unavailable.
@@ -1429,6 +1433,9 @@ def _news_items_for_market(market: str) -> list[dict]:
             "published_at": published,
             "importance": "medium",
         })
+    if items:
+        with NEWS_CACHE_LOCK:
+            NEWS_CACHE[market] = items
     return items
 
 
@@ -1442,10 +1449,17 @@ def market_news(market: str = "ALL"):
     errors = []
     for item_market in markets:
         try:
-            items.extend(_news_items_for_market(item_market))
+            current_items = _news_items_for_market(item_market)
+            if current_items:
+                items.extend(current_items)
+            else:
+                with NEWS_CACHE_LOCK:
+                    items.extend(NEWS_CACHE.get(item_market, []))
         except Exception as error:
             errors.append(item_market)
             print(f"News provider error ({item_market}): {error}")
+            with NEWS_CACHE_LOCK:
+                items.extend(NEWS_CACHE.get(item_market, []))
     unique = {}
     for item in items:
         dedupe_key = "|".join([
