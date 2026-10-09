@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 from datetime import datetime, timezone
 from pathlib import Path
 import os
+import re
 import sqlite3
 import json
 import time
@@ -141,8 +142,8 @@ TIMEFRAME_CONFIG = {
         "lookback": 20,
         "tp_atr": 1.5,
         "sl_atr": 1.0,
-        "name": "1分極速衝浪",
-        "description": "極短線動能策略",
+        "name": "1分策略說明",
+        "description": "1分鐘短線進出",
     },
     "3m": {
         "source": "1m",
@@ -155,7 +156,7 @@ TIMEFRAME_CONFIG = {
         "lookback": 20,
         "tp_atr": 1.5,
         "sl_atr": 1.0,
-        "name": "3分極短線策略",
+        "name": "3分策略說明",
         "description": "微觀趨勢交叉策略",
     },
     "5m": {
@@ -169,8 +170,8 @@ TIMEFRAME_CONFIG = {
         "lookback": 20,
         "tp_atr": 1.5,
         "sl_atr": 1.0,
-        "name": "5分動能策略",
-        "description": "5分鐘極速衝浪",
+        "name": "5分策略說明",
+        "description": "5分鐘短線進出",
     },
     "10m": {
         "source": "5m",
@@ -183,7 +184,7 @@ TIMEFRAME_CONFIG = {
         "lookback": 20,
         "tp_atr": 1.8,
         "sl_atr": 1.0,
-        "name": "10分動能策略",
+        "name": "10分策略說明",
         "description": "10分鐘聚合波段",
     },
     "15m": {
@@ -197,7 +198,7 @@ TIMEFRAME_CONFIG = {
         "lookback": 20,
         "tp_atr": 1.8,
         "sl_atr": 1.0,
-        "name": "15分日內策略",
+        "name": "15分策略說明",
         "description": "當沖經典短線策略",
     },
     "30m": {
@@ -211,7 +212,7 @@ TIMEFRAME_CONFIG = {
         "lookback": 20,
         "tp_atr": 2.0,
         "sl_atr": 1.2,
-        "name": "30分區間突破",
+        "name": "30分策略說明",
         "description": "半小時區間突破策略",
     },
     "45m": {
@@ -225,7 +226,7 @@ TIMEFRAME_CONFIG = {
         "lookback": 20,
         "tp_atr": 2.0,
         "sl_atr": 1.2,
-        "name": "45分區間突破",
+        "name": "45分策略說明",
         "description": "波段進場過濾策略",
     },
     "1h": {
@@ -239,7 +240,7 @@ TIMEFRAME_CONFIG = {
         "lookback": 20,
         "tp_atr": 2.0,
         "sl_atr": 1.2,
-        "name": "1小時突破策略",
+        "name": "1小時策略說明",
         "description": "趨勢區間突破策略",
     },
     "2h": {
@@ -253,7 +254,7 @@ TIMEFRAME_CONFIG = {
         "lookback": 20,
         "tp_atr": 2.2,
         "sl_atr": 1.2,
-        "name": "2小時亞盤/歐盤策略",
+        "name": "2小時策略說明",
         "description": "跨時區區間突破策略",
     },
     "3h": {
@@ -267,7 +268,7 @@ TIMEFRAME_CONFIG = {
         "lookback": 20,
         "tp_atr": 2.5,
         "sl_atr": 1.5,
-        "name": "3小時趨勢策略",
+        "name": "3小時策略說明",
         "description": "中長線區間突破",
     },
     "4h": {
@@ -281,7 +282,7 @@ TIMEFRAME_CONFIG = {
         "lookback": 20,
         "tp_atr": 2.5,
         "sl_atr": 1.5,
-        "name": "4小時四小時線策略",
+        "name": "4小時策略說明",
         "description": "機構級波段突破策略",
     },
     "1d": {
@@ -295,7 +296,7 @@ TIMEFRAME_CONFIG = {
         "lookback": 60,
         "tp_atr": 3.0,
         "sl_atr": 1.5,
-        "name": "日線趨勢結構策略",
+        "name": "日線策略說明",
         "description": "EMA 斜率、布林通道與波段回測綜合判讀",
     },
     "1w": {
@@ -309,7 +310,7 @@ TIMEFRAME_CONFIG = {
         "lookback": 52,
         "tp_atr": 3.5,
         "sl_atr": 2.0,
-        "name": "週線戰略趨勢策略",
+        "name": "週線策略說明",
         "description": "52 週趨勢、布林中軌與長波段結構",
     },
     "1mo": {
@@ -323,7 +324,7 @@ TIMEFRAME_CONFIG = {
         "lookback": 24,
         "tp_atr": 4.0,
         "sl_atr": 2.0,
-        "name": "月線宏觀週期策略",
+        "name": "月線策略說明",
         "description": "兩年趨勢、布林通道與主要回測區判讀",
     },
 }
@@ -477,7 +478,7 @@ def _telegram_worker() -> None:
                     try:
                         result = analyze_market(symbol=symbol, interval=interval)
                         direction = result.get("direction")
-                        key = f"{symbol.upper()}:{interval}:{result.get('chart_data', [{}])[-1].get('time')}:{direction}"
+                        key = f"{symbol.upper()}:{interval}:{result.get('signal_time')}:{direction}"
                         if direction in ("BUY", "SELL") and _telegram_last_signal.get(f"{symbol}:{interval}") != key:
                             _telegram_last_signal[f"{symbol}:{interval}"] = key
                             _telegram_api("sendMessage", {"chat_id": TELEGRAM_CHAT_ID, "text": format_analysis_message(symbol, interval, result)})
@@ -501,6 +502,20 @@ BB_PERIOD = 20
 BB_DEVIATIONS = 2.0
 API_CACHE = {}
 API_CACHE_LOCK = threading.Lock()
+API_INFLIGHT = {}
+RESPONSE_CACHE = {}
+RESPONSE_CACHE_LOCK = threading.Lock()
+RESPONSE_INFLIGHT = {}
+# 端點級 TTL：重整與輪詢共用，避免每次請求都打上游。
+RANKING_TTL_SECONDS = {
+    "futures": 45,
+    "taiwan": 120,
+    "us": 120,
+    "metals": 120,
+}
+NEWS_RESPONSE_TTL_SECONDS = 180
+NEWS_ITEM_TTL_SECONDS = 180
+ANALYZE_TTL_SECONDS = 20
 
 app.add_middleware(
     CORSMiddleware,
@@ -509,6 +524,49 @@ app.add_middleware(
     allow_methods=["GET"],
     allow_headers=["*"],
 )
+
+
+def _wait_for_inflight(event: threading.Event, timeout: float = 30) -> None:
+    event.wait(timeout=timeout)
+
+
+def cached_endpoint(cache_key: str, ttl: float, producer):
+    """快取完整 API 回應，並以 single-flight 合併同 key 的併發重建。"""
+    now = time.time()
+    with RESPONSE_CACHE_LOCK:
+        entry = RESPONSE_CACHE.get(cache_key)
+        if entry and now - entry[0] < ttl:
+            return entry[1]
+        event = RESPONSE_INFLIGHT.get(cache_key)
+        if event is None:
+            event = threading.Event()
+            RESPONSE_INFLIGHT[cache_key] = event
+            owner = True
+        else:
+            owner = False
+    if not owner:
+        _wait_for_inflight(event)
+        with RESPONSE_CACHE_LOCK:
+            entry = RESPONSE_CACHE.get(cache_key)
+            if entry:
+                return entry[1]
+        # 等待後仍無資料時才自行重建，避免整頁卡住。
+        return producer()
+    try:
+        payload = producer()
+        with RESPONSE_CACHE_LOCK:
+            RESPONSE_CACHE[cache_key] = (time.time(), payload)
+        return payload
+    except Exception:
+        with RESPONSE_CACHE_LOCK:
+            entry = RESPONSE_CACHE.get(cache_key)
+        if entry:
+            return entry[1]
+        raise
+    finally:
+        with RESPONSE_CACHE_LOCK:
+            RESPONSE_INFLIGHT.pop(cache_key, None)
+            event.set()
 
 
 def calculate_ema(prices, period):
@@ -567,16 +625,51 @@ def cached_json(url, params, ttl=60):
         cached = API_CACHE.get(key)
         if cached and now - cached[0] < ttl:
             return cached[1]
+        event = API_INFLIGHT.get(key)
+        if event is None:
+            event = threading.Event()
+            API_INFLIGHT[key] = event
+            owner = True
+        else:
+            owner = False
+    if not owner:
+        _wait_for_inflight(event)
+        with API_CACHE_LOCK:
+            cached = API_CACHE.get(key)
+            if cached:
+                return cached[1]
+        # 等待逾時仍無結果：若無人重建則接手；否則再等一次。
+        with API_CACHE_LOCK:
+            event = API_INFLIGHT.get(key)
+            if event is None:
+                event = threading.Event()
+                API_INFLIGHT[key] = event
+                owner = True
+            else:
+                owner = False
+        if not owner:
+            _wait_for_inflight(event)
+            with API_CACHE_LOCK:
+                cached = API_CACHE.get(key)
+                if cached:
+                    return cached[1]
+            raise requests.RequestException(f"上游快取重建逾時: {url}")
     try:
         response = HTTP.get(url, params=params, timeout=10)
         response.raise_for_status()
         payload = response.json()
     except (requests.RequestException, ValueError):
+        with API_CACHE_LOCK:
+            cached = API_CACHE.get(key)
+            API_INFLIGHT.pop(key, None)
+            event.set()
         if cached:
             return cached[1]
         raise
     with API_CACHE_LOCK:
-        API_CACHE[key] = (now, payload)
+        API_CACHE[key] = (time.time(), payload)
+        API_INFLIGHT.pop(key, None)
+        event.set()
     return payload
 
 
@@ -751,6 +844,33 @@ def okx_history_candles(symbol, bar, pages=5):
         after = page[-1][0]
     unique = {row[0]: row for row in rows}
     return [unique[key] for key in sorted(unique, key=int)]
+
+
+INTERVAL_SECONDS = {
+    "1m": 60,
+    "3m": 180,
+    "5m": 300,
+    "10m": 600,
+    "15m": 900,
+    "30m": 1800,
+    "45m": 2700,
+    "1h": 3600,
+    "2h": 7200,
+    "3h": 10800,
+    "4h": 14400,
+    "1d": 86400,
+    "1w": 604800,
+}
+
+
+def candle_is_forming(candle, interval, now=None) -> bool:
+    """K 線開始時間加上週期長度還沒到，就代表這根還沒收線。"""
+    now = time.time() if now is None else now
+    if interval == "1mo":
+        start = datetime.fromtimestamp(candle["time"], tz=timezone.utc)
+        current = datetime.fromtimestamp(now, tz=timezone.utc)
+        return (start.year, start.month) == (current.year, current.month)
+    return candle["time"] + INTERVAL_SECONDS.get(interval, 0) > now
 
 
 def aggregate_candles(candles, bucket_minutes):
@@ -996,169 +1116,236 @@ def simulation_instrument_spec(symbol: str):
     }
 
 
+SEARCH_CATALOG_REFRESH_SECONDS = 21600
+SEARCH_CATALOG = []
+SEARCH_CATALOG_LOCK = threading.Lock()
+_search_catalog_started = False
+
+
+def _compact(text) -> str:
+    """只留英數與中日韓文字並轉小寫，讓 btcusdt 能對上 BTC-USDT。"""
+    return "".join(ch for ch in str(text or "").lower() if ch.isalnum())
+
+
+def _catalog_entry(
+    symbol, name, type_, exchange, source, keywords=(), category=None
+) -> dict:
+    raw_symbol = str(symbol).split(":", 1)[-1]
+    is_exchange = str(symbol).upper().startswith(("OKX:", "BINANCE:", "BYBIT:"))
+    compact_symbol = _compact(raw_symbol)
+    if compact_symbol.endswith("swap"):
+        compact_symbol = compact_symbol[: -len("swap")]
+    base = _compact(re.split(r"[-./]", raw_symbol)[0])
+    terms = {_compact(name)}
+    terms.update(_compact(word) for word in str(name or "").split())
+    terms.update(_compact(keyword) for keyword in keywords if keyword)
+    terms.discard("")
+    return {
+        "item": {
+            "symbol": symbol,
+            "name": name or symbol,
+            "type": type_,
+            "exchange": exchange,
+            "source": source,
+        },
+        "symbol_key": compact_symbol,
+        "base_key": base,
+        "terms": tuple(terms),
+        "is_crypto": is_exchange and category in (None, "1"),
+        "is_tokenized": is_exchange and category not in (None, "1"),
+        "is_perpetual": str(symbol).upper().endswith("-SWAP"),
+    }
+
+
+def _local_catalog_entries() -> list[dict]:
+    return [
+        _catalog_entry(
+            item["symbol"],
+            item.get("name", item["symbol"]),
+            item.get("type", "ASSET"),
+            item.get("exchange", "LOCAL"),
+            "Local",
+            item.get("keywords", []),
+            item.get("category"),
+        )
+        for item in SYMBOL_DATABASE
+        if item.get("symbol")
+    ]
+
+
+def _remote_catalog_entries() -> list[dict]:
+    entries = []
+    sources = [
+        (
+            "https://openapi.twse.com.tw/v1/opendata/t187ap03_L",
+            {},
+            lambda payload: [
+                (f"{row.get('公司代號', '').strip()}.TW", row.get("公司簡稱", "").strip(),
+                 "Taiwan Stock", "TWSE", "TWSE")
+                for row in payload
+                if str(row.get("公司代號", "")).strip()
+            ],
+        ),
+        (
+            "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O",
+            {},
+            lambda payload: [
+                (f"{row.get('SecuritiesCompanyCode', '').strip()}.TWO",
+                 row.get("CompanyAbbreviation", "").strip(),
+                 "Taiwan OTC Stock", "TPEx", "TPEx")
+                for row in payload
+                if str(row.get("SecuritiesCompanyCode", "")).strip()
+            ],
+        ),
+        (
+            "https://openapi.twse.com.tw/v1/opendata/t187ap47_L",
+            {},
+            lambda payload: [
+                (f"{row.get('基金代號', '').strip()}.TW", row.get("基金簡稱", "").strip(),
+                 "Taiwan ETF", "TWSE", "TWSE")
+                for row in payload
+                if str(row.get("基金代號", "")).strip()
+            ],
+        ),
+        (
+            "https://api.nasdaq.com/api/screener/stocks",
+            {"tableonly": "true", "limit": 10000, "offset": 0},
+            lambda payload: [
+                (row.get("symbol", "").strip(), row.get("name", "").strip(),
+                 "US Stock", "NASDAQ/NYSE", "Nasdaq")
+                for row in (payload.get("data") or {}).get("table", {}).get("rows", [])
+                if str(row.get("symbol", "")).strip()
+            ],
+        ),
+        (
+            "https://api.nasdaq.com/api/screener/etf",
+            {"tableonly": "true", "limit": 10000, "offset": 0},
+            lambda payload: [
+                (row.get("symbol", "").strip(), row.get("companyName", "").strip(),
+                 "US ETF", "US ETF", "Nasdaq")
+                for row in (
+                    ((payload.get("data") or {}).get("records") or {}).get("data") or {}
+                ).get("rows", [])
+                if str(row.get("symbol", "")).strip()
+            ],
+        ),
+    ]
+    for url, params, parse in sources:
+        try:
+            payload = cached_json(url, params, SEARCH_CATALOG_REFRESH_SECONDS)
+            entries.extend(_catalog_entry(*row) for row in parse(payload))
+        except Exception as error:
+            print(f"Search catalog error ({url}): {error}")
+    return entries
+
+
+def _rebuild_search_catalog() -> None:
+    entries = _local_catalog_entries() + _remote_catalog_entries()
+    with SEARCH_CATALOG_LOCK:
+        SEARCH_CATALOG[:] = entries
+
+
+def _search_catalog_worker() -> None:
+    while True:
+        try:
+            _rebuild_search_catalog()
+        except Exception as error:
+            print(f"Search catalog worker error: {error}")
+        time.sleep(SEARCH_CATALOG_REFRESH_SECONDS)
+
+
+@app.on_event("startup")
+def start_search_catalog_worker():
+    global _search_catalog_started
+    with SEARCH_CATALOG_LOCK:
+        SEARCH_CATALOG[:] = _local_catalog_entries()
+    if not _search_catalog_started:
+        _search_catalog_started = True
+        threading.Thread(
+            target=_search_catalog_worker, name="search-catalog", daemon=True
+        ).start()
+
+
+def _match_score(entry: dict, query: str) -> int | None:
+    """數字越小越相關：完全符合 > 代號開頭 > 名稱開頭 > 任意包含。"""
+    symbol_key, base_key = entry["symbol_key"], entry["base_key"]
+    if query in (symbol_key, base_key):
+        return 0
+    if symbol_key.startswith(query):
+        return 1
+    if any(term.startswith(query) for term in entry["terms"]):
+        return 2
+    if query in symbol_key or any(query in term for term in entry["terms"]):
+        return 3
+    return None
+
+
+def search_catalog(keyword: str, limit: int = 30) -> list[dict]:
+    query = _compact(keyword)
+    if not query:
+        return []
+    with SEARCH_CATALOG_LOCK:
+        catalog = SEARCH_CATALOG or _local_catalog_entries()
+    scored = []
+    for entry in catalog:
+        score = _match_score(entry, query)
+        if score is not None:
+            scored.append(
+                (
+                    score,
+                    not entry["is_crypto"],
+                    entry["is_tokenized"],
+                    not entry["is_perpetual"],
+                    len(entry["symbol_key"]),
+                    entry["item"]["symbol"],
+                    entry["item"],
+                )
+            )
+    scored.sort(key=lambda row: row[:6])
+    unique = {}
+    for row in scored:
+        unique.setdefault(row[-1]["symbol"], row[-1])
+        if len(unique) >= limit:
+            break
+    return list(unique.values())
+
+
 @app.get("/api/search")
 def search_symbol(keyword: str):
     keyword = keyword.strip()
     if not keyword:
         return {"status": "success", "results": []}
 
-    results = []
-    lower_keyword = keyword.lower()
+    # 1. 記憶體內商品清單：背景預先載入，搜尋時不等外部網站。
+    results = search_catalog(keyword)
 
-    # 1. 本地資料庫搜尋（包含 Binance 永續合約）
-    for item in SYMBOL_DATABASE:
-        searchable = [
-            item.get("symbol", ""),
-            item.get("name", ""),
-            *item.get("keywords", []),
-        ]
-        if any(lower_keyword in key.lower() for key in searchable):
-            results.append(
-                {
-                    "symbol": item["symbol"],
-                    "name": item.get("name", item["symbol"]),
-                    "type": item.get("type", "ASSET"),
-                    "exchange": item.get("exchange", "LOCAL"),
-                    "source": "Local",
-                }
+    # 2. 清單內找不到時，才問 Nasdaq 即時查詢。
+    if not results:
+        try:
+            payload = cached_json(
+                "https://api.nasdaq.com/api/autocomplete/slookup/10",
+                {"search": keyword},
+                3600,
             )
+            for item in payload.get("data", []):
+                ticker, name = (
+                    str(item.get("symbol", "")).strip(),
+                    str(item.get("name", "")).strip(),
+                )
+                if ticker:
+                    results.append(
+                        {
+                            "symbol": ticker,
+                            "name": name,
+                            "type": str(item.get("asset", "US Asset")),
+                            "exchange": item.get("exchange") or "US Market",
+                            "source": "Nasdaq",
+                        }
+                    )
+        except Exception:
+            pass
 
-    # Official catalogs expand search beyond the small built-in seed list.
-    try:
-        for item in cached_json(
-            "https://openapi.twse.com.tw/v1/opendata/t187ap03_L", {}, 21600
-        ):
-            code, name = (
-                str(item.get("公司代號", "")).strip(),
-                str(item.get("公司簡稱", "")).strip(),
-            )
-            if lower_keyword in code.lower() or lower_keyword in name.lower():
-                results.append(
-                    {
-                        "symbol": f"{code}.TW",
-                        "name": name,
-                        "type": "Taiwan Stock",
-                        "exchange": "TWSE",
-                        "source": "TWSE",
-                    }
-                )
-    except Exception:
-        pass
-    try:
-        for item in cached_json(
-            "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O", {}, 21600
-        ):
-            code, name = (
-                str(item.get("SecuritiesCompanyCode", "")).strip(),
-                str(item.get("CompanyAbbreviation", "")).strip(),
-            )
-            if lower_keyword in code.lower() or lower_keyword in name.lower():
-                results.append(
-                    {
-                        "symbol": f"{code}.TWO",
-                        "name": name,
-                        "type": "Taiwan OTC Stock",
-                        "exchange": "TPEx",
-                        "source": "TPEx",
-                    }
-                )
-    except Exception:
-        pass
-    try:
-        for item in cached_json(
-            "https://openapi.twse.com.tw/v1/opendata/t187ap47_L", {}, 21600
-        ):
-            code, name = (
-                str(item.get("基金代號", "")).strip(),
-                str(item.get("基金簡稱", "")).strip(),
-            )
-            if lower_keyword in code.lower() or lower_keyword in name.lower():
-                results.append(
-                    {
-                        "symbol": f"{code}.TW",
-                        "name": name,
-                        "type": "Taiwan ETF",
-                        "exchange": "TWSE",
-                        "source": "TWSE",
-                    }
-                )
-    except Exception:
-        pass
-    try:
-        payload = cached_json(
-            "https://api.nasdaq.com/api/screener/stocks",
-            {"tableonly": "true", "limit": 10000, "offset": 0},
-            21600,
-        )
-        for item in (payload.get("data") or {}).get("table", {}).get("rows", []):
-            ticker, name = (
-                str(item.get("symbol", "")).strip(),
-                str(item.get("name", "")).strip(),
-            )
-            if lower_keyword in ticker.lower() or lower_keyword in name.lower():
-                results.append(
-                    {
-                        "symbol": ticker,
-                        "name": name,
-                        "type": "US Stock",
-                        "exchange": "NASDAQ/NYSE",
-                        "source": "Nasdaq",
-                    }
-                )
-    except Exception:
-        pass
-    try:
-        payload = cached_json(
-            "https://api.nasdaq.com/api/screener/etf",
-            {"tableonly": "true", "limit": 10000, "offset": 0},
-            21600,
-        )
-        rows = (
-            ((payload.get("data") or {}).get("records") or {}).get("data") or {}
-        ).get("rows", [])
-        for item in rows:
-            ticker, name = (
-                str(item.get("symbol", "")).strip(),
-                str(item.get("companyName", "")).strip(),
-            )
-            if lower_keyword in ticker.lower() or lower_keyword in name.lower():
-                results.append(
-                    {
-                        "symbol": ticker,
-                        "name": name,
-                        "type": "US ETF",
-                        "exchange": "US ETF",
-                        "source": "Nasdaq",
-                    }
-                )
-    except Exception:
-        pass
-    try:
-        payload = cached_json(
-            "https://api.nasdaq.com/api/autocomplete/slookup/10",
-            {"search": keyword},
-            3600,
-        )
-        for item in payload.get("data", []):
-            ticker, name = (
-                str(item.get("symbol", "")).strip(),
-                str(item.get("name", "")).strip(),
-            )
-            if ticker:
-                asset = str(item.get("asset", "US Asset"))
-                results.append(
-                    {
-                        "symbol": ticker,
-                        "name": name,
-                        "type": asset,
-                        "exchange": item.get("exchange") or "US Market",
-                        "source": "Nasdaq",
-                    }
-                )
-    except Exception:
-        pass
-
-    # 2. TradingView 全球大數據搜尋
+    # 3. TradingView 全球大數據搜尋
     if not results:
         try:
             response = requests.get(
@@ -1182,7 +1369,7 @@ def search_symbol(keyword: str):
         except Exception as e:
             print("TradingView 搜尋失敗:", e)
 
-    # 3. Yahoo Search 備用；使用快取避免 Render 共用 IP 被限流。
+    # 4. Yahoo Search 備用；使用快取避免 Render 共用 IP 被限流。
     if not results:
         try:
             payload = yahoo_json(
@@ -1363,7 +1550,26 @@ NEWS_CACHE = {}
 NEWS_CACHE_LOCK = threading.Lock()
 
 
+def _read_news_cache(market: str, *, allow_stale: bool = False) -> list[dict] | None:
+    with NEWS_CACHE_LOCK:
+        entry = NEWS_CACHE.get(market)
+        if not entry:
+            return None
+        timestamp, items = entry
+        if allow_stale or time.time() - timestamp < NEWS_ITEM_TTL_SECONDS:
+            return list(items)
+    return None
+
+
+def _write_news_cache(market: str, items: list[dict]) -> None:
+    with NEWS_CACHE_LOCK:
+        NEWS_CACHE[market] = (time.time(), list(items))
+
+
 def _news_items_for_market(market: str) -> list[dict]:
+    fresh = _read_news_cache(market)
+    if fresh is not None:
+        return fresh
     query = NEWS_QUERIES[market]
     try:
         payload = yahoo_json(
@@ -1398,8 +1604,7 @@ def _news_items_for_market(market: str) -> list[dict]:
             "importance": "medium",
         })
     if items:
-        with NEWS_CACHE_LOCK:
-            NEWS_CACHE[market] = items
+        _write_news_cache(market, items)
         return items
     # Fallback to Google News RSS so the page can still show sourced headlines
     # when Yahoo Finance is rate-limited or unavailable.
@@ -1434,8 +1639,7 @@ def _news_items_for_market(market: str) -> list[dict]:
             "importance": "medium",
         })
     if items:
-        with NEWS_CACHE_LOCK:
-            NEWS_CACHE[market] = items
+        _write_news_cache(market, items)
     return items
 
 
@@ -1445,38 +1649,43 @@ def market_news(market: str = "ALL"):
     markets = list(NEWS_QUERIES) if market == "ALL" else [market]
     if any(item not in NEWS_QUERIES for item in markets):
         raise HTTPException(status_code=400, detail="不支援的消息市場分類。")
-    items = []
-    errors = []
-    for item_market in markets:
-        try:
-            current_items = _news_items_for_market(item_market)
-            if current_items:
-                items.extend(current_items)
-            else:
-                with NEWS_CACHE_LOCK:
-                    items.extend(NEWS_CACHE.get(item_market, []))
-        except Exception as error:
-            errors.append(item_market)
-            print(f"News provider error ({item_market}): {error}")
-            with NEWS_CACHE_LOCK:
-                items.extend(NEWS_CACHE.get(item_market, []))
-    unique = {}
-    for item in items:
-        dedupe_key = "|".join([
-            item.get("market", ""),
-            " ".join(item.get("title", "").lower().split()),
-            item.get("source", "").lower(),
-        ])
-        unique[dedupe_key] = item
-    ordered = sorted(
-        unique.values(), key=lambda item: item.get("published_at") or "", reverse=True
-    )[:30]
-    return {
-        "status": "partial" if errors and ordered else "error" if errors else "success",
-        "results": ordered,
-        "updated_at": datetime.now(timezone.utc).isoformat(),
-        "failed_markets": errors,
-    }
+
+    def build_news_payload():
+        items = []
+        errors = []
+        for item_market in markets:
+            try:
+                current_items = _news_items_for_market(item_market)
+                if current_items:
+                    items.extend(current_items)
+                else:
+                    stale = _read_news_cache(item_market, allow_stale=True) or []
+                    items.extend(stale)
+            except Exception as error:
+                errors.append(item_market)
+                print(f"News provider error ({item_market}): {error}")
+                stale = _read_news_cache(item_market, allow_stale=True) or []
+                items.extend(stale)
+        unique = {}
+        for item in items:
+            dedupe_key = "|".join([
+                item.get("market", ""),
+                " ".join(item.get("title", "").lower().split()),
+                item.get("source", "").lower(),
+            ])
+            unique[dedupe_key] = item
+        ordered = sorted(
+            unique.values(), key=lambda item: item.get("published_at") or "", reverse=True
+        )[:30]
+        return {
+            "status": "partial" if errors and ordered else "error" if errors else "success",
+            "results": ordered,
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+            "failed_markets": errors,
+            "cache_ttl_seconds": NEWS_RESPONSE_TTL_SECONDS,
+        }
+
+    return cached_endpoint(f"news:{market}", NEWS_RESPONSE_TTL_SECONDS, build_news_payload)
 
 
 @app.get("/api/market-ranking")
@@ -1489,105 +1698,115 @@ def market_ranking(market: str = "futures", ranking: str = "gainers"):
         "volume",
     }:
         raise HTTPException(status_code=400, detail="不支援的排行榜類型。")
-    rows = []
-    try:
-        if market == "futures":
-            payload = cached_json(
-                "https://www.okx.com/api/v5/market/tickers", {"instType": "SWAP"}, 60
-            )
-            for item in payload.get("data", []):
-                if not item.get("instId", "").endswith("-USDT-SWAP"):
-                    continue
-                last, open_ = number_value(item.get("last")), number_value(
-                    item.get("open24h")
+    ttl = RANKING_TTL_SECONDS[market]
+
+    def build_ranking_payload():
+        rows = []
+        try:
+            if market == "futures":
+                payload = cached_json(
+                    "https://www.okx.com/api/v5/market/tickers",
+                    {"instType": "SWAP"},
+                    ttl,
                 )
-                if last and open_:
-                    rows.append(
-                        {
-                            "symbol": f"OKX:{item['instId']}",
-                            "name": item["instId"],
-                            "price": last,
-                            "change": round((last - open_) / open_ * 100, 2),
-                            "volume": number_value(item.get("volCcy24h")) or 0,
-                        }
-                    )
-        else:
-            symbols = {
-                "taiwan": [
-                    "2330.TW",
-                    "2317.TW",
-                    "2454.TW",
-                    "2303.TW",
-                    "2881.TW",
-                    "2882.TW",
-                    "2308.TW",
-                    "3711.TW",
-                    "2382.TW",
-                    "0050.TW",
-                ],
-                "us": [
-                    "AAPL",
-                    "MSFT",
-                    "NVDA",
-                    "TSLA",
-                    "AMZN",
-                    "META",
-                    "GOOGL",
-                    "AMD",
-                    "QQQ",
-                    "TLT",
-                ],
-                "metals": [
-                    "GLD",
-                    "IAU",
-                    "SLV",
-                    "SIVR",
-                    "PPLT",
-                    "PALL",
-                    "GDX",
-                    "GDXJ",
-                    "SIL",
-                    "COPX",
-                ],
-            }[market]
-            for ticker in symbols:
-                try:
-                    candles = (
-                        twse_recent_candles(ticker)
-                        if market == "taiwan"
-                        else nasdaq_daily_candles(ticker)
-                    )
-                    if len(candles) < 2:
+                for item in payload.get("data", []):
+                    if not item.get("instId", "").endswith("-USDT-SWAP"):
                         continue
-                    latest, previous = candles[-1], candles[-2]
-                    rows.append(
-                        {
-                            "symbol": ticker,
-                            "name": ticker,
-                            "price": latest["close"],
-                            "change": round(
-                                (latest["close"] - previous["close"])
-                                / previous["close"]
-                                * 100,
-                                2,
-                            ),
-                            "volume": latest.get("volume", 0),
-                        }
+                    last, open_ = number_value(item.get("last")), number_value(
+                        item.get("open24h")
                     )
-                except Exception as error:
-                    print(f"Ranking item error {ticker}:", error)
-        key = "volume" if ranking == "volume" else "change"
-        reverse = ranking != "losers"
-        return {
-            "status": "success",
-            "market": market,
-            "ranking": ranking,
-            "results": sorted(rows, key=lambda item: item[key], reverse=reverse)[:10],
-        }
-    except Exception as error:
-        raise HTTPException(
-            status_code=502, detail="目前選擇的排行榜資料暫時無法取得。"
-        ) from error
+                    if last and open_:
+                        rows.append(
+                            {
+                                "symbol": f"OKX:{item['instId']}",
+                                "name": item["instId"],
+                                "price": last,
+                                "change": round((last - open_) / open_ * 100, 2),
+                                "volume": number_value(item.get("volCcy24h")) or 0,
+                            }
+                        )
+            else:
+                symbols = {
+                    "taiwan": [
+                        "2330.TW",
+                        "2317.TW",
+                        "2454.TW",
+                        "2303.TW",
+                        "2881.TW",
+                        "2882.TW",
+                        "2308.TW",
+                        "3711.TW",
+                        "2382.TW",
+                        "0050.TW",
+                    ],
+                    "us": [
+                        "AAPL",
+                        "MSFT",
+                        "NVDA",
+                        "TSLA",
+                        "AMZN",
+                        "META",
+                        "GOOGL",
+                        "AMD",
+                        "QQQ",
+                        "TLT",
+                    ],
+                    "metals": [
+                        "GLD",
+                        "IAU",
+                        "SLV",
+                        "SIVR",
+                        "PPLT",
+                        "PALL",
+                        "GDX",
+                        "GDXJ",
+                        "SIL",
+                        "COPX",
+                    ],
+                }[market]
+                for ticker in symbols:
+                    try:
+                        candles = (
+                            twse_recent_candles(ticker)
+                            if market == "taiwan"
+                            else nasdaq_daily_candles(ticker)
+                        )
+                        if len(candles) < 2:
+                            continue
+                        latest, previous = candles[-1], candles[-2]
+                        rows.append(
+                            {
+                                "symbol": ticker,
+                                "name": ticker,
+                                "price": latest["close"],
+                                "change": round(
+                                    (latest["close"] - previous["close"])
+                                    / previous["close"]
+                                    * 100,
+                                    2,
+                                ),
+                                "volume": latest.get("volume", 0),
+                            }
+                        )
+                    except Exception as error:
+                        print(f"Ranking item error {ticker}:", error)
+            sort_key = "volume" if ranking == "volume" else "change"
+            reverse = ranking != "losers"
+            return {
+                "status": "success",
+                "market": market,
+                "ranking": ranking,
+                "results": sorted(
+                    rows, key=lambda item: item[sort_key], reverse=reverse
+                )[:10],
+                "cache_ttl_seconds": ttl,
+            }
+        except Exception as error:
+            raise HTTPException(
+                status_code=502, detail="目前選擇的排行榜資料暫時無法取得。"
+            ) from error
+
+    return cached_endpoint(f"ranking:{market}:{ranking}", ttl, build_ranking_payload)
 
 
 @app.post("/api/admin/telegram/test")
@@ -1607,6 +1826,13 @@ def telegram_send(message: str, x_mosstrade_admin_key: str | None = Header(defau
 
 @app.get("/api/analyze")
 def analyze_market(symbol: str, interval: str = "1h"):
+    cache_key = f"analyze:{symbol.strip().upper()}:{interval.strip().lower()}"
+    return cached_endpoint(
+        cache_key, ANALYZE_TTL_SECONDS, lambda: _compute_analyze_market(symbol, interval)
+    )
+
+
+def _compute_analyze_market(symbol: str, interval: str = "1h"):
     interval = interval.strip().lower()
     symbol_upper = symbol.strip().upper()
 
@@ -1773,7 +1999,13 @@ def analyze_market(symbol: str, interval: str = "1h"):
                 detail=f"{source} 暫時無法提供 {symbol} 的 K 線資料，請稍後再試。",
             ) from error
 
-    candles = aggregate_candles(candles, config["bucket"])
+    all_candles = aggregate_candles(candles, config["bucket"])
+    if not all_candles:
+        raise HTTPException(status_code=422, detail="沒有可用的 K 線資料。")
+    live_price = all_candles[-1]["close"]
+    # 策略只看已收線的 K 線：盤中插針或暫時突破，收線前不會亮訊號。
+    forming = candle_is_forming(all_candles[-1], interval)
+    candles = all_candles[:-1] if forming else all_candles
     lookback = config.get("lookback", 0)
     if len(candles) < max(config["trend"], lookback) + 2:
         raise HTTPException(
@@ -1943,6 +2175,30 @@ def analyze_market(symbol: str, interval: str = "1h"):
     )
     reason = f"{interval} 多因子評分｜多方 {long_score} 分：{', '.join(long_factors) or '無'}｜空方 {short_score} 分：{', '.join(short_factors) or '無'}"
 
+    # 插針／假突破過濾：看收線後的影線長度與收盤位置。
+    candle_range = current["high"] - current["low"]
+    upper_wick = current["high"] - max(current["open"], current["close"])
+    lower_wick = min(current["open"], current["close"]) - current["low"]
+    filter_notes = []
+    if long_signal and candle_range > 0:
+        if upper_wick >= candle_range * 0.6:
+            long_signal = False
+            filter_notes.append("上影線過長（插針），多單不成立")
+        elif current["high"] > recent_high and price <= recent_high:
+            long_signal = False
+            filter_notes.append("盤中突破但收線跌回區間（假突破），多單不成立")
+    if short_signal and candle_range > 0:
+        if lower_wick >= candle_range * 0.6:
+            short_signal = False
+            filter_notes.append("下影線過長（插針），空單不成立")
+        elif current["low"] < recent_low and price >= recent_low:
+            short_signal = False
+            filter_notes.append("盤中跌破但收線站回區間（假跌破），空單不成立")
+    if filter_notes:
+        reason += "｜" + "；".join(filter_notes)
+    if forming:
+        reason += "｜以上一根已收線 K 線判斷"
+
     if long_signal:
         direction, message = "BUY", "多頭進場訊號"
         tp, sl = (
@@ -1966,35 +2222,43 @@ def analyze_market(symbol: str, interval: str = "1h"):
         "resistance": round(max(candle["high"] for candle in level_candles), 4),
         "support": round(min(candle["low"] for candle in level_candles), 4),
     }
+    # 圖表線條仍畫到最新一根（含未收線），讓畫面跟著即時價格走。
+    chart_closes = [candle["close"] for candle in all_candles]
+    chart_fast = calculate_ema(chart_closes, config["fast"])
+    chart_slow = calculate_ema(chart_closes, config["slow"])
+    chart_trend = calculate_ema(chart_closes, config["trend"])
+    chart_bb_middle, chart_bb_upper, chart_bb_lower = calculate_bollinger(
+        chart_closes, period=BB_PERIOD, deviations=BB_DEVIATIONS
+    )
     ema_data = {
         "fast": [
-            {"time": candle["time"], "value": round(fast_ema[index], 4)}
-            for index, candle in enumerate(candles)
+            {"time": candle["time"], "value": round(chart_fast[index], 4)}
+            for index, candle in enumerate(all_candles)
         ],
         "slow": [
-            {"time": candle["time"], "value": round(slow_ema[index], 4)}
-            for index, candle in enumerate(candles)
+            {"time": candle["time"], "value": round(chart_slow[index], 4)}
+            for index, candle in enumerate(all_candles)
         ],
         "trend": [
-            {"time": candle["time"], "value": round(trend_ema[index], 4)}
-            for index, candle in enumerate(candles)
+            {"time": candle["time"], "value": round(chart_trend[index], 4)}
+            for index, candle in enumerate(all_candles)
         ],
     }
     bollinger_data = {
         "middle": [
-            {"time": candle["time"], "value": round(bb_middle[index], 4)}
-            for index, candle in enumerate(candles)
-            if bb_middle[index] is not None
+            {"time": candle["time"], "value": round(chart_bb_middle[index], 4)}
+            for index, candle in enumerate(all_candles)
+            if chart_bb_middle[index] is not None
         ],
         "upper": [
-            {"time": candle["time"], "value": round(bb_upper[index], 4)}
-            for index, candle in enumerate(candles)
-            if bb_upper[index] is not None
+            {"time": candle["time"], "value": round(chart_bb_upper[index], 4)}
+            for index, candle in enumerate(all_candles)
+            if chart_bb_upper[index] is not None
         ],
         "lower": [
-            {"time": candle["time"], "value": round(bb_lower[index], 4)}
-            for index, candle in enumerate(candles)
-            if bb_lower[index] is not None
+            {"time": candle["time"], "value": round(chart_bb_lower[index], 4)}
+            for index, candle in enumerate(all_candles)
+            if chart_bb_lower[index] is not None
         ],
     }
     return {
@@ -2004,7 +2268,11 @@ def analyze_market(symbol: str, interval: str = "1h"):
         "market_source": market_source,
         "direction": direction,
         "message": message,
-        "current_price": round(price, 4),
+        "current_price": round(live_price, 4),
+        # 訊號依據的已收線收盤價，止損／止盈也以此計算。
+        "entry_price": round(price, 4),
+        "signal_time": current["time"],
+        "signal_candle_closed": True,
         "tp": round(tp, 4) if tp is not None else "—",
         "tp2": round(tp2, 4) if tp2 is not None else "—",
         "sl": round(sl, 4) if sl is not None else "—",
@@ -2023,6 +2291,6 @@ def analyze_market(symbol: str, interval: str = "1h"):
                 key: round(value, 4) if key != "time" else value
                 for key, value in candle.items()
             }
-            for candle in candles
+            for candle in all_candles
         ],
     }
