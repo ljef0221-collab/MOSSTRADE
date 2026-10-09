@@ -478,7 +478,7 @@ def _telegram_worker() -> None:
                     try:
                         result = analyze_market(symbol=symbol, interval=interval)
                         direction = result.get("direction")
-                        key = f"{symbol.upper()}:{interval}:{result.get('chart_data', [{}])[-1].get('time')}:{direction}"
+                        key = f"{symbol.upper()}:{interval}:{result.get('signal_time')}:{direction}"
                         if direction in ("BUY", "SELL") and _telegram_last_signal.get(f"{symbol}:{interval}") != key:
                             _telegram_last_signal[f"{symbol}:{interval}"] = key
                             _telegram_api("sendMessage", {"chat_id": TELEGRAM_CHAT_ID, "text": format_analysis_message(symbol, interval, result)})
@@ -844,6 +844,33 @@ def okx_history_candles(symbol, bar, pages=5):
         after = page[-1][0]
     unique = {row[0]: row for row in rows}
     return [unique[key] for key in sorted(unique, key=int)]
+
+
+INTERVAL_SECONDS = {
+    "1m": 60,
+    "3m": 180,
+    "5m": 300,
+    "10m": 600,
+    "15m": 900,
+    "30m": 1800,
+    "45m": 2700,
+    "1h": 3600,
+    "2h": 7200,
+    "3h": 10800,
+    "4h": 14400,
+    "1d": 86400,
+    "1w": 604800,
+}
+
+
+def candle_is_forming(candle, interval, now=None) -> bool:
+    """K 線開始時間加上週期長度還沒到，就代表這根還沒收線。"""
+    now = time.time() if now is None else now
+    if interval == "1mo":
+        start = datetime.fromtimestamp(candle["time"], tz=timezone.utc)
+        current = datetime.fromtimestamp(now, tz=timezone.utc)
+        return (start.year, start.month) == (current.year, current.month)
+    return candle["time"] + INTERVAL_SECONDS.get(interval, 0) > now
 
 
 def aggregate_candles(candles, bucket_minutes):
@@ -1972,7 +1999,13 @@ def _compute_analyze_market(symbol: str, interval: str = "1h"):
                 detail=f"{source} 暫時無法提供 {symbol} 的 K 線資料，請稍後再試。",
             ) from error
 
-    candles = aggregate_candles(candles, config["bucket"])
+    all_candles = aggregate_candles(candles, config["bucket"])
+    if not all_candles:
+        raise HTTPException(status_code=422, detail="沒有可用的 K 線資料。")
+    live_price = all_candles[-1]["close"]
+    # 策略只看已收線的 K 線：盤中插針或暫時突破，收線前不會亮訊號。
+    forming = candle_is_forming(all_candles[-1], interval)
+    candles = all_candles[:-1] if forming else all_candles
     lookback = config.get("lookback", 0)
     if len(candles) < max(config["trend"], lookback) + 2:
         raise HTTPException(
@@ -2142,6 +2175,30 @@ def _compute_analyze_market(symbol: str, interval: str = "1h"):
     )
     reason = f"{interval} 多因子評分｜多方 {long_score} 分：{', '.join(long_factors) or '無'}｜空方 {short_score} 分：{', '.join(short_factors) or '無'}"
 
+    # 插針／假突破過濾：看收線後的影線長度與收盤位置。
+    candle_range = current["high"] - current["low"]
+    upper_wick = current["high"] - max(current["open"], current["close"])
+    lower_wick = min(current["open"], current["close"]) - current["low"]
+    filter_notes = []
+    if long_signal and candle_range > 0:
+        if upper_wick >= candle_range * 0.6:
+            long_signal = False
+            filter_notes.append("上影線過長（插針），多單不成立")
+        elif current["high"] > recent_high and price <= recent_high:
+            long_signal = False
+            filter_notes.append("盤中突破但收線跌回區間（假突破），多單不成立")
+    if short_signal and candle_range > 0:
+        if lower_wick >= candle_range * 0.6:
+            short_signal = False
+            filter_notes.append("下影線過長（插針），空單不成立")
+        elif current["low"] < recent_low and price >= recent_low:
+            short_signal = False
+            filter_notes.append("盤中跌破但收線站回區間（假跌破），空單不成立")
+    if filter_notes:
+        reason += "｜" + "；".join(filter_notes)
+    if forming:
+        reason += "｜以上一根已收線 K 線判斷"
+
     if long_signal:
         direction, message = "BUY", "多頭進場訊號"
         tp, sl = (
@@ -2165,35 +2222,43 @@ def _compute_analyze_market(symbol: str, interval: str = "1h"):
         "resistance": round(max(candle["high"] for candle in level_candles), 4),
         "support": round(min(candle["low"] for candle in level_candles), 4),
     }
+    # 圖表線條仍畫到最新一根（含未收線），讓畫面跟著即時價格走。
+    chart_closes = [candle["close"] for candle in all_candles]
+    chart_fast = calculate_ema(chart_closes, config["fast"])
+    chart_slow = calculate_ema(chart_closes, config["slow"])
+    chart_trend = calculate_ema(chart_closes, config["trend"])
+    chart_bb_middle, chart_bb_upper, chart_bb_lower = calculate_bollinger(
+        chart_closes, period=BB_PERIOD, deviations=BB_DEVIATIONS
+    )
     ema_data = {
         "fast": [
-            {"time": candle["time"], "value": round(fast_ema[index], 4)}
-            for index, candle in enumerate(candles)
+            {"time": candle["time"], "value": round(chart_fast[index], 4)}
+            for index, candle in enumerate(all_candles)
         ],
         "slow": [
-            {"time": candle["time"], "value": round(slow_ema[index], 4)}
-            for index, candle in enumerate(candles)
+            {"time": candle["time"], "value": round(chart_slow[index], 4)}
+            for index, candle in enumerate(all_candles)
         ],
         "trend": [
-            {"time": candle["time"], "value": round(trend_ema[index], 4)}
-            for index, candle in enumerate(candles)
+            {"time": candle["time"], "value": round(chart_trend[index], 4)}
+            for index, candle in enumerate(all_candles)
         ],
     }
     bollinger_data = {
         "middle": [
-            {"time": candle["time"], "value": round(bb_middle[index], 4)}
-            for index, candle in enumerate(candles)
-            if bb_middle[index] is not None
+            {"time": candle["time"], "value": round(chart_bb_middle[index], 4)}
+            for index, candle in enumerate(all_candles)
+            if chart_bb_middle[index] is not None
         ],
         "upper": [
-            {"time": candle["time"], "value": round(bb_upper[index], 4)}
-            for index, candle in enumerate(candles)
-            if bb_upper[index] is not None
+            {"time": candle["time"], "value": round(chart_bb_upper[index], 4)}
+            for index, candle in enumerate(all_candles)
+            if chart_bb_upper[index] is not None
         ],
         "lower": [
-            {"time": candle["time"], "value": round(bb_lower[index], 4)}
-            for index, candle in enumerate(candles)
-            if bb_lower[index] is not None
+            {"time": candle["time"], "value": round(chart_bb_lower[index], 4)}
+            for index, candle in enumerate(all_candles)
+            if chart_bb_lower[index] is not None
         ],
     }
     return {
@@ -2203,7 +2268,11 @@ def _compute_analyze_market(symbol: str, interval: str = "1h"):
         "market_source": market_source,
         "direction": direction,
         "message": message,
-        "current_price": round(price, 4),
+        "current_price": round(live_price, 4),
+        # 訊號依據的已收線收盤價，止損／止盈也以此計算。
+        "entry_price": round(price, 4),
+        "signal_time": current["time"],
+        "signal_candle_closed": True,
         "tp": round(tp, 4) if tp is not None else "—",
         "tp2": round(tp2, 4) if tp2 is not None else "—",
         "sl": round(sl, 4) if sl is not None else "—",
@@ -2222,6 +2291,6 @@ def _compute_analyze_market(symbol: str, interval: str = "1h"):
                 key: round(value, 4) if key != "time" else value
                 for key, value in candle.items()
             }
-            for candle in candles
+            for candle in all_candles
         ],
     }

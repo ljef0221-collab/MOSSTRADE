@@ -7151,7 +7151,7 @@
         }
         function saveSignal(data, symbol, interval, chartRows = lastChartData) {
           if (!["BUY", "SELL"].includes(data.direction)) return;
-          const signalTime = chartRows.at(-1)?.time;
+          const signalTime = data.signal_time || chartRows.at(-1)?.time;
           if (!signalTime) return;
           const history = readHistory();
           const same = history.filter(
@@ -7164,7 +7164,7 @@
           const latest = same.sort((a, b) => b.signalTime - a.signalTime)[0];
           const cooldown =
             (intervalSeconds[interval] || 3600) * (cooldownBars[interval] || 6);
-          const entry = Number(data.current_price);
+          const entry = Number(data.entry_price ?? data.current_price);
           if (latest) {
             const elapsed = signalTime - latest.signalTime;
             const overlap =
@@ -7334,12 +7334,13 @@
           const active = ["BUY", "SELL"].includes(data.direction);
           byId("trade-plan").classList.toggle("hidden", !active);
           if (!active) return;
-          byId("entry-price").textContent = data.current_price;
+          const entry = data.entry_price ?? data.current_price;
+          byId("entry-price").textContent = entry;
           byId("stop-price").textContent = data.sl;
           byId("tp1-price").textContent = data.tp;
           byId("tp2-price").textContent = data.tp2;
           byId("risk-reward-price").textContent = formatRiskReward(
-            data.current_price,
+            entry,
             data.sl,
             data.tp,
           );
@@ -8105,13 +8106,17 @@
           byId("sim-strategy-reason").textContent =
             analysis?.reason || analysis?.message || "等待更多條件確認。";
           byId("sim-strategy-entry").textContent = active
-            ? formatSimNumber(analysis.current_price, 4)
+            ? formatSimNumber(analysis.entry_price ?? analysis.current_price, 4)
             : "—";
           byId("sim-strategy-sl").textContent = active ? analysis.sl : "—";
           byId("sim-strategy-tp1").textContent = active ? analysis.tp : "—";
           byId("sim-strategy-tp2").textContent = active ? analysis.tp2 : "—";
           byId("sim-strategy-rr").textContent = active
-            ? formatRiskReward(analysis.current_price, analysis.sl, analysis.tp)
+            ? formatRiskReward(
+                analysis.entry_price ?? analysis.current_price,
+                analysis.sl,
+                analysis.tp,
+              )
             : "—";
         }
 
@@ -8432,10 +8437,42 @@
           recordEquitySnapshot(true);
         }
 
+        // 防止連點：送單處理中鎖住按鈕；同一筆內容 2 秒內不能重複建立。
+        const SIM_DUPLICATE_ORDER_MS = 2000;
+        let simOrderSubmitting = false;
+        let simLastOrderFingerprint = { key: "", time: 0 };
+        const closingPositionIds = new Set();
+
+        function setSimulationSubmitDisabled(disabled) {
+          ["sim-submit-long", "sim-submit-short"].forEach((id) => {
+            const button = byId(id);
+            if (!button) return;
+            button.disabled = disabled;
+            button.setAttribute("aria-busy", String(disabled));
+          });
+        }
+
         function submitSimulationOrder(side) {
+          if (simOrderSubmitting) return;
+          simOrderSubmitting = true;
+          setSimulationSubmitDisabled(true);
           byId("sim-error").textContent = "";
           try {
             const order = buildSimulationOrder(side);
+            const fingerprint = [
+              order.symbol,
+              order.side,
+              order.orderType,
+              order.margin,
+              order.leverage,
+              order.limitPrice || "",
+            ].join("|");
+            if (
+              simLastOrderFingerprint.key === fingerprint &&
+              Date.now() - simLastOrderFingerprint.time < SIM_DUPLICATE_ORDER_MS
+            ) {
+              throw new Error("剛剛已建立相同的訂單，請稍候再試，避免重複下單。");
+            }
             const direction = order.side === "short" ? "做空" : "做多／買進";
             const preview = [
               `商品：${order.symbol}`,
@@ -8456,12 +8493,19 @@
             } else {
               executeSimulationOrder(order, simPrice);
             }
+            simLastOrderFingerprint = { key: fingerprint, time: Date.now() };
             recordEquitySnapshot(true);
             renderSimulation();
             updateSimulationSummary();
             closeSimulationOrderPanel();
           } catch (error) {
             byId("sim-error").textContent = error.message;
+          } finally {
+            // 確認視窗關閉後，排隊中的第二下點擊會在此之前被忽略。
+            setTimeout(() => {
+              simOrderSubmitting = false;
+              setSimulationSubmitDisabled(false);
+            }, 400);
           }
         }
 
@@ -8540,8 +8584,26 @@
         }
 
         async function closeSimulationPosition(id) {
+          if (closingPositionIds.has(id)) return;
           const position = simState.positions.find((item) => item.id === id);
           if (!position) return;
+          closingPositionIds.add(id);
+          document
+            .querySelectorAll(
+              `[data-close-position="${CSS.escape(id)}"], [data-global-close-position="${CSS.escape(id)}"]`,
+            )
+            .forEach((button) => {
+              button.disabled = true;
+              button.textContent = "平倉中…";
+            });
+          try {
+            await settleClosedPosition(id, position);
+          } finally {
+            closingPositionIds.delete(id);
+          }
+        }
+
+        async function settleClosedPosition(id, position) {
           let price = position.lastPrice || position.entry;
           try {
             const response = await fetch(
@@ -8551,6 +8613,11 @@
             if (response.ok) price = Number(data.current_price) || price;
           } catch (_error) {
             // Last known price is used if the quote service is unavailable.
+          }
+          // 等報價期間可能已被止損／止盈或另一個按鈕平掉，避免重複退款。
+          if (!simState.positions.some((item) => item.id === id)) {
+            renderSimulation();
+            return;
           }
           const pnl = positionPnl(position, price);
           const closingFee =
@@ -8796,7 +8863,7 @@
           if (!data || !["BUY", "SELL"].includes(data.direction)) return;
           const key = sessionStorage.getItem("mosstrade_admin_key");
           if (!key) return;
-          const dedupeKey = `${symbol}|${interval}|${data.direction}|${data.current_price}`;
+          const dedupeKey = `${symbol}|${interval}|${data.direction}|${data.signal_time || data.current_price}`;
           if (sessionStorage.getItem("mosstrade_last_push") === dedupeKey) return;
           const message = [
             `MOSSTRADE ${data.direction} 訊號`,
