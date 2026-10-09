@@ -501,6 +501,20 @@ BB_PERIOD = 20
 BB_DEVIATIONS = 2.0
 API_CACHE = {}
 API_CACHE_LOCK = threading.Lock()
+API_INFLIGHT = {}
+RESPONSE_CACHE = {}
+RESPONSE_CACHE_LOCK = threading.Lock()
+RESPONSE_INFLIGHT = {}
+# 端點級 TTL：重整與輪詢共用，避免每次請求都打上游。
+RANKING_TTL_SECONDS = {
+    "futures": 45,
+    "taiwan": 120,
+    "us": 120,
+    "metals": 120,
+}
+NEWS_RESPONSE_TTL_SECONDS = 180
+NEWS_ITEM_TTL_SECONDS = 180
+ANALYZE_TTL_SECONDS = 20
 
 app.add_middleware(
     CORSMiddleware,
@@ -509,6 +523,49 @@ app.add_middleware(
     allow_methods=["GET"],
     allow_headers=["*"],
 )
+
+
+def _wait_for_inflight(event: threading.Event, timeout: float = 30) -> None:
+    event.wait(timeout=timeout)
+
+
+def cached_endpoint(cache_key: str, ttl: float, producer):
+    """快取完整 API 回應，並以 single-flight 合併同 key 的併發重建。"""
+    now = time.time()
+    with RESPONSE_CACHE_LOCK:
+        entry = RESPONSE_CACHE.get(cache_key)
+        if entry and now - entry[0] < ttl:
+            return entry[1]
+        event = RESPONSE_INFLIGHT.get(cache_key)
+        if event is None:
+            event = threading.Event()
+            RESPONSE_INFLIGHT[cache_key] = event
+            owner = True
+        else:
+            owner = False
+    if not owner:
+        _wait_for_inflight(event)
+        with RESPONSE_CACHE_LOCK:
+            entry = RESPONSE_CACHE.get(cache_key)
+            if entry:
+                return entry[1]
+        # 等待後仍無資料時才自行重建，避免整頁卡住。
+        return producer()
+    try:
+        payload = producer()
+        with RESPONSE_CACHE_LOCK:
+            RESPONSE_CACHE[cache_key] = (time.time(), payload)
+        return payload
+    except Exception:
+        with RESPONSE_CACHE_LOCK:
+            entry = RESPONSE_CACHE.get(cache_key)
+        if entry:
+            return entry[1]
+        raise
+    finally:
+        with RESPONSE_CACHE_LOCK:
+            RESPONSE_INFLIGHT.pop(cache_key, None)
+            event.set()
 
 
 def calculate_ema(prices, period):
@@ -567,16 +624,51 @@ def cached_json(url, params, ttl=60):
         cached = API_CACHE.get(key)
         if cached and now - cached[0] < ttl:
             return cached[1]
+        event = API_INFLIGHT.get(key)
+        if event is None:
+            event = threading.Event()
+            API_INFLIGHT[key] = event
+            owner = True
+        else:
+            owner = False
+    if not owner:
+        _wait_for_inflight(event)
+        with API_CACHE_LOCK:
+            cached = API_CACHE.get(key)
+            if cached:
+                return cached[1]
+        # 等待逾時仍無結果：若無人重建則接手；否則再等一次。
+        with API_CACHE_LOCK:
+            event = API_INFLIGHT.get(key)
+            if event is None:
+                event = threading.Event()
+                API_INFLIGHT[key] = event
+                owner = True
+            else:
+                owner = False
+        if not owner:
+            _wait_for_inflight(event)
+            with API_CACHE_LOCK:
+                cached = API_CACHE.get(key)
+                if cached:
+                    return cached[1]
+            raise requests.RequestException(f"上游快取重建逾時: {url}")
     try:
         response = HTTP.get(url, params=params, timeout=10)
         response.raise_for_status()
         payload = response.json()
     except (requests.RequestException, ValueError):
+        with API_CACHE_LOCK:
+            cached = API_CACHE.get(key)
+            API_INFLIGHT.pop(key, None)
+            event.set()
         if cached:
             return cached[1]
         raise
     with API_CACHE_LOCK:
-        API_CACHE[key] = (now, payload)
+        API_CACHE[key] = (time.time(), payload)
+        API_INFLIGHT.pop(key, None)
+        event.set()
     return payload
 
 
@@ -1363,7 +1455,26 @@ NEWS_CACHE = {}
 NEWS_CACHE_LOCK = threading.Lock()
 
 
+def _read_news_cache(market: str, *, allow_stale: bool = False) -> list[dict] | None:
+    with NEWS_CACHE_LOCK:
+        entry = NEWS_CACHE.get(market)
+        if not entry:
+            return None
+        timestamp, items = entry
+        if allow_stale or time.time() - timestamp < NEWS_ITEM_TTL_SECONDS:
+            return list(items)
+    return None
+
+
+def _write_news_cache(market: str, items: list[dict]) -> None:
+    with NEWS_CACHE_LOCK:
+        NEWS_CACHE[market] = (time.time(), list(items))
+
+
 def _news_items_for_market(market: str) -> list[dict]:
+    fresh = _read_news_cache(market)
+    if fresh is not None:
+        return fresh
     query = NEWS_QUERIES[market]
     try:
         payload = yahoo_json(
@@ -1398,8 +1509,7 @@ def _news_items_for_market(market: str) -> list[dict]:
             "importance": "medium",
         })
     if items:
-        with NEWS_CACHE_LOCK:
-            NEWS_CACHE[market] = items
+        _write_news_cache(market, items)
         return items
     # Fallback to Google News RSS so the page can still show sourced headlines
     # when Yahoo Finance is rate-limited or unavailable.
@@ -1434,8 +1544,7 @@ def _news_items_for_market(market: str) -> list[dict]:
             "importance": "medium",
         })
     if items:
-        with NEWS_CACHE_LOCK:
-            NEWS_CACHE[market] = items
+        _write_news_cache(market, items)
     return items
 
 
@@ -1445,38 +1554,43 @@ def market_news(market: str = "ALL"):
     markets = list(NEWS_QUERIES) if market == "ALL" else [market]
     if any(item not in NEWS_QUERIES for item in markets):
         raise HTTPException(status_code=400, detail="不支援的消息市場分類。")
-    items = []
-    errors = []
-    for item_market in markets:
-        try:
-            current_items = _news_items_for_market(item_market)
-            if current_items:
-                items.extend(current_items)
-            else:
-                with NEWS_CACHE_LOCK:
-                    items.extend(NEWS_CACHE.get(item_market, []))
-        except Exception as error:
-            errors.append(item_market)
-            print(f"News provider error ({item_market}): {error}")
-            with NEWS_CACHE_LOCK:
-                items.extend(NEWS_CACHE.get(item_market, []))
-    unique = {}
-    for item in items:
-        dedupe_key = "|".join([
-            item.get("market", ""),
-            " ".join(item.get("title", "").lower().split()),
-            item.get("source", "").lower(),
-        ])
-        unique[dedupe_key] = item
-    ordered = sorted(
-        unique.values(), key=lambda item: item.get("published_at") or "", reverse=True
-    )[:30]
-    return {
-        "status": "partial" if errors and ordered else "error" if errors else "success",
-        "results": ordered,
-        "updated_at": datetime.now(timezone.utc).isoformat(),
-        "failed_markets": errors,
-    }
+
+    def build_news_payload():
+        items = []
+        errors = []
+        for item_market in markets:
+            try:
+                current_items = _news_items_for_market(item_market)
+                if current_items:
+                    items.extend(current_items)
+                else:
+                    stale = _read_news_cache(item_market, allow_stale=True) or []
+                    items.extend(stale)
+            except Exception as error:
+                errors.append(item_market)
+                print(f"News provider error ({item_market}): {error}")
+                stale = _read_news_cache(item_market, allow_stale=True) or []
+                items.extend(stale)
+        unique = {}
+        for item in items:
+            dedupe_key = "|".join([
+                item.get("market", ""),
+                " ".join(item.get("title", "").lower().split()),
+                item.get("source", "").lower(),
+            ])
+            unique[dedupe_key] = item
+        ordered = sorted(
+            unique.values(), key=lambda item: item.get("published_at") or "", reverse=True
+        )[:30]
+        return {
+            "status": "partial" if errors and ordered else "error" if errors else "success",
+            "results": ordered,
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+            "failed_markets": errors,
+            "cache_ttl_seconds": NEWS_RESPONSE_TTL_SECONDS,
+        }
+
+    return cached_endpoint(f"news:{market}", NEWS_RESPONSE_TTL_SECONDS, build_news_payload)
 
 
 @app.get("/api/market-ranking")
@@ -1489,105 +1603,115 @@ def market_ranking(market: str = "futures", ranking: str = "gainers"):
         "volume",
     }:
         raise HTTPException(status_code=400, detail="不支援的排行榜類型。")
-    rows = []
-    try:
-        if market == "futures":
-            payload = cached_json(
-                "https://www.okx.com/api/v5/market/tickers", {"instType": "SWAP"}, 60
-            )
-            for item in payload.get("data", []):
-                if not item.get("instId", "").endswith("-USDT-SWAP"):
-                    continue
-                last, open_ = number_value(item.get("last")), number_value(
-                    item.get("open24h")
+    ttl = RANKING_TTL_SECONDS[market]
+
+    def build_ranking_payload():
+        rows = []
+        try:
+            if market == "futures":
+                payload = cached_json(
+                    "https://www.okx.com/api/v5/market/tickers",
+                    {"instType": "SWAP"},
+                    ttl,
                 )
-                if last and open_:
-                    rows.append(
-                        {
-                            "symbol": f"OKX:{item['instId']}",
-                            "name": item["instId"],
-                            "price": last,
-                            "change": round((last - open_) / open_ * 100, 2),
-                            "volume": number_value(item.get("volCcy24h")) or 0,
-                        }
-                    )
-        else:
-            symbols = {
-                "taiwan": [
-                    "2330.TW",
-                    "2317.TW",
-                    "2454.TW",
-                    "2303.TW",
-                    "2881.TW",
-                    "2882.TW",
-                    "2308.TW",
-                    "3711.TW",
-                    "2382.TW",
-                    "0050.TW",
-                ],
-                "us": [
-                    "AAPL",
-                    "MSFT",
-                    "NVDA",
-                    "TSLA",
-                    "AMZN",
-                    "META",
-                    "GOOGL",
-                    "AMD",
-                    "QQQ",
-                    "TLT",
-                ],
-                "metals": [
-                    "GLD",
-                    "IAU",
-                    "SLV",
-                    "SIVR",
-                    "PPLT",
-                    "PALL",
-                    "GDX",
-                    "GDXJ",
-                    "SIL",
-                    "COPX",
-                ],
-            }[market]
-            for ticker in symbols:
-                try:
-                    candles = (
-                        twse_recent_candles(ticker)
-                        if market == "taiwan"
-                        else nasdaq_daily_candles(ticker)
-                    )
-                    if len(candles) < 2:
+                for item in payload.get("data", []):
+                    if not item.get("instId", "").endswith("-USDT-SWAP"):
                         continue
-                    latest, previous = candles[-1], candles[-2]
-                    rows.append(
-                        {
-                            "symbol": ticker,
-                            "name": ticker,
-                            "price": latest["close"],
-                            "change": round(
-                                (latest["close"] - previous["close"])
-                                / previous["close"]
-                                * 100,
-                                2,
-                            ),
-                            "volume": latest.get("volume", 0),
-                        }
+                    last, open_ = number_value(item.get("last")), number_value(
+                        item.get("open24h")
                     )
-                except Exception as error:
-                    print(f"Ranking item error {ticker}:", error)
-        key = "volume" if ranking == "volume" else "change"
-        reverse = ranking != "losers"
-        return {
-            "status": "success",
-            "market": market,
-            "ranking": ranking,
-            "results": sorted(rows, key=lambda item: item[key], reverse=reverse)[:10],
-        }
-    except Exception as error:
-        raise HTTPException(
-            status_code=502, detail="目前選擇的排行榜資料暫時無法取得。"
-        ) from error
+                    if last and open_:
+                        rows.append(
+                            {
+                                "symbol": f"OKX:{item['instId']}",
+                                "name": item["instId"],
+                                "price": last,
+                                "change": round((last - open_) / open_ * 100, 2),
+                                "volume": number_value(item.get("volCcy24h")) or 0,
+                            }
+                        )
+            else:
+                symbols = {
+                    "taiwan": [
+                        "2330.TW",
+                        "2317.TW",
+                        "2454.TW",
+                        "2303.TW",
+                        "2881.TW",
+                        "2882.TW",
+                        "2308.TW",
+                        "3711.TW",
+                        "2382.TW",
+                        "0050.TW",
+                    ],
+                    "us": [
+                        "AAPL",
+                        "MSFT",
+                        "NVDA",
+                        "TSLA",
+                        "AMZN",
+                        "META",
+                        "GOOGL",
+                        "AMD",
+                        "QQQ",
+                        "TLT",
+                    ],
+                    "metals": [
+                        "GLD",
+                        "IAU",
+                        "SLV",
+                        "SIVR",
+                        "PPLT",
+                        "PALL",
+                        "GDX",
+                        "GDXJ",
+                        "SIL",
+                        "COPX",
+                    ],
+                }[market]
+                for ticker in symbols:
+                    try:
+                        candles = (
+                            twse_recent_candles(ticker)
+                            if market == "taiwan"
+                            else nasdaq_daily_candles(ticker)
+                        )
+                        if len(candles) < 2:
+                            continue
+                        latest, previous = candles[-1], candles[-2]
+                        rows.append(
+                            {
+                                "symbol": ticker,
+                                "name": ticker,
+                                "price": latest["close"],
+                                "change": round(
+                                    (latest["close"] - previous["close"])
+                                    / previous["close"]
+                                    * 100,
+                                    2,
+                                ),
+                                "volume": latest.get("volume", 0),
+                            }
+                        )
+                    except Exception as error:
+                        print(f"Ranking item error {ticker}:", error)
+            sort_key = "volume" if ranking == "volume" else "change"
+            reverse = ranking != "losers"
+            return {
+                "status": "success",
+                "market": market,
+                "ranking": ranking,
+                "results": sorted(
+                    rows, key=lambda item: item[sort_key], reverse=reverse
+                )[:10],
+                "cache_ttl_seconds": ttl,
+            }
+        except Exception as error:
+            raise HTTPException(
+                status_code=502, detail="目前選擇的排行榜資料暫時無法取得。"
+            ) from error
+
+    return cached_endpoint(f"ranking:{market}:{ranking}", ttl, build_ranking_payload)
 
 
 @app.post("/api/admin/telegram/test")
@@ -1607,6 +1731,13 @@ def telegram_send(message: str, x_mosstrade_admin_key: str | None = Header(defau
 
 @app.get("/api/analyze")
 def analyze_market(symbol: str, interval: str = "1h"):
+    cache_key = f"analyze:{symbol.strip().upper()}:{interval.strip().lower()}"
+    return cached_endpoint(
+        cache_key, ANALYZE_TTL_SECONDS, lambda: _compute_analyze_market(symbol, interval)
+    )
+
+
+def _compute_analyze_market(symbol: str, interval: str = "1h"):
     interval = interval.strip().lower()
     symbol_upper = symbol.strip().upper()
 

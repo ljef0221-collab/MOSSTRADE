@@ -6014,6 +6014,35 @@
         let rankingData = {};
         let rankingLoading = false;
         let rankingLastUpdated = 0;
+        let newsLoading = false;
+        let newsLastUpdated = 0;
+        // 與後端 TTL 對齊：重整先讀本地快取，過期才打 API。
+        const RANKING_CLIENT_TTL_MS = {
+          futures: 45000,
+          taiwan: 120000,
+          us: 120000,
+          metals: 120000,
+        };
+        const NEWS_CLIENT_TTL_MS = 180000;
+        const RANKING_STORAGE_PREFIX = "mosstrade-ranking-v1:";
+        const NEWS_STORAGE_PREFIX = "mosstrade-news-v1:";
+        const readSessionJson = (key) => {
+          try {
+            return JSON.parse(sessionStorage.getItem(key) || "null");
+          } catch {
+            return null;
+          }
+        };
+        const writeSessionJson = (key, value) => {
+          try {
+            sessionStorage.setItem(key, JSON.stringify(value));
+          } catch {
+            // sessionStorage 滿了或被停用時略過，仍可走網路。
+          }
+        };
+        const rankingStorageKey = (market, ranking) =>
+          `${RANKING_STORAGE_PREFIX}${market}:${ranking}`;
+        const newsStorageKey = (market) => `${NEWS_STORAGE_PREFIX}${market}`;
         let structureData = null;
         let levelsData = null;
         let chochLines = [],
@@ -6819,18 +6848,30 @@
             box.append(row);
           });
         }
-        async function loadRankings(silent = false) {
+        async function loadRankings(silent = false, force = false) {
           if (rankingLoading) return;
-          rankingLoading = true;
           const market = byId("market-select").value;
           const ranking = byId("ranking-select").value;
           const labels = { gainers: "漲幅", losers: "跌幅", volume: "成交量" };
+          const ttlMs = RANKING_CLIENT_TTL_MS[market] || 60000;
+          const storageKey = rankingStorageKey(market, ranking);
+          const cached = readSessionJson(storageKey);
+          const cacheAge = cached?.savedAt ? Date.now() - cached.savedAt : Infinity;
           byId("ranking-title").textContent = labels[ranking];
           byId("ranking-error").textContent = "";
-          if (!silent)
+          if (cached?.results) {
+            rankingRows(cached.results, ranking === "volume");
+            rankingLastUpdated = cached.savedAt || rankingLastUpdated;
+          }
+          if (!force && cacheAge < ttlMs) {
+            return;
+          }
+          rankingLoading = true;
+          if (!silent && !cached?.results) {
             byId("ranking-list").innerHTML =
               '<div class="empty">資料比對中…</div>';
-          if (!silent) updateMarketSummary([], ranking === "volume");
+            updateMarketSummary([], ranking === "volume");
+          }
           try {
             const response = await fetch(
               "/api/market-ranking?market=" +
@@ -6842,10 +6883,16 @@
             if (!response.ok) throw new Error(data.detail || "排行榜載入失敗");
             rankingRows(data.results || [], ranking === "volume");
             rankingLastUpdated = Date.now();
+            writeSessionJson(storageKey, {
+              savedAt: rankingLastUpdated,
+              results: data.results || [],
+            });
           } catch (error) {
-            byId("ranking-error").textContent = error.message;
-            if (!silent) rankingRows([], ranking === "volume");
-            updateMarketSummary([], ranking === "volume", true);
+            if (!cached?.results) {
+              byId("ranking-error").textContent = error.message;
+              if (!silent) rankingRows([], ranking === "volume");
+              updateMarketSummary([], ranking === "volume", true);
+            }
           } finally {
             rankingLoading = false;
           }
@@ -6933,31 +6980,73 @@
             box.append(card);
           });
         }
-        async function loadNews() {
+        async function loadNews(force = false) {
+          if (newsLoading) return;
           const status = byId("news-status");
           const box = byId("news-list");
-          status.textContent = "正在讀取最新消息…";
-          box.innerHTML = '<div class="news-skeleton" aria-hidden="true"><i></i><i></i><i></i></div>';
+          const storageKey = newsStorageKey(activeNewsMarket);
+          const cached = readSessionJson(storageKey);
+          const cacheAge = cached?.savedAt ? Date.now() - cached.savedAt : Infinity;
+          if (cached?.results) {
+            renderNews(cached.results, cached.failed_markets || []);
+            byId("news-updated").textContent = cached.updated_at
+              ? `更新於 ${formatNewsTime(cached.updated_at)}`
+              : "已使用本機快取";
+            status.textContent = cached.failed_markets?.length
+              ? "部分市場消息暫時無法取得"
+              : "資料來源：快取／Yahoo Finance";
+            newsLastUpdated = cached.savedAt || newsLastUpdated;
+          }
+          if (!force && cacheAge < NEWS_CLIENT_TTL_MS) {
+            return;
+          }
+          newsLoading = true;
+          if (!cached?.results) {
+            status.textContent = "正在讀取最新消息…";
+            box.innerHTML =
+              '<div class="news-skeleton" aria-hidden="true"><i></i><i></i><i></i></div>';
+          } else {
+            status.textContent = "背景更新消息中…";
+          }
           try {
-            const response = await fetch(`/api/news?market=${encodeURIComponent(activeNewsMarket)}`);
+            const response = await fetch(
+              `/api/news?market=${encodeURIComponent(activeNewsMarket)}`,
+            );
             const data = await response.json();
             if (!response.ok) throw new Error(data.detail || "消息資料載入失敗");
             renderNews(data.results || [], data.failed_markets || []);
-            const updated = data.updated_at ? formatNewsTime(data.updated_at) : "未知";
+            const updated = data.updated_at
+              ? formatNewsTime(data.updated_at)
+              : "未知";
             byId("news-updated").textContent = `更新於 ${updated}`;
-            status.textContent = data.failed_markets?.length ? "部分市場消息暫時無法取得" : "資料來源：Yahoo Finance";
+            status.textContent = data.failed_markets?.length
+              ? "部分市場消息暫時無法取得"
+              : "資料來源：Yahoo Finance";
+            newsLastUpdated = Date.now();
+            writeSessionJson(storageKey, {
+              savedAt: newsLastUpdated,
+              results: data.results || [],
+              failed_markets: data.failed_markets || [],
+              updated_at: data.updated_at || null,
+            });
           } catch (error) {
-            renderNews([], [activeNewsMarket]);
-            status.textContent = "目前無法取得最新消息，請稍後再試";
+            if (!cached?.results) {
+              renderNews([], [activeNewsMarket]);
+              status.textContent = "目前無法取得最新消息，請稍後再試";
+            } else {
+              status.textContent = "沿用本機快取（上游暫時無法更新）";
+            }
+          } finally {
+            newsLoading = false;
           }
         }
         document.querySelectorAll(".news-tab").forEach((button) => button.addEventListener("click", () => {
           document.querySelectorAll(".news-tab").forEach((item) => item.classList.remove("is-active"));
           button.classList.add("is-active");
           activeNewsMarket = button.dataset.newsMarket || "ALL";
-          loadNews();
+          loadNews(true);
         }));
-        byId("news-refresh")?.addEventListener("click", loadNews);
+        byId("news-refresh")?.addEventListener("click", () => loadNews(true));
         const search = () => searchFrom("search-input", "results");
         const searchAnalysis = () =>
           searchFrom("analysis-search-input", "analysis-results");
@@ -8640,11 +8729,11 @@
         };
         byId("market-select").onchange = () => {
           rankingLastUpdated = 0;
-          loadRankings();
+          loadRankings(false, true);
         };
         byId("ranking-select").onchange = () => {
           rankingLastUpdated = 0;
-          loadRankings();
+          loadRankings(false, true);
         };
         byId("back-button").onclick = () => showAppPage("home");
         function closeMobileMenu() {
@@ -8881,11 +8970,17 @@
         }).observe(byId("chart"));
         renderSimulation();
         showAppPage("home");
-        loadRankings();
+        loadRankings(false);
         loadNews();
         setInterval(() => {
-          if (!document.hidden && !byId("home-page").classList.contains("hidden")) loadNews();
-        }, 300000);
+          if (
+            document.hidden ||
+            byId("home-page").classList.contains("hidden") ||
+            newsLoading
+          )
+            return;
+          if (Date.now() - newsLastUpdated >= NEWS_CLIENT_TTL_MS) loadNews();
+        }, 60000);
         setInterval(() => {
           if (
             document.hidden ||
@@ -8894,7 +8989,7 @@
           )
             return;
           const market = byId("market-select").value;
-          const refreshEvery = market === "futures" ? 10000 : 60000;
+          const refreshEvery = RANKING_CLIENT_TTL_MS[market] || 60000;
           if (Date.now() - rankingLastUpdated >= refreshEvery)
             loadRankings(true);
         }, 5000);
