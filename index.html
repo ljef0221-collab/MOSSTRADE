@@ -6074,6 +6074,21 @@
         let simSyncingRange = false;
         let simCrosshairReady = false;
         let simSearchTimer = null;
+        let simSearchRequestId = 0;
+        const searchResultCache = new Map();
+        async function fetchSearchResults(keyword) {
+          const key = keyword.trim().toLowerCase();
+          if (searchResultCache.has(key)) return searchResultCache.get(key);
+          const response = await fetch(
+            `/api/search?keyword=${encodeURIComponent(keyword)}`,
+          );
+          const data = await response.json();
+          const results = data.results || [];
+          searchResultCache.set(key, results);
+          if (searchResultCache.size > 100)
+            searchResultCache.delete(searchResultCache.keys().next().value);
+          return results;
+        }
         let walletEquityChart = null;
         let walletEquitySeries = {};
         let selectedWalletCurrency = "TWD";
@@ -6921,12 +6936,9 @@
           box.classList.remove("hidden");
           box.textContent = "搜尋中…";
           try {
-            const response = await fetch(
-              "/api/search?keyword=" + encodeURIComponent(keyword),
-            );
-            const data = await response.json();
+            const results = await fetchSearchResults(keyword);
             box.replaceChildren();
-            (data.results || []).slice(0, 15).forEach((item) => {
+            results.slice(0, 15).forEach((item) => {
               const row = document.createElement("div");
               row.className = "result";
               row.textContent = `${compactSymbol(item)} · ${item.name || ""}`;
@@ -8110,12 +8122,11 @@
             resultsBox.classList.add("hidden");
             return;
           }
+          const requestId = ++simSearchRequestId;
           try {
-            const response = await fetch(
-              `/api/search?keyword=${encodeURIComponent(keyword)}`,
-            );
-            const data = await response.json();
-            const results = (data.results || []).slice(0, 12);
+            const results = (await fetchSearchResults(keyword)).slice(0, 12);
+            // 使用者已經繼續打字時，丟掉較舊的回應。
+            if (requestId !== simSearchRequestId) return;
             resultsBox.innerHTML = results.length
               ? results
                   .map(
@@ -8729,11 +8740,11 @@
         };
         byId("market-select").onchange = () => {
           rankingLastUpdated = 0;
-          loadRankings(false, true);
+          loadRankings();
         };
         byId("ranking-select").onchange = () => {
           rankingLastUpdated = 0;
-          loadRankings(false, true);
+          loadRankings();
         };
         byId("back-button").onclick = () => showAppPage("home");
         function closeMobileMenu() {
@@ -8827,7 +8838,7 @@
         };
         byId("sim-symbol").oninput = () => {
           clearTimeout(simSearchTimer);
-          simSearchTimer = setTimeout(searchSimulationSuggestions, 250);
+          simSearchTimer = setTimeout(searchSimulationSuggestions, 150);
         };
         byId("sim-search-results").onclick = (event) => {
           const button = event.target.closest("[data-sim-symbol]");
