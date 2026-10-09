@@ -29,6 +29,8 @@ def sync_binance_futures():
                         "Perpetual Futures" if instrument_type == "SWAP" else "Spot"
                     ),
                     "exchange": "OKX",
+                    # OKX instCategory：1 為加密貨幣，3 為代幣化股票，4 為商品。
+                    "category": item.get("instCategory", "1"),
                     "keywords": [
                         item["instId"],
                         f"OKX:{item['instId']}",

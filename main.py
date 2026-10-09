@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 from datetime import datetime, timezone
 from pathlib import Path
 import os
+import re
 import sqlite3
 import json
 import time
@@ -1088,169 +1089,236 @@ def simulation_instrument_spec(symbol: str):
     }
 
 
+SEARCH_CATALOG_REFRESH_SECONDS = 21600
+SEARCH_CATALOG = []
+SEARCH_CATALOG_LOCK = threading.Lock()
+_search_catalog_started = False
+
+
+def _compact(text) -> str:
+    """只留英數與中日韓文字並轉小寫，讓 btcusdt 能對上 BTC-USDT。"""
+    return "".join(ch for ch in str(text or "").lower() if ch.isalnum())
+
+
+def _catalog_entry(
+    symbol, name, type_, exchange, source, keywords=(), category=None
+) -> dict:
+    raw_symbol = str(symbol).split(":", 1)[-1]
+    is_exchange = str(symbol).upper().startswith(("OKX:", "BINANCE:", "BYBIT:"))
+    compact_symbol = _compact(raw_symbol)
+    if compact_symbol.endswith("swap"):
+        compact_symbol = compact_symbol[: -len("swap")]
+    base = _compact(re.split(r"[-./]", raw_symbol)[0])
+    terms = {_compact(name)}
+    terms.update(_compact(word) for word in str(name or "").split())
+    terms.update(_compact(keyword) for keyword in keywords if keyword)
+    terms.discard("")
+    return {
+        "item": {
+            "symbol": symbol,
+            "name": name or symbol,
+            "type": type_,
+            "exchange": exchange,
+            "source": source,
+        },
+        "symbol_key": compact_symbol,
+        "base_key": base,
+        "terms": tuple(terms),
+        "is_crypto": is_exchange and category in (None, "1"),
+        "is_tokenized": is_exchange and category not in (None, "1"),
+        "is_perpetual": str(symbol).upper().endswith("-SWAP"),
+    }
+
+
+def _local_catalog_entries() -> list[dict]:
+    return [
+        _catalog_entry(
+            item["symbol"],
+            item.get("name", item["symbol"]),
+            item.get("type", "ASSET"),
+            item.get("exchange", "LOCAL"),
+            "Local",
+            item.get("keywords", []),
+            item.get("category"),
+        )
+        for item in SYMBOL_DATABASE
+        if item.get("symbol")
+    ]
+
+
+def _remote_catalog_entries() -> list[dict]:
+    entries = []
+    sources = [
+        (
+            "https://openapi.twse.com.tw/v1/opendata/t187ap03_L",
+            {},
+            lambda payload: [
+                (f"{row.get('公司代號', '').strip()}.TW", row.get("公司簡稱", "").strip(),
+                 "Taiwan Stock", "TWSE", "TWSE")
+                for row in payload
+                if str(row.get("公司代號", "")).strip()
+            ],
+        ),
+        (
+            "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O",
+            {},
+            lambda payload: [
+                (f"{row.get('SecuritiesCompanyCode', '').strip()}.TWO",
+                 row.get("CompanyAbbreviation", "").strip(),
+                 "Taiwan OTC Stock", "TPEx", "TPEx")
+                for row in payload
+                if str(row.get("SecuritiesCompanyCode", "")).strip()
+            ],
+        ),
+        (
+            "https://openapi.twse.com.tw/v1/opendata/t187ap47_L",
+            {},
+            lambda payload: [
+                (f"{row.get('基金代號', '').strip()}.TW", row.get("基金簡稱", "").strip(),
+                 "Taiwan ETF", "TWSE", "TWSE")
+                for row in payload
+                if str(row.get("基金代號", "")).strip()
+            ],
+        ),
+        (
+            "https://api.nasdaq.com/api/screener/stocks",
+            {"tableonly": "true", "limit": 10000, "offset": 0},
+            lambda payload: [
+                (row.get("symbol", "").strip(), row.get("name", "").strip(),
+                 "US Stock", "NASDAQ/NYSE", "Nasdaq")
+                for row in (payload.get("data") or {}).get("table", {}).get("rows", [])
+                if str(row.get("symbol", "")).strip()
+            ],
+        ),
+        (
+            "https://api.nasdaq.com/api/screener/etf",
+            {"tableonly": "true", "limit": 10000, "offset": 0},
+            lambda payload: [
+                (row.get("symbol", "").strip(), row.get("companyName", "").strip(),
+                 "US ETF", "US ETF", "Nasdaq")
+                for row in (
+                    ((payload.get("data") or {}).get("records") or {}).get("data") or {}
+                ).get("rows", [])
+                if str(row.get("symbol", "")).strip()
+            ],
+        ),
+    ]
+    for url, params, parse in sources:
+        try:
+            payload = cached_json(url, params, SEARCH_CATALOG_REFRESH_SECONDS)
+            entries.extend(_catalog_entry(*row) for row in parse(payload))
+        except Exception as error:
+            print(f"Search catalog error ({url}): {error}")
+    return entries
+
+
+def _rebuild_search_catalog() -> None:
+    entries = _local_catalog_entries() + _remote_catalog_entries()
+    with SEARCH_CATALOG_LOCK:
+        SEARCH_CATALOG[:] = entries
+
+
+def _search_catalog_worker() -> None:
+    while True:
+        try:
+            _rebuild_search_catalog()
+        except Exception as error:
+            print(f"Search catalog worker error: {error}")
+        time.sleep(SEARCH_CATALOG_REFRESH_SECONDS)
+
+
+@app.on_event("startup")
+def start_search_catalog_worker():
+    global _search_catalog_started
+    with SEARCH_CATALOG_LOCK:
+        SEARCH_CATALOG[:] = _local_catalog_entries()
+    if not _search_catalog_started:
+        _search_catalog_started = True
+        threading.Thread(
+            target=_search_catalog_worker, name="search-catalog", daemon=True
+        ).start()
+
+
+def _match_score(entry: dict, query: str) -> int | None:
+    """數字越小越相關：完全符合 > 代號開頭 > 名稱開頭 > 任意包含。"""
+    symbol_key, base_key = entry["symbol_key"], entry["base_key"]
+    if query in (symbol_key, base_key):
+        return 0
+    if symbol_key.startswith(query):
+        return 1
+    if any(term.startswith(query) for term in entry["terms"]):
+        return 2
+    if query in symbol_key or any(query in term for term in entry["terms"]):
+        return 3
+    return None
+
+
+def search_catalog(keyword: str, limit: int = 30) -> list[dict]:
+    query = _compact(keyword)
+    if not query:
+        return []
+    with SEARCH_CATALOG_LOCK:
+        catalog = SEARCH_CATALOG or _local_catalog_entries()
+    scored = []
+    for entry in catalog:
+        score = _match_score(entry, query)
+        if score is not None:
+            scored.append(
+                (
+                    score,
+                    not entry["is_crypto"],
+                    entry["is_tokenized"],
+                    not entry["is_perpetual"],
+                    len(entry["symbol_key"]),
+                    entry["item"]["symbol"],
+                    entry["item"],
+                )
+            )
+    scored.sort(key=lambda row: row[:6])
+    unique = {}
+    for row in scored:
+        unique.setdefault(row[-1]["symbol"], row[-1])
+        if len(unique) >= limit:
+            break
+    return list(unique.values())
+
+
 @app.get("/api/search")
 def search_symbol(keyword: str):
     keyword = keyword.strip()
     if not keyword:
         return {"status": "success", "results": []}
 
-    results = []
-    lower_keyword = keyword.lower()
+    # 1. 記憶體內商品清單：背景預先載入，搜尋時不等外部網站。
+    results = search_catalog(keyword)
 
-    # 1. 本地資料庫搜尋（包含 Binance 永續合約）
-    for item in SYMBOL_DATABASE:
-        searchable = [
-            item.get("symbol", ""),
-            item.get("name", ""),
-            *item.get("keywords", []),
-        ]
-        if any(lower_keyword in key.lower() for key in searchable):
-            results.append(
-                {
-                    "symbol": item["symbol"],
-                    "name": item.get("name", item["symbol"]),
-                    "type": item.get("type", "ASSET"),
-                    "exchange": item.get("exchange", "LOCAL"),
-                    "source": "Local",
-                }
+    # 2. 清單內找不到時，才問 Nasdaq 即時查詢。
+    if not results:
+        try:
+            payload = cached_json(
+                "https://api.nasdaq.com/api/autocomplete/slookup/10",
+                {"search": keyword},
+                3600,
             )
+            for item in payload.get("data", []):
+                ticker, name = (
+                    str(item.get("symbol", "")).strip(),
+                    str(item.get("name", "")).strip(),
+                )
+                if ticker:
+                    results.append(
+                        {
+                            "symbol": ticker,
+                            "name": name,
+                            "type": str(item.get("asset", "US Asset")),
+                            "exchange": item.get("exchange") or "US Market",
+                            "source": "Nasdaq",
+                        }
+                    )
+        except Exception:
+            pass
 
-    # Official catalogs expand search beyond the small built-in seed list.
-    try:
-        for item in cached_json(
-            "https://openapi.twse.com.tw/v1/opendata/t187ap03_L", {}, 21600
-        ):
-            code, name = (
-                str(item.get("公司代號", "")).strip(),
-                str(item.get("公司簡稱", "")).strip(),
-            )
-            if lower_keyword in code.lower() or lower_keyword in name.lower():
-                results.append(
-                    {
-                        "symbol": f"{code}.TW",
-                        "name": name,
-                        "type": "Taiwan Stock",
-                        "exchange": "TWSE",
-                        "source": "TWSE",
-                    }
-                )
-    except Exception:
-        pass
-    try:
-        for item in cached_json(
-            "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O", {}, 21600
-        ):
-            code, name = (
-                str(item.get("SecuritiesCompanyCode", "")).strip(),
-                str(item.get("CompanyAbbreviation", "")).strip(),
-            )
-            if lower_keyword in code.lower() or lower_keyword in name.lower():
-                results.append(
-                    {
-                        "symbol": f"{code}.TWO",
-                        "name": name,
-                        "type": "Taiwan OTC Stock",
-                        "exchange": "TPEx",
-                        "source": "TPEx",
-                    }
-                )
-    except Exception:
-        pass
-    try:
-        for item in cached_json(
-            "https://openapi.twse.com.tw/v1/opendata/t187ap47_L", {}, 21600
-        ):
-            code, name = (
-                str(item.get("基金代號", "")).strip(),
-                str(item.get("基金簡稱", "")).strip(),
-            )
-            if lower_keyword in code.lower() or lower_keyword in name.lower():
-                results.append(
-                    {
-                        "symbol": f"{code}.TW",
-                        "name": name,
-                        "type": "Taiwan ETF",
-                        "exchange": "TWSE",
-                        "source": "TWSE",
-                    }
-                )
-    except Exception:
-        pass
-    try:
-        payload = cached_json(
-            "https://api.nasdaq.com/api/screener/stocks",
-            {"tableonly": "true", "limit": 10000, "offset": 0},
-            21600,
-        )
-        for item in (payload.get("data") or {}).get("table", {}).get("rows", []):
-            ticker, name = (
-                str(item.get("symbol", "")).strip(),
-                str(item.get("name", "")).strip(),
-            )
-            if lower_keyword in ticker.lower() or lower_keyword in name.lower():
-                results.append(
-                    {
-                        "symbol": ticker,
-                        "name": name,
-                        "type": "US Stock",
-                        "exchange": "NASDAQ/NYSE",
-                        "source": "Nasdaq",
-                    }
-                )
-    except Exception:
-        pass
-    try:
-        payload = cached_json(
-            "https://api.nasdaq.com/api/screener/etf",
-            {"tableonly": "true", "limit": 10000, "offset": 0},
-            21600,
-        )
-        rows = (
-            ((payload.get("data") or {}).get("records") or {}).get("data") or {}
-        ).get("rows", [])
-        for item in rows:
-            ticker, name = (
-                str(item.get("symbol", "")).strip(),
-                str(item.get("companyName", "")).strip(),
-            )
-            if lower_keyword in ticker.lower() or lower_keyword in name.lower():
-                results.append(
-                    {
-                        "symbol": ticker,
-                        "name": name,
-                        "type": "US ETF",
-                        "exchange": "US ETF",
-                        "source": "Nasdaq",
-                    }
-                )
-    except Exception:
-        pass
-    try:
-        payload = cached_json(
-            "https://api.nasdaq.com/api/autocomplete/slookup/10",
-            {"search": keyword},
-            3600,
-        )
-        for item in payload.get("data", []):
-            ticker, name = (
-                str(item.get("symbol", "")).strip(),
-                str(item.get("name", "")).strip(),
-            )
-            if ticker:
-                asset = str(item.get("asset", "US Asset"))
-                results.append(
-                    {
-                        "symbol": ticker,
-                        "name": name,
-                        "type": asset,
-                        "exchange": item.get("exchange") or "US Market",
-                        "source": "Nasdaq",
-                    }
-                )
-    except Exception:
-        pass
-
-    # 2. TradingView 全球大數據搜尋
+    # 3. TradingView 全球大數據搜尋
     if not results:
         try:
             response = requests.get(
@@ -1274,7 +1342,7 @@ def search_symbol(keyword: str):
         except Exception as e:
             print("TradingView 搜尋失敗:", e)
 
-    # 3. Yahoo Search 備用；使用快取避免 Render 共用 IP 被限流。
+    # 4. Yahoo Search 備用；使用快取避免 Render 共用 IP 被限流。
     if not results:
         try:
             payload = yahoo_json(
