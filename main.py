@@ -142,8 +142,8 @@ TIMEFRAME_CONFIG = {
         "lookback": 20,
         "tp_atr": 1.5,
         "sl_atr": 1.0,
-        "name": "1分極速衝浪",
-        "description": "極短線動能策略",
+        "name": "1分策略說明",
+        "description": "1分鐘短線進出",
     },
     "3m": {
         "source": "1m",
@@ -156,7 +156,7 @@ TIMEFRAME_CONFIG = {
         "lookback": 20,
         "tp_atr": 1.5,
         "sl_atr": 1.0,
-        "name": "3分極短線策略",
+        "name": "3分策略說明",
         "description": "微觀趨勢交叉策略",
     },
     "5m": {
@@ -170,8 +170,8 @@ TIMEFRAME_CONFIG = {
         "lookback": 20,
         "tp_atr": 1.5,
         "sl_atr": 1.0,
-        "name": "5分動能策略",
-        "description": "5分鐘極速衝浪",
+        "name": "5分策略說明",
+        "description": "5分鐘短線進出",
     },
     "10m": {
         "source": "5m",
@@ -184,7 +184,7 @@ TIMEFRAME_CONFIG = {
         "lookback": 20,
         "tp_atr": 1.8,
         "sl_atr": 1.0,
-        "name": "10分動能策略",
+        "name": "10分策略說明",
         "description": "10分鐘聚合波段",
     },
     "15m": {
@@ -198,7 +198,7 @@ TIMEFRAME_CONFIG = {
         "lookback": 20,
         "tp_atr": 1.8,
         "sl_atr": 1.0,
-        "name": "15分日內策略",
+        "name": "15分策略說明",
         "description": "當沖經典短線策略",
     },
     "30m": {
@@ -212,7 +212,7 @@ TIMEFRAME_CONFIG = {
         "lookback": 20,
         "tp_atr": 2.0,
         "sl_atr": 1.2,
-        "name": "30分區間突破",
+        "name": "30分策略說明",
         "description": "半小時區間突破策略",
     },
     "45m": {
@@ -226,7 +226,7 @@ TIMEFRAME_CONFIG = {
         "lookback": 20,
         "tp_atr": 2.0,
         "sl_atr": 1.2,
-        "name": "45分區間突破",
+        "name": "45分策略說明",
         "description": "波段進場過濾策略",
     },
     "1h": {
@@ -240,7 +240,7 @@ TIMEFRAME_CONFIG = {
         "lookback": 20,
         "tp_atr": 2.0,
         "sl_atr": 1.2,
-        "name": "1小時突破策略",
+        "name": "1小時策略說明",
         "description": "趨勢區間突破策略",
     },
     "2h": {
@@ -254,7 +254,7 @@ TIMEFRAME_CONFIG = {
         "lookback": 20,
         "tp_atr": 2.2,
         "sl_atr": 1.2,
-        "name": "2小時亞盤/歐盤策略",
+        "name": "2小時策略說明",
         "description": "跨時區區間突破策略",
     },
     "3h": {
@@ -268,7 +268,7 @@ TIMEFRAME_CONFIG = {
         "lookback": 20,
         "tp_atr": 2.5,
         "sl_atr": 1.5,
-        "name": "3小時趨勢策略",
+        "name": "3小時策略說明",
         "description": "中長線區間突破",
     },
     "4h": {
@@ -282,7 +282,7 @@ TIMEFRAME_CONFIG = {
         "lookback": 20,
         "tp_atr": 2.5,
         "sl_atr": 1.5,
-        "name": "4小時四小時線策略",
+        "name": "4小時策略說明",
         "description": "機構級波段突破策略",
     },
     "1d": {
@@ -296,7 +296,7 @@ TIMEFRAME_CONFIG = {
         "lookback": 60,
         "tp_atr": 3.0,
         "sl_atr": 1.5,
-        "name": "日線趨勢結構策略",
+        "name": "日線策略說明",
         "description": "EMA 斜率、布林通道與波段回測綜合判讀",
     },
     "1w": {
@@ -310,7 +310,7 @@ TIMEFRAME_CONFIG = {
         "lookback": 52,
         "tp_atr": 3.5,
         "sl_atr": 2.0,
-        "name": "週線戰略趨勢策略",
+        "name": "週線策略說明",
         "description": "52 週趨勢、布林中軌與長波段結構",
     },
     "1mo": {
@@ -324,7 +324,7 @@ TIMEFRAME_CONFIG = {
         "lookback": 24,
         "tp_atr": 4.0,
         "sl_atr": 2.0,
-        "name": "月線宏觀週期策略",
+        "name": "月線策略說明",
         "description": "兩年趨勢、布林通道與主要回測區判讀",
     },
 }
